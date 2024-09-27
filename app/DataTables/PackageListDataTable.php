@@ -27,7 +27,7 @@ class PackageListDataTable extends DataTable
             $join->on('pms_subscription_ids.property_id', '=', 'properties.id');
         })
         ->join('pms_recurring_packages', function ($join) {
-            $join->on('pms_subscription_ids.package_id', '=', 'pms_recurring_packages.id');
+            $join->on('pms_subscription_ids.package_id', '=', 'pms_recurring_packages.pms_recurring_service_ids');
         })
         ->join('users', function ($join) {
             $join->on('properties.host_id', '=', 'users.id');
@@ -89,7 +89,7 @@ class PackageListDataTable extends DataTable
     public function html()
     {
         // Check if the authenticated user is an admin
-        if (Auth::guard('admin')->user()->username == 'admin') {
+        if (Auth::guard('admin')->user() && Auth::guard('admin')->user()->username == 'admin') {
             $this->builder()->addColumn([
                 'data' => 'property_name_user',
                 'name' => 'users.first_name',
@@ -98,18 +98,16 @@ class PackageListDataTable extends DataTable
         }
         // Define columns
         $this->builder()
-            ->addColumn(['data' => 'package_name', 'name' => 'pms_recurring_packages.package_name', 'title' => 'Package Name'])
-            ->addColumn(['data' => 'property_name', 'name' => 'properties.name', 'title' => 'Property Name'])
-            ->addColumn(['data' => 'subscription_type', 'name' => 'pms_subscription_ids.subscription_type', 'title' => 'Subscription Type'])
-            ->addColumn(['data' => 'services', 'name' => 'services', 'title' => 'Services Name'])
-            ->addColumn(['data' => 'price', 'name' => 'pms_recurring_packages.price', 'title' => 'Price'])
-            ->addColumn(['data' => 'offer_price', 'name' => 'pms_subscription_ids.offer_price', 'title' => 'Offer Price']);
-        
-        
+        ->addColumn(['data' => 'package_name', 'name' => 'pms_recurring_packages.package_name', 'title' => 'Package Name'])
+        ->addColumn(['data' => 'property_name', 'name' => 'properties.name', 'title' => 'Property Name'])
+        ->addColumn(['data' => 'subscription_type', 'name' => 'pms_subscription_ids.subscription_type', 'title' => 'Subscription Type'])
+        ->addColumn(['data' => 'services', 'name' => 'services', 'title' => 'Services Name'])
+        ->addColumn(['data' => 'price', 'name' => 'pms_recurring_packages.price', 'title' => 'Price'])
+        ->addColumn(['data' => 'offer_price', 'name' => 'pms_subscription_ids.offer_price', 'title' => 'Offer Price']);
+    return $this->builder()
+        ->parameters(dataTableOptions());
+}
 
-        return $this->builder()
-            ->parameters(dataTableOptions());
-    }
 
     protected function filename()
     {
