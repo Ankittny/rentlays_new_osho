@@ -15,7 +15,7 @@
                             <input type="hidden" name="subscription_type" value="on-demand">
                             <input type="hidden" name="property_id" value="{{ $properties->id }}">
                             <input type="hidden" name="pms_recurring_packages_id" value="0">
-
+                            <input type="hidden" name="package_id" value="0">
                             <div class="offers active">
                                 {{-- <img src="{{asset('public/images/s1.png')}}" style="height: 170px"/>
                         <br> --}}
@@ -34,6 +34,7 @@
                                 <input type="hidden" name="subscription_type" value="requrring">
                                 <input type="hidden" name="property_id" value="{{ $properties->id }}">
                                 <input type="hidden" name="pms_recurring_packages_id" value="{{ $items->pms_recurring_service_ids }}">
+                                <input type="hidden" name="package_id" value="{{ $items->id }}">
                                 <div class="offers">
                                     {{-- <img src="{{asset('public/images/s2.png')}}" style="height: 170px"/>
                             <br> --}}

@@ -7,9 +7,7 @@
             <div class="card-body ">
                 <dl class="row">
                     <dt class="col-sm-4">Package Name:</dt>
-
                     <dd class="col-sm-8 float-right">{{$data['result']['package_name'] ?? $data['subscription_type']}}</dd>
-                    
                     <dt class="col-sm-4">Price:</dt>
                     <dd class="col-sm-8">{{$data['result']['price'] ?? 'N/A'}}</dd>
                     
@@ -26,9 +24,10 @@
                     </dd>
                 </dl>
                 <div class="text-center mt-4">
-                    <a href="{{ url('subscription-payments') }}/{{ base64_encode($data['property_id']) }}/{{ base64_encode($data['subscription_type']) }}/{{ base64_encode($data['pms_recurring_packages_id']) }}" class="btn btn-primary">Pay Now</a>
+                    <a href="{{ url('subscription-payments') }}/{{ base64_encode($data['property_id']) }}/{{ base64_encode($data['subscription_type']) }}/{{ base64_encode($data['pms_recurring_packages_id']) }}/{{base64_encode($data['package_id'])}}" class="btn btn-primary">Pay Now</a>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+

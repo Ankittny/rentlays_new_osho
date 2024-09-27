@@ -21,7 +21,8 @@ class SubscriptionController extends Controller
                 'id' => $id,
                 'property_id' => $property_id,
                 'subscription_type' => $subscription_type,
-                'pms_recurring_packages_id'=>$pms_recurring_packages_id 
+                'pms_recurring_packages_id'=>$pms_recurring_packages_id,
+                'package_id'=>$request->package_id
             ]);
             return redirect($url);
             
@@ -47,6 +48,7 @@ class SubscriptionController extends Controller
         $data['property_id'] = base64_decode($request->route('property_id'));
         $data['subscription_type']= base64_decode($request->route('subscription_type'));
         $data['pms_recurring_packages_id']= base64_decode($request->route('pms_recurring_packages_id'));
+        $data['package_id']= $request->route('package_id');
         $data['result'] = PmsRecurringPackage::where('pms_recurring_service_ids', $data['id'])->first();
         $recurring_service_id = PmsRecurringService::whereIn('id', explode(',',$data['result']->pms_recurring_service_ids ?? 0))->pluck('service_id');
         $data['recurring_service'] =PmsServiceMaster::whereIn('id',$recurring_service_id)->pluck('name');
@@ -59,6 +61,7 @@ class SubscriptionController extends Controller
         $property_id  = base64_decode($request->route('property_id'));
         $subscription_type= base64_decode($request->route('subscription_type'));
         $pms_recurring_packages_id= base64_decode($request->route('pms_recurring_packages_id'));
+        $package_id= base64_decode($request->route('package_id'));
         $PmsOnboard = new PmsOnboard();
         $PmsOnboard->property_id = $property_id;
         $PmsOnboard->assing_by_id = 0;
@@ -70,7 +73,7 @@ class SubscriptionController extends Controller
         $PmsOnboard->save();
          if($PmsOnboard->save()){
             if(!empty($pms_recurring_packages_id)){
-                $this->SubcriptionData($subscription_type,$property_id,$pms_recurring_packages_id);
+                $this->SubcriptionData($subscription_type,$property_id,$pms_recurring_packages_id,$package_id);
             }
            return redirect('thankyou')->with('success','Your Query Successful Send For admin');
         } else {
@@ -80,7 +83,7 @@ class SubscriptionController extends Controller
 
     }
 
-    public function SubcriptionData($subscription_type,$property_id,$pms_recurring_packages_id){
+    public function SubcriptionData($subscription_type,$property_id,$pms_recurring_packages_id,$package_id = null){
         $pms_recurring_services  = PmsRecurringService::find($pms_recurring_packages_id);
         if($pms_recurring_services->duration_type=="1"){
              $start_date_time = date('Y-m-d H:i:s');
@@ -95,8 +98,7 @@ class SubscriptionController extends Controller
         $pmssubscriptionids = new PmsSubscriptionIds();
         $pmssubscriptionids->property_id = $property_id;
         $pmssubscriptionids->subscription_type = $subscription_type;
-        $pmssubscriptionids->package_id        = $pms_recurring_packages_id;
-        $pmssubscriptionids->package_id        = $pms_recurring_packages_id;
+        $pmssubscriptionids->package_id        = $package_id;
         $pmssubscriptionids->start_date_time   = $start_date_time;
         $pmssubscriptionids->end_date_time     = $end_date_time;
         $pmssubscriptionids->user_id           =  Auth::user()->id;
