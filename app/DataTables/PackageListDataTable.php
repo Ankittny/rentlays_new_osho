@@ -27,7 +27,7 @@ class PackageListDataTable extends DataTable
             $join->on('pms_subscription_ids.property_id', '=', 'properties.id');
         })
         ->join('pms_recurring_packages', function ($join) {
-            $join->on('pms_subscription_ids.package_id', '=', 'pms_recurring_packages.pms_recurring_service_ids');
+            $join->on('pms_subscription_ids.package_id', '=', 'pms_recurring_packages.id');
         })
         ->join('users', function ($join) {
             $join->on('properties.host_id', '=', 'users.id');
@@ -41,7 +41,7 @@ class PackageListDataTable extends DataTable
             'users.first_name as property_name_user',  // Include user's first name
             'pms_recurring_packages.package_name as package_name',
             'pms_recurring_packages.price as price',
-            'pms_recurring_packages.pms_recurring_service_ids as pms_recurring_service_ids',
+            'pms_recurring_packages.id as pms_recurring_service_ids',
             'pms_recurring_packages.offer_price as offer_price'
         ])
         ->where('pms_subscription_ids.status', '=', '1')->where('user_id', '=', auth()->user()->id);
@@ -59,7 +59,7 @@ class PackageListDataTable extends DataTable
         // Execute query and process results
         $results = $query->get()->map(function ($package) {
             // Split service IDs
-            $serviceIds = explode(',', str_replace(' ', '', $package->pms_recurring_service_ids));
+            $serviceIds = explode(',', str_replace(' ', '', $package->id));
             // Fetch service details
             $services = DB::table('pms_recurring_services')
                 ->whereIn('id', $serviceIds)
