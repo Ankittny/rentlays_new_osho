@@ -18,7 +18,7 @@
 							<nav class="navbar navbar-expand-lg navbar-light list-bacground border rounded-3 p-4">
 								<ul class="navbar-nav">
 									<li class="nav-item pl-4 pr-4">
-										<a class="text-color font-weight-700 text-color-hover" href="{{ url('users/transaction-history') }}">{{ __('Transactions') }}</a>
+										<a class="text-color font-weight-700 text-color-hover" href="{{ url('users/transaction-history') }}">{{ __('Transactions new') }}</a>
 									</li>
 								</ul>
 							</nav>
