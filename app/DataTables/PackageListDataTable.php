@@ -27,7 +27,7 @@ class PackageListDataTable extends DataTable
             $join->on('pms_subscription_ids.property_id', '=', 'properties.id');
         })
         ->join('pms_recurring_packages', function ($join) {
-            $join->on('pms_subscription_ids.package_id', '=', 'pms_recurring_packages.pms_recurring_service_ids');
+            $join->on('pms_subscription_ids.package_id', '=', 'pms_recurring_packages.id');
         })
         ->join('users', function ($join) {
             $join->on('properties.host_id', '=', 'users.id');
