@@ -33,7 +33,7 @@
                                         <select name="pms_recurring_service_ids[]" multiple class="form-control f-14">
                                           <option value=""> Select Package </option>
                                             @foreach ($recurring_service as $key => $value)
-                                                <option data-icon-class="icon-star-alt" value="{{ $value->service_id }}" {{ in_array($value->id, explode(',', $result->pms_recurring_service_ids)) ? 'selected' : '' }} >
+                                                <option data-icon-class="icon-star-alt" value="{{ $value->id }}" {{ in_array($value->id, explode(',', $result->pms_recurring_service_ids)) ? 'selected' : '' }} >
                                                     {{ $value->name  }}
                                                 </option>
                                           @endforeach
