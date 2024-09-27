@@ -14,9 +14,7 @@
             <!-- @include('admin.common.breadcrumb') -->
         </section>
         <!-- Main content -->
-        <section class="content">
-           
-                       
+        <section class="content">             
                     @php
                         $roleName = \App\Models\Roles::find($role->role_id)->name;
                     @endphp
@@ -48,6 +46,7 @@
                                                     <li class="list-group-item">Location:- {{App\Models\PropertyAddress::where('property_id',$result->property_id)->first()->city}}</li>
                                                     <li class="list-group-item">Issu List:- {{App\Models\PmsHelpdesk::find($result->helpdesk_id)->issue}}</li>
                                                     <li class="list-group-item">Priority:- {{App\Models\PmsHelpdesk::find($result->helpdesk_id)->priority}}</li>
+
                                                     <li class="list-group-item">User :- <span>{{App\Models\Admin::find($result->user_id)->username}}</span></li>
                                                     <li class="list-group-item">Subscription Type :- <span>{{ App\Models\PmsRecurringPackage::where('id', App\Models\PmsSubscriptionIds::where('property_id', $result->property_id)->value('package_id'))->value('package_name') ?? "No Subscription" }}</span></li>
                                                  </ul> 
