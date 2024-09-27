@@ -9,7 +9,7 @@ class SubscriptionController extends Controller
 {
     public function subcribe(Request $request,$slug){
         if($request->isMethod('post')) {
-            $check_duplicacy = PmsOnboard::where('property_id', $request->property_id)->where('subscription_type', $request->subscription_type)->where('source', 'rentlays')->first();
+            $check_duplicacy = PmsOnboard::where('property_id', intval($request->property_id))->where('subscription_type', $request->subscription_type)->where('source', 'PMS')->first();
             if(!empty($check_duplicacy)){
                 return redirect()->back()->with('error', 'This property already subscribed for this package');
             }
@@ -64,7 +64,7 @@ class SubscriptionController extends Controller
         $PmsOnboard->assing_by_id = 0;
         $PmsOnboard->assing_to_id = 0;
         $PmsOnboard->subscription_type  =$subscription_type;
-        $PmsOnboard->source = "rentlays";
+        $PmsOnboard->source = "PMS";
         $PmsOnboard->remarks = "test";
         $PmsOnboard->status = "1";
         $PmsOnboard->save();
