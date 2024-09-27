@@ -299,10 +299,11 @@ class PmsJobController extends Controller
                     } else {
                         $data = new PmsJobsItems();
                         $service_data  = PmsServiceMaster::find($service_id);
-                        
                         $service_exit =PmsRecurringPackage::where('id',$package_id)->select('pms_recurring_service_ids')->first();
-                        $service_exit_ids = array_map('intval', explode(',',$service_exit->pms_recurring_service_ids));
-                        if(in_array($service_data->id,$service_exit_ids)){
+                        $pms_recurring_services = PmsRecurringService::whereIn('id',explode(',',$service_exit->pms_recurring_service_ids))->pluck('service_id')->toArray();
+                        // dd($pms_recurring_services);
+                        // $service_exit_ids = array_map('intval', explode(',',$service_exit->pms_recurring_service_ids));
+                        if(in_array($service_data->id,$pms_recurring_services)){
                             $service_data->amount = 0;
                         }  
                         $data->pms_job_id = $pms_job_id;
