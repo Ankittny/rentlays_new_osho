@@ -41,7 +41,7 @@ class PackageListDataTable extends DataTable
             'users.first_name as property_name_user',  // Include user's first name
             'pms_recurring_packages.package_name as package_name',
             'pms_recurring_packages.price as price',
-            'pms_recurring_packages.id as pms_recurring_service_ids',
+            'pms_recurring_packages.id as package_id',
             'pms_recurring_packages.offer_price as offer_price'
         ])
         ->where('pms_subscription_ids.status', '=', '1')->where('user_id', '=', auth()->user()->id);
@@ -59,25 +59,21 @@ class PackageListDataTable extends DataTable
         // Execute query and process results
         $results = $query->get()->map(function ($package) {
             // Split service IDs
-            $serviceIds = explode(',', str_replace(' ', '', $package->id));
-            // Fetch service details
+            $serviceIds = explode(',', str_replace(' ', '', $package->package_id));
+            $services_id_in_package = DB::table('pms_recurring_packages')->select('pms_recurring_service_ids')->first();
+            $services_id_in_package = array_map('intval', explode(',', $services_id_in_package->pms_recurring_service_ids));
             $services = DB::table('pms_recurring_services')
-                ->whereIn('id', $serviceIds)
+                ->whereIn('id',$services_id_in_package)
                 ->select('service_id', 'duration_time')
                 ->get();
-            
-            // Fetch service names
             $serviceIdsForName = $services->pluck('service_id');
             $serviceNames = DB::table('pms_service_masters')
                 ->whereIn('id', $serviceIdsForName)
                 ->pluck('name', 'id');
-            
             // Format services into a single line with HTML line breaks
             $formattedServices = $services->map(function ($service) use ($serviceNames) {
                 return $serviceNames[$service->service_id] . '-  ' . $service->duration_time;
-            });
-
-            // Add formatted services to the package
+            })->unique();
             $package->services = $formattedServices;
 
             return $package;
