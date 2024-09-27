@@ -14,6 +14,8 @@
                             @csrf
                             <input type="hidden" name="subscription_type" value="on-demand">
                             <input type="hidden" name="property_id" value="{{ $properties->id }}">
+                            <input type="hidden" name="pms_recurring_packages_id" value="0">
+
                             <div class="offers active">
                                 {{-- <img src="{{asset('public/images/s1.png')}}" style="height: 170px"/>
                         <br> --}}

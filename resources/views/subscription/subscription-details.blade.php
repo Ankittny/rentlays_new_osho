@@ -3,12 +3,12 @@
 @section('main')
     <div class="container mt-5 mb-5">
         <h3 class="text-center mb-4">Recurring Package Details</h3>
-        
         <div class="card w-75 m-auto ">
             <div class="card-body ">
                 <dl class="row">
                     <dt class="col-sm-4">Package Name:</dt>
-                    <dd class="col-sm-8 float-right">{{$data['result']['package_name'] ?? 'N/A'}}</dd>
+
+                    <dd class="col-sm-8 float-right">{{$data['result']['package_name'] ?? $data['subscription_type']}}</dd>
                     
                     <dt class="col-sm-4">Price:</dt>
                     <dd class="col-sm-8">{{$data['result']['price'] ?? 'N/A'}}</dd>

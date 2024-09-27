@@ -21,7 +21,7 @@ class SubscriptionController extends Controller
                 'id' => $id,
                 'property_id' => $property_id,
                 'subscription_type' => $subscription_type,
-                'pms_recurring_packages_id'=>$pms_recurring_packages_id
+                'pms_recurring_packages_id'=>$pms_recurring_packages_id 
             ]);
             return redirect($url);
             
@@ -48,7 +48,7 @@ class SubscriptionController extends Controller
         $data['subscription_type']= base64_decode($request->route('subscription_type'));
         $data['pms_recurring_packages_id']= base64_decode($request->route('pms_recurring_packages_id'));
         $data['result'] = PmsRecurringPackage::where('pms_recurring_service_ids', $data['id'])->first();
-        $recurring_service_id = PmsRecurringService::whereIn('id', explode(',',$data['result']->pms_recurring_service_ids))->pluck('service_id');
+        $recurring_service_id = PmsRecurringService::whereIn('id', explode(',',$data['result']->pms_recurring_service_ids ?? 0))->pluck('service_id');
         $data['recurring_service'] =PmsServiceMaster::whereIn('id',$recurring_service_id)->pluck('name');
         $data['title'] = "Subscription Details";
         return view('subscription.subscription-details',['data'=>$data]);
