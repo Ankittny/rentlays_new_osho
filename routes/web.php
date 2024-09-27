@@ -494,8 +494,8 @@ Route::group(['middleware' => ['guest:users', 'locale']], function () {
     Route::match(array('GET', 'POST'),'listing/update_status', 'PropertyController@updateStatus');
     Route::match(array('GET', 'POST'),'listing/{id}/{step}', 'PropertyController@listing')->where(['id' => '[0-9]+','page' => 'basics|description|location|amenities|photos|pricing|calendar|details|booking']);
     Route::match(array('GET', 'POST'),'subcribe/{any}', 'SubscriptionController@subcribe');
-    Route::match(array('GET', 'POST'),'subscribe-details/{id}/{property_id}/{subscription_type}/{pms_recurring_packages_id}', 'SubscriptionController@subscribeDetails')->name('subscribe-details');
-	Route::get('subscription-payments/{property_id}/{subscription_type}/{pms_recurring_packages_id}', 'SubscriptionController@subscription_payments');
+    Route::match(array('GET', 'POST'),'subscribe-details/{id}/{property_id}/{subscription_type}/{pms_recurring_packages_id}/{package_id?}', 'SubscriptionController@subscribeDetails')->name('subscribe-details');
+	Route::get('subscription-payments/{property_id}/{subscription_type}/{pms_recurring_packages_id}/{package_id?}', 'SubscriptionController@subscription_payments');
     Route::get('thankyou', 'SubscriptionController@ThankYou');
     // Favourites routes
     Route::get('user/favourite', 'PropertyController@userBookmark');
