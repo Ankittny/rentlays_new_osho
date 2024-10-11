@@ -88,11 +88,10 @@
                                     
                                     <div class="col-sm-6">
                                         <select class="form-control f-14" id="role" name="role" aria-invalid="false">
+                                           
                                             @foreach ($roles as $key=>$item)
-                                                <option value="{{ $key }}" {{ $result->role_id == $key ? 'selected' : '' }}>{{ $item }}</option>
-                                                
+                                                <option value="{{ $key }}" {{ $role_id == $key ? 'selected' : '' }}>{{ $item }}</option>
                                             @endforeach
-                                            
                                         </select>
                                         <span class="text-danger">{{ $errors->first('role') }}</span>
                                     </div>

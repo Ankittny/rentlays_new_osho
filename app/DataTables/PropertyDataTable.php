@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Properties;
+use App\Models\RoleAdmin;
 use Yajra\DataTables\Services\DataTable;
 use Request, Common;
 
@@ -10,8 +11,8 @@ class PropertyDataTable extends DataTable
 {
     public function ajax()
     {
+       
         $properties = $this->query();
-
         return datatables()
             ->of($properties)
             ->addColumn('action', function ($properties) {
@@ -58,6 +59,7 @@ class PropertyDataTable extends DataTable
 
     public function query()
     {
+        $role = RoleAdmin::where('admin_id',Auth('admin')->user()->id)->first();
         $user_id    = Request::segment(4);
         $status     = isset(request()->status) ? request()->status : null;
         $from = isset(request()->from) ? setDateForDb(request()->from) : null;
@@ -68,8 +70,6 @@ class PropertyDataTable extends DataTable
         if (isset($user_id)) {
             $query->where('host_id', '=', $user_id);
         }
-
-
         if ($from) {
              $query->whereDate('created_at', '>=', $from);
         }
@@ -81,6 +81,14 @@ class PropertyDataTable extends DataTable
         }
         if ($space_type) {
             $query->where('space_type', '=', $space_type);
+        }
+        if($role->role_id==3){ // pms id 
+            $query->whereIn('for_property',['pms','pmsandrentlays']);
+        }
+        if($role->role_id==2){ // rentlays id 
+            $query->whereIn('for_property',['rentlays','pmsandrentlays']);
+        } if($role->role_id==1){
+            $query->whereIn('for_property', ['pms', 'rentlays', 'pmsandrentlays']);
         }
         return $this->applyScopes($query);
     }
@@ -95,6 +103,7 @@ class PropertyDataTable extends DataTable
             ->addColumn(['data' => 'status', 'name' => 'status', 'title' => 'Status'])
             ->addColumn(['data' => 'recomended', 'name' => 'recomended', 'title' => 'Recomended'])
             ->addColumn(['data' => 'verified', 'name' => 'verified', 'title' => 'Verified'])
+            ->addColumn(['data' => 'for_property', 'name' => 'For Property', 'title' => 'For Property'])
             ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Date'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Action', 'orderable' => false, 'searchable' => false])
             ->parameters(dataTableOptions());

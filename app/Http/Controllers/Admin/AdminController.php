@@ -71,19 +71,16 @@ class AdminController extends Controller
                 return back()->withErrors($validator)->withInput();
             } else {
                 $admin = new Admin;
+                $admin->user_id =  Auth('admin')->user()->id;
                 $admin->username = $request->username;
                 $admin->email    = $request->email;
                 $admin->pincode  = $request->pincode;
                 $admin->password = bcrypt($request->password);
                 $admin->status   = !empty($request->status) ? $request->status : 'Active';
                 $admin->save();
-
                 RoleAdmin::insert(['admin_id' => $admin->id, 'role_id' => $request->role]);
-
                 Cache::forget(config('cache.prefix') . '.role_admin');
-
                 Common::one_time_message('success', 'Added Successfully');
-
                 return redirect('admin/admin-users');
             }
         } else {
@@ -188,7 +185,7 @@ class AdminController extends Controller
                 return back()->withErrors($validator)->withInput();
             } else {
                 $admin = Admin::findOrFail($request->id);
-
+                $admin->user_id =  Auth('admin')->user()->id;
                 $admin->username = $request->username;
                 $admin->email    = $request->email;
                 $admin->pincode  = $request->pincode;

@@ -67,5 +67,9 @@ Route::group(['prefix' => 'v1'], function () {
 });    
 
 
+Route::group(['prefix' => 'supervisorv1'], function () {
+    Route::post('login', 'Api\SupervisorLoginController@login');
+});
+
 
 

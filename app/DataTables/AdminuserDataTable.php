@@ -20,7 +20,7 @@ namespace App\DataTables;
 
 use App\Models\Admin;
 use Yajra\DataTables\Services\DataTable;
-
+use Auth;
 class AdminuserDataTable extends DataTable
 {
     public function ajax()
@@ -50,7 +50,12 @@ class AdminuserDataTable extends DataTable
                                 $join->on('roles.id', '=', 'role_admin.role_id');
                         })
                         ->select(['admin.id as id', 'username', 'email', 'roles.display_name as role_name', 'status']);
-
+                        if(Auth::guard('admin')->user()->id != 1){
+                            $admin = $admin->where('user_id', '=', Auth::guard('admin')->user()->id);
+                        } else {
+                            $admin = $admin;
+                        }
+                        
         return $this->applyScopes($admin);
     }
 

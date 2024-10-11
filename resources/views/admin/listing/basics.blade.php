@@ -211,6 +211,19 @@
                                                 Approved</option>
                                         </select>
                                     </div>
+                                    @if(App\Models\RoleAdmin::where('admin_id',Auth('admin')->user()->id)->first()->role_id == '3' || App\Models\RoleAdmin::where('admin_id',Auth('admin')->user()->id)->first()->role_id=='1')
+                                    <div class="col-md-4">
+                                        <label class="label-large fw-bold">Verified For Pms</label>
+                                        <select name="verified" class="form-control f-14">
+                                            <option value="Pending"
+                                                {{ $result->is_verified_pms == 'Pending' ? 'selected' : '' }}>Pending
+                                            </option>
+                                            <option value="Approved"
+                                                {{ $result->is_verified_pms == 'Approved' || $result->is_verified_pms == '' ? 'selected' : '' }}>
+                                                Approved</option>
+                                        </select>
+                                    </div>
+                                    @endif
                                 </div>
                                 <div class="row">
                                     <br>

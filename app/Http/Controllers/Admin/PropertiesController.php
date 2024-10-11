@@ -44,7 +44,8 @@ use App\Models\{
     Bookings,
     Currency,
     warehouetype,
-    FloorType
+    FloorType,
+    RoleAdmin
 };
 
 class PropertiesController extends Controller
@@ -52,6 +53,7 @@ class PropertiesController extends Controller
 
     public function index(PropertyDataTable $dataTable)
     {
+        $data['role'] = RoleAdmin::where('admin_id',Auth('admin')->user()->id)->first(); 
         $data['from'] = isset(request()->from) ? request()->from : null;
         $data['to']   = isset(request()->to) ? request()->to : null;
         $data['space_type_all'] = SpaceType::getAll();

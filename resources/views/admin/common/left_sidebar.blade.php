@@ -11,7 +11,6 @@
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'customers'))
 				<li class="{{ (Route::current()->uri() == 'admin/customers') || (Route::current()->uri() == 'admin/add-customer') || (Route::current()->uri() == 'admin/edit-customer/{id}') || (Route::current()->uri() == 'admin/customer/properties/{id}')  || (Route::current()->uri() == 'admin/customer/bookings/{id}') || (Route::current()->uri() == 'admin/customer/payouts/{id}')  || (Route::current()->uri() == 'admin/customer/payment-methods/{id}') || (Route::current()->uri() == 'admin/customer/wallet/{id}')  ? 'active' : '' }}"><a href="{{ url('admin/customers') }}"><i class="fa fa-users"></i><span>Customers</span></a></li>
 			@endif
-
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'properties'))
 				<li class="{{ (Route::current()->uri() == 'admin/properties') || (Route::current()->uri() == 'admin/add-properties') || (Route::current()->uri() == 'admin/listing/{id}/{step}') ? 'active' : ''  }}"><a href="{{ url('admin/properties') }}"><i class="fa fa-home"></i><span>Properties</span></a></li>
 			@endif
@@ -79,12 +78,13 @@
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'pms_appoint_managers'))
 			<li class="{{ (Route::current()->uri() == 'admin/add-appoint-managers') || (Route::current()->uri() == 'admin/edit-appoint-managers/{id}') || (Route::current()->uri() == 'admin/add-appoint-managers') ? 'active' : ''  }}"><a href="{{ url('admin/appoint-managers') }}"><i class="fa fa-quote-left"></i><span>Appoint Managers</span></a></li>
 			@endif
-			
+			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'pms_master'))
 			<li class="treeview {{ (Route::current()->uri() == 'admin/brand-master' || Route::current()->uri() == 'admin/department-master' || Route::current()->uri() == 'admin/recurring-service-master' || Route::current()->uri() == 'admin/recurring-packages-master' || Route::current()->uri() == 'admin/vendor-master' || Route::current()->uri() == 'admin/service-master'  || Route::current()->uri() == 'admin/category-master' || Route::current()->uri() == 'admin/sub-category-master') ? 'active' : ''    }}">
-				
+		
 				<a href="#">
-				<i class="fa fa-bar-chart-o"></i> <span>Pms Master</span><i class="fa fa-angle-left pull-right"></i>
+				  <i class="fa fa-bar-chart-o"></i> <span>Pms Master</span><i class="fa fa-angle-left pull-right"></i>
 				</a>
+
 				<ul class="treeview-menu">
 				@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'brand_view'))
 
@@ -127,7 +127,7 @@
 
 				</ul> 
 			</li>
-
+			@endif
 				
 		
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'service_request'))
@@ -135,13 +135,12 @@
 			<li class="{{ (Route::current()->uri() == 'admin/service_request') || (Route::current()->uri() == 'admin/edit-service-request/{id}') || (Route::current()->uri() == 'admin/add-service-request') ? 'active' : ''  }}"><a href="{{ url('admin/service_request') }}"><i class="fa fa-quote-left"></i><span>Service Request</span></a></li>
 			
 			@endif
-
-			
-			<li class="{{ (Route::current()->uri() == 'admin/pms_inventory') || (Route::current()->uri() == 'admin/edit-pms-inventory/{id}') || (Route::current()->uri() == 'admin/add-pms-inventory') ? 'active' : ''  }}"><a href="{{ url('admin/pms_inventory') }}"><i class="fa fa-quote-left"></i><span>Pms Inventory</span></a></li>
-
-			
+			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'pms_inventory'))
+			  <li class="{{ (Route::current()->uri() == 'admin/pms_inventory') || (Route::current()->uri() == 'admin/edit-pms-inventory/{id}') || (Route::current()->uri() == 'admin/add-pms-inventory') ? 'active' : ''  }}"><a href="{{ url('admin/pms_inventory') }}"><i class="fa fa-quote-left"></i><span>Pms Inventory</span></a></li>
+			@endif
+			@if(Helpers::has_permission(Auth::guard('admin')->user()->id, 'pms_job'))
 			<li class="{{ (Route::current()->uri() == 'admin/pms_job') || (Route::current()->uri() == 'admin/edit-pms-job/{id}') || (Route::current()->uri() == 'admin/add-pms-job') ? 'active' : ''  }}"><a href="{{ url('admin/pms_job') }}"><i class="fa fa-quote-left"></i><span>Pms Job</span></a></li>
-
+			@endif
 
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'manage_email_template'))
 				<li class="{{ (Route::current()->uri() == 'admin/email-template/{id}') ? 'active' : ''  }}"><a href="{{ url('admin/email-template/1') }}"><i class="fa fa-envelope"></i><span>Email Templates</span></a></li>

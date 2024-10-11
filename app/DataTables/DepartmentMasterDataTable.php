@@ -38,13 +38,7 @@ class DepartmentMasterDataTable extends DataTable
 
     public function query()
     {
-
-       
-
-
         $department_master =PmsDepartmentMaster::select();
-
-
         return $this->applyScopes($department_master);
     }
 
@@ -53,12 +47,10 @@ class DepartmentMasterDataTable extends DataTable
         return $this->builder()
         ->columns([
             'id',
-           
             'name',
             'description',
             'status',
             'created_at'
-
         ])
         ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Action', 'orderable' => false, 'searchable' => false])
         ->parameters(dataTableOptions());

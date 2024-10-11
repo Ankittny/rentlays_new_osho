@@ -139,7 +139,6 @@ class PropertyController extends Controller
 
         if ($step == 'basics') {
             if ($request->isMethod('post')) {
-                // dd($request->all());
                 $property                     = Properties::find($property_id);
                 if(!empty($request->bedrooms) && !empty($request->beds) && !empty($request->bathrooms) && !empty($request->bed_type)){
                     $property->bedrooms           = $request->bedrooms;
@@ -172,7 +171,6 @@ class PropertyController extends Controller
                         }
                     }
                 }
-            
                 return redirect('listing/' . $property_id . '/description');
             }
             $data['bed_type']       = BedType::getAll()->pluck('name', 'id');
@@ -182,24 +180,20 @@ class PropertyController extends Controller
             $data['warehouse_type']     = warehouetype::getAll()->pluck('name', 'id');
             $data['floor_type']         = FloorType::getAll()->pluck('name', 'id');
             $property                   = Properties::find($property_id);
-            //dd($property->property_type);
             $data['ProperTypeOptionset']   = ProperTypeOptionset::where('property_type_id',$property->property_type)->get();
-            // commit by ankit 06/05/2024
-            // if (n_as_k_c()) {
-            //     Session::flush();
-            //     return view('vendor.installer.errors.user');
-            // }
         } elseif ($step == 'description') {
             if ($request->isMethod('post')) {
 
                 $rules = array(
                     'name'     => 'required|max:50',
-                    'summary'  => 'required|max:1000'
+                    'summary'  => 'required|max:1000',
+                    'for_property'  => 'required|max:1000'
                 );
 
                 $fieldNames = array(
                     'name'     => 'Name',
                     'summary'  => 'Summary',
+                    'for_property'  => 'For Property'
                 );
 
                 $validator = Validator::make($request->all(), $rules);
@@ -213,6 +207,7 @@ class PropertyController extends Controller
                 {
                     $property           = Properties::find($property_id);
                     $property->name     = $request->name;
+                    $property->for_property = $request->for_property;
                     $property->slug     = Common::pretty_url($request->name);
                     $property->save();
 
