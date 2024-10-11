@@ -19,7 +19,17 @@
 								<div class="form-group col-md-12 main-panelbg pb-3 pt-3 mt-sm-0 ">
 									<h4 class="text-18 font-weight-700 pl-3">{{ __('Description') }}</h4>
 								</div>
-
+								<div class="row mt-4">
+									<div class="col-md-12 pl-5 pr-5">
+										<label>{{ __('For Property') }} <span class="text-danger">*</span></label>
+										<select name="for_property" id="for" class="form-control text-16 mt-2">
+											<option value="rantlays"> For Rantlays</option>
+											<option value="pms">For Pms</option>
+											<option value="pmsandrantlays">For Pms&Rantlays</option>
+										</select>
+										<span class="text-danger">{{ $errors->first('for_property') }}</span>
+									</div>
+								</div>
 								<div class="row mt-4">
 									<div class="col-md-12 pl-5 pr-5">
 										<label>{{ __('Listing Name') }} <span class="text-danger">*</span></label>

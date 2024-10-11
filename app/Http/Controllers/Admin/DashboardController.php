@@ -7,18 +7,19 @@ use App\Http\Controllers\Controller;
 use App\Models\{
     User,
     Properties,
-    Bookings
+    Bookings,
+    RoleAdmin
 };
+use Auth;
+use App\Helpers;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        
         $data['total_users_count']        = User::count();
         $data['total_property_count']     = Properties::count();
         $data['total_reservations_count'] = Bookings::count();
-
         $data['today_users_count']        = User::whereDate('created_at', DB::raw('CURDATE()'))->count();
         $data['today_property_count']     = Properties::whereDate('created_at', DB::raw('CURDATE()'))->count();
         $data['today_reservations_count'] = Bookings::whereDate('created_at', DB::raw('CURDATE()'))->count();

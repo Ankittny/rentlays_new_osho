@@ -156,7 +156,6 @@ class LoginController extends Controller
             'formatted_phone' => $user->formatted_phone,
             'token' => $token,
         ];
-    
         return response($response, 200);
     }
 

@@ -152,14 +152,7 @@ class PmsMasterController extends Controller
                 $brand_master->name 		 	= $request->name;
                 $brand_master->status   		= $request->status;
                 $brand_master->description   = $request->description;
-              
-                 
-               
-
                 $brand_master->save();
-
-             
-
                 Common::one_time_message('success', 'Updated Successfully');
                 return redirect('admin/brand-master');
             }
