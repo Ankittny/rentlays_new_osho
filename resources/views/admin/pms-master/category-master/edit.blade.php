@@ -60,10 +60,10 @@
                                         class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Status</label>
                                     <div class="col-sm-8">
                                         <select class="form-control f-14" name="status" id="status">
-                                            <option value="1" {{ $result->status == 1 ? 'selected' : '' }}>
+                                            <option value="active" {{ $result->status == 'active' ? 'selected' : '' }}>
                                                 Active</option>
-                                            <option value="0"
-                                                {{ $result->status == 0 ? 'selected' : '' }}>Inactive</option>
+                                            <option value="inactive"
+                                                {{ $result->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
                                         </select>
                                     </div>
                                 </div>
