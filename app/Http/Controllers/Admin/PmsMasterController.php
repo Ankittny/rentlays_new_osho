@@ -53,8 +53,6 @@ class PmsMasterController extends Controller
     
     public function brandIndex(BrandMasterDataTable $dataTable)
     {
-
-        
         return $dataTable->render('admin.pms-master.brand-master.view');
     }
 
@@ -68,11 +66,7 @@ class PmsMasterController extends Controller
                 'name'           => 'required|max:100',
                 'description'    => 'required|max:100',
                 'status'    => 'required',
-               
-               
             );
-
-            
             $fieldNames = array(
                 'name'           => 'Name',
                 'description'    => 'Description',
@@ -107,7 +101,7 @@ class PmsMasterController extends Controller
           
                 $brand_master->save();
 
-                // Common::vrCacheForget('vr-testimonials');
+                Common::vrCacheForget('vr-testimonials');
                 
                 Common::one_time_message('success', 'Added Successfully');
                 return redirect('admin/brand-master');
@@ -129,17 +123,12 @@ class PmsMasterController extends Controller
             $rules = array(
                 'name'           => 'required|max:100',
                 'description'    => 'required|max:100',
-                'status'    => 'required',
-               
-               
+                'status'    => 'required', 
             );
-
-            
             $fieldNames = array(
                 'name'           => 'Name',
                 'description'    => 'Description',
                 'status'    => 'Status',
-                
             );
             $validator = Validator::make($request->all(), $rules);
             $validator->setAttributeNames($fieldNames);
@@ -196,8 +185,6 @@ class PmsMasterController extends Controller
                 'name'           => 'required|max:100',
                 'description'    => 'required|max:100',
                 'status'    => 'required',
-               
-               
             );
 
             
@@ -320,8 +307,6 @@ class PmsMasterController extends Controller
 
     public function subCategoryIndex(SubCategoryMasterDataTable $dataTable)
     {
-
-        
         return $dataTable->render('admin.pms-master.sub-category-master.view');
     }
 
@@ -331,12 +316,7 @@ class PmsMasterController extends Controller
     public function subCategoryAdd(Request $request)
     {
         if (! $request->isMethod('post')) {
-
             $data['category']= PmsInventoryCategoryMasters::all();
-
-           
-
-
             return view('admin.pms-master.sub-category-master.add', $data);
         } 
         elseif ($request->isMethod('post')) {
@@ -346,21 +326,15 @@ class PmsMasterController extends Controller
                 'name'           => 'required|max:100',
                 'description'    => 'required|max:100',
                 'status'    => 'required',
-               
-               
             );
-
-           
             $fieldNames = array(
                 'category_id'=>'Category_id',
                 'name'           => 'Name',
                 'description'    => 'Description',
                 'status'    => 'Status',
-                
             );
            
             $validator = Validator::make($request->all(), $rules);
-
             if ($validator->fails()) {
                 return back()->withErrors($validator)->withInput();
             } 
@@ -378,25 +352,16 @@ class PmsMasterController extends Controller
                 // }
 
                 $sub_cate_master = new PmsInventorySubcategoryMasters();
-
-               
-
                 $sub_cate_master->category_id  = $request->category_id;
-
                 $sub_cate_master->name  = $request->name;
-               
                 $sub_cate_master->status   = $request->status;
                 $sub_cate_master->description   = $request->description;
-             
                 $sub_cate_master->save();
-              
                 // Common::vrCacheForget('vr-testimonials');
-              
                 Common::one_time_message('success', 'Added Successfully');
                 return redirect('admin/sub-category-master');
             }
         } 
-        
         else {
             return redirect('admin/sub-category-master');
         }
@@ -479,41 +444,29 @@ class PmsMasterController extends Controller
     public function departmentAdd(Request $request)
     {
         if (! $request->isMethod('post')) {
-
-
             return view('admin.pms-master.department-master.add');
         } 
         elseif ($request->isMethod('post')) {
            
              $rules = array(
-               
                 'name'           => 'required|max:100',
                 'description'    => 'required|max:100',
                 'status'    => 'required',
                
-               
             );
-
-           
             $fieldNames = array(
-             
                 'name'           => 'Name',
                 'description'    => 'Description',
                 'status'    => 'Status',
                 
             );
-           
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
                 return back()->withErrors($validator)->withInput();
             } 
-            
             else {
-                            
-               
-                $department_master = new PmsDepartmentMaster();
-                       
+                $department_master = new PmsDepartmentMaster();   
                 $department_master->name  = $request->name;
                 $department_master->status   = $request->status;
                 $department_master->description   = $request->description;
@@ -1006,23 +959,15 @@ class PmsMasterController extends Controller
     {
         if (! $request->isMethod('post')) {
             $data['result'] = PmsVendorMaster::find($request->id);
-             
-           
             return view('admin.pms-master.vendor-master.edit', $data);
         } elseif ($request->isMethod('post')) {
             $rules = array(
                 'name'           => 'required|max:100',
-              
                 'description'    => 'required|max:200',
-         
             );
-
-            
             $fieldNames = array(
                 'name'           => 'Name',
-             
                 'description'    => 'Description',
-          
                 'image'          => 'Image'
             );
             $validator = Validator::make($request->all(), $rules);
@@ -1036,8 +981,6 @@ class PmsMasterController extends Controller
                 $testimonial->name 		 	= $request->name;
                 $testimonial->status   		= $request->status;
                 $testimonial->description   = $request->description;
-          
-                 
                 $image     =   $request->file('image');
 
                 if ($image) {

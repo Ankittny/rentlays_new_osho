@@ -21,8 +21,6 @@
         <div class="col-md-12">
           <!-- Horizontal Form -->
           <div class="box">
-            <!-- /.box-header -->
-            <!-- form start -->
             <form class="form-horizontal" action="{{ url('admin/add-brand-master') }}" id="add_brand_master" method="post" name="add_brand_master" accept-charset='UTF-8' enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="box-body">
@@ -37,7 +35,6 @@
                         @endif
                         </div>
                     </div>
-                   
                     <div class="form-group row mt-3">
                         <label for="exampleInputPassword1" class="control-label col-sm-3 fw-bold text-md-end mb-2">Description<span class="text-danger">*</span></label>
                         <div class="col-sm-8">
@@ -49,17 +46,12 @@
                         @endif
                         </div>
                     </div>
-
-                   
-
-                   
-
                     <div class="form-group row mt-3">
                     <label for="exampleInputPassword1" class="control-label col-sm-3 fw-bold text-md-end mb-2">Status</label>
                     <div class="col-sm-8">
                         <select class="form-control f-14" name="status" id="status">
-                        <option value="1">Active</option>
-                        <option value="0">Inactive</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
                         </select>
                     </div>
                     </div>

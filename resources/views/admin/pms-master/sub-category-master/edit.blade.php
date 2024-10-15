@@ -56,7 +56,6 @@
                                         @endif
                                     </div>
                                 </div>
-
                                 <div class="form-group row mt-3">
                                     <label for="exampleInputPassword1"
                                         class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Description<span
@@ -70,17 +69,15 @@
                                         @endif
                                     </div>
                                 </div>
-
-
                                 <div class="form-group row mt-3">
                                     <label for="exampleInputPassword1"
                                         class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Status</label>
                                     <div class="col-sm-8">
                                         <select class="form-control f-14" name="status" id="status">
-                                            <option value="Active" {{ $result->status == 1 ? 'selected' : '' }}>
+                                            <option value="active" {{ $result->status == 'active' ? 'selected' : '' }}>
                                                 Active</option>
-                                            <option value="Inactive"
-                                                {{ $result->status == 0 ? 'selected' : '' }}>Inactive</option>
+                                            <option value="inactive"
+                                                {{ $result->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
                                         </select>
                                     </div>
                                 </div>
@@ -89,7 +86,7 @@
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-info f-14 text-white me-2"
                                     id="submitBtn">Submit</button>
-                                <a class="btn btn-danger f-14" href="{{ url('admin/sub-category-master') }}">Cancel</a>
+                                    <a class="btn btn-danger f-14" href="{{ url('admin/sub-category-master') }}">Cancel</a>
                             </div>
                             <!-- /.box-footer -->
                         </form>

@@ -12,7 +12,7 @@ use App\Models\{
     PropertyDates,
     PropertyFees,
     penalty,
-    Currency
+    Currency,
 };
 
 
@@ -569,6 +569,14 @@ class Common {
             
         }
     }
+        public static function get_roles($value) {
+            $check_role = RoleAdmin::where('admin_id',$value)->first()->role_id;
+            if($check_role==3){
+                return "supervisor";
+            } if($check_role==6){
+                return "sitemanager";
+            }
+        }
     
 
 }
