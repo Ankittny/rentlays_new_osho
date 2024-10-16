@@ -11,13 +11,17 @@ use App\Models\{
     PropertyDetails,
     PropertyAddress,
     PropertyPhotos,
+    PmsJobs,
     PropertyPrice,
     PropertyType,
+    PmsHelpdesk,
     PropertyDescription,
     Currency,
     Settings,
     Bookings,
     SpaceType,
+    RoleAdmin,
+    Admin,
     BedType,
     PropertySteps,
     Country,
@@ -26,7 +30,7 @@ use App\Models\{
     warehouetype,
     FloorType,
     ProperTypeOptionset,
-    PropertyMetadata
+    PropertyMetadata,
 };
 
 class PropertyController extends Controller
@@ -158,16 +162,22 @@ class PropertyController extends Controller
                 $property_steps->basics = 1;
                 $property_steps->save();
 
-                if (!empty($request->other)) {
+                if (!empty($request->other) && isset($request->platform)) {
                     foreach ($request->other as $index => $platformName) {
-                        $registrationId = $request->platform[$index];
-                        $existingMetadata = PropertyMetadata::where('property_id', $property->id)->first();
-                        if (!$existingMetadata) {
-                            $metadata = new PropertyMetadata();
-                            $metadata->property_id = $property->id;
-                            $metadata->where_list = $platformName;
-                            $metadata->property_registration_id = $registrationId;
-                            $metadata->save();
+                        if (isset($request->platform[$index])) {
+                            $registrationId = $request->platform[$index];
+                            $existingMetadata = PropertyMetadata::where('property_id', $property_id)
+                                ->where('where_list', $platformName)
+                                ->first();
+                            if (!$existingMetadata) {
+                                $metadata = new PropertyMetadata();
+                                $metadata->property_id = $property->id;
+                                $metadata->where_list = $platformName;
+                                $metadata->property_registration_id = $registrationId;
+                                $metadata->save();
+                            }
+                        } else {
+                            \Log::warning("Registration ID not found for index $index");
                         }
                     }
                 }
@@ -288,6 +298,9 @@ class PropertyController extends Controller
             if ($request->isMethod('post') && is_array($request->amenities)) {
                 $rooms            = Properties::find($request->id);
                 $rooms->amenities = implode(',', $request->amenities);
+                $rooms->property_square =$request->property_square ?? null;
+                $rooms->number_of_floor =$request->number_of_floor ?? null;
+                $rooms->number_of_rooms =$request->number_of_rooms ?? null;
                 $rooms->save();
                 return redirect('listing/' . $property_id . '/photos');
             }
@@ -427,11 +440,48 @@ class PropertyController extends Controller
                 return redirect('listing/' . $property_id . '/calendar');
             }
         } elseif ($step == 'calendar') {
+            $service_request = new PmsHelpdesk;
+            $service_request->issue  = null;
+            $service_request->image    = 'default.png';
+            $service_request->status   = 'New Task';
+            $service_request->description   = 'Onboard';
+            $service_request->property_id   = $request->id;
+            $service_request->priority   = 'Medium';
+            $service_request->assign_to_sitemanager   = 0;
+            $service_request->assign_to_supervisor   = self::getUser($request->id,'supervisor');
+            $service_request->helpdesk_user_id   = self::getUser($request->id,'helpdesk');
+            $service_request->save();
+            $pms_job = new PmsJobs();
+            $pms_job->user_id  = Auth::user()->id;
+            $pms_job->property_id   = $request->id;
+            $pms_job->helpdesk_id   = $service_request->id;
+            $pms_job->status   = 'Onboard';
+            $pms_job->save();
             $data['calendar'] = $calendar->generate($request->id);
         }
         return view("listing.$step", $data);
     }
 
+    public function getUser($id,$role)
+    {
+        $data = Admin::where('pincode', PropertyAddress::where('property_id', $id)->value('postal_code'))->pluck('id')->toArray();
+        if($role == 'supervisor'){
+            foreach ($data as $value) {
+                if (Common::get_roles($value) == 'supervisor') {
+                    return $value;
+                    break;
+                }
+            }
+        }else{
+            foreach ($data as $value) {
+                if (Common::get_roles($value) == 'helpdesk') {
+                    return $value;
+                    break;
+                }
+            }
+        }
+        return 0;
+    }
 
     public function updateStatus(Request $request)
     {
@@ -470,7 +520,6 @@ class PropertyController extends Controller
             return view('property.unlisted_property');
 
         } elseif ($data['result']->is_verified == 'Pending') {
-
             return view('property.pending_property');
 
         } else {

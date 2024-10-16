@@ -53,7 +53,7 @@
                                 @endforeach
                             @else
                                 @foreach ($amenities_type as $row_type)
-                                    @if($row_type->id == 1 || $row_type->id == 2)
+                                    @if($row_type->id == 1 || $row_type->id == 2 || $row_type->id == 3 || $row_type->id == 4 || $row_type->id == 5) 
                                         <div class="col-md-12 p-0 mt-4 border rounded-3 ">
                                             <div class="row">
                                                 <div class="col-md-12 pl-4 main-panelbg mb-4">
@@ -67,6 +67,7 @@
                                                         <p class="text-muted">{{ $row_type->description }}</p>
                                                     @endif
                                                 </div>
+                                                @if(!($row_type->id == 5))
                                                 <div class="col-md-12 pl-4 pr-4 pt-0 pb-4">
                                                     <div class="row">
                                                         @foreach ($amenities as $amenity)
@@ -86,6 +87,30 @@
                                                         <span class="ml-4" id="at_least_one"><br></span>
                                                     </div>
                                                 </div>
+                                                @else
+                                                <div class="col-md-12 pl-4 pr-4 pt-0 pb-4">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="label-large label-inline">{{ __('Property Square fit') }}</label>
+                                                                <input type="text" class="form-control" name="property_square" value="{{ $result->property_square ?? '' }}" data-saving="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="label-large label-inline">{{ __('How many Floor') }}</label>
+                                                                <input type="text" class="form-control" name="number_of_floor" value="{{ $result->number_of_floor ?? '' }}" data-saving="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label class="label-large label-inline">{{ __('How many rooms') }}</label>
+                                                                <input type="text" class="form-control" name="number_of_rooms" value="{{ $result->number_of_rooms ?? '' }}" data-saving="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
                                             </div>
                                         </div>
                                     @endif
