@@ -189,6 +189,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 		Route::match(array('GET', 'POST'), 'edit-appoint-managers/{id}', 'AppointManagerController@pms_appoint_update');
 		Route::get('delete-appoint-managers/{id}', 'AppointManagerController@pms_appoint_delete');
 	});
+	Route::get('pms-new-request', 'PmsJobController@pms_new_request');
 	Route::get('properties', 'PropertiesController@index')->middleware(['permission:properties']);
 	Route::match(array('GET', 'POST'), 'add-properties', 'PropertiesController@add')->middleware(['permission:add_properties']);
 	Route::get('properties/property_list_csv', 'PropertiesController@propertyCsv');
