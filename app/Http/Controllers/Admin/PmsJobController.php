@@ -22,6 +22,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\{Controller, EmailController};
 use App\DataTables\PmsInventoryDataTable;
+use App\DataTables\PmsnewrequestDatatable;
 use App\DataTables\PmsJobDataTable;
 use App\Models\Testimonials;
 use App\Models\Properties;
@@ -717,6 +718,13 @@ class PmsJobController extends Controller
                 return response()->json(['status' => false, 'data' => $data]);
             }
         }
+    }
+
+   
+
+    public function pms_new_request(PmsnewrequestDatatable $dataTable)
+    {
+       return $dataTable->render('admin.pmsrequest.pms-new-request');
     }
 
 
