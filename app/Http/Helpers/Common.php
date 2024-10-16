@@ -571,12 +571,16 @@ class Common {
     }
         public static function get_roles($value) {
             $check_role = RoleAdmin::where('admin_id',$value)->first()->role_id;
-            if($check_role==3){
+            if($check_role==5){
                 return "supervisor";
-            } if($check_role==6){
+            }else if($check_role==6){
                 return "sitemanager";
+            }else if($check_role==4){
+                return "helpdesk";
             }
         }
+
+        
     
 
 }
