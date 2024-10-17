@@ -728,6 +728,25 @@ class PmsJobController extends Controller
     }
 
 
+    public function view_pms_request($id)
+    {
+        $user_role_id = RoleAdmin::where('admin_id', Auth::guard('admin')->user()->id)->first();
+        if (!$user_role_id) {
+            return PmsHelpdesk::where('status', 'New Task');
+        }
+
+        $user_role = Roles::where('id', $user_role_id->role_id)->pluck('display_name')->first();
+        $pms_new_request = PmsHelpdesk::with(['getHelpdesk:username,id', 'getSupervisor:username,id', 'property_name:name,id'])
+        ->where('status', 'New Task');
+
+        if ($user_role === 'supervisor') {
+            $pms_new_request->where('assign_to_supervisor', Auth::guard('admin')->user()->id);
+        } elseif ($user_role === 'helpdesk') {
+            $pms_new_request->where('helpdesk_user_id', Auth::guard('admin')->user()->id);
+        }    
+        $pms_request= $pms_new_request->first();
+        return view('admin.pmsrequest.view-pms-request', compact('pms_request'));
+    }
   
 }
 
