@@ -11,6 +11,7 @@ class PmsHelpdesk extends Model
 
     public $table = "pms_helpdesks";
 
+
     public function  getHelpdesk()
     {
         return $this->hasOne(Admin::class,'id','helpdesk_user_id');

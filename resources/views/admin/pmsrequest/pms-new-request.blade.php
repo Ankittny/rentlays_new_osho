@@ -20,9 +20,6 @@
 			<div class="box">
 				<div class="box-header">
 					<h3 class="box-title">Pms Job</h3>
-					{{-- @if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'add_pms_job'))
-						<div class="pull-right"><a class="btn btn-success f-14" href="{{ url('admin/add-pms-job') }}">Add Pms job</a></div>
-					@endif --}}
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">

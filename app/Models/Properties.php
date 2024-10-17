@@ -42,11 +42,14 @@ class Properties extends Model
                         ->get();
         return $data;
     }
-    public function getHostNameAttribute()
-    {
-        $result = User::where('id', $this->attributes['host_id'])->first();
-        return $result->first_name ?? "";
+    public function getHostNameAttribute(){
+        if (isset($this->attributes['host_id'])) {
+            $result = User::where('id', $this->attributes['host_id'])->first();
+            return $result->first_name ?? "";
+        }
+        return ""; 
     }
+
     public function getHostImageAttribute()
     {
         $result = User::where('id', $this->attributes['host_id'])->first();
@@ -60,41 +63,45 @@ class Properties extends Model
         $result = PropertyPhotos::where('property_id', $this->attributes['id'])->first();
         return (isset($result->photo) ? $result->photo : '') ;
     }
-    public function getPropertyTypeNameAttribute()
-    {
-        return PropertyType::getAll()->where('id', $this->attributes['property_type'])->first()->name ?? "";
+    public function getPropertyTypeNameAttribute(){
+    if (!isset($this->attributes['property_type'])) {
+        return ""; 
     }
+    $propertyType = PropertyType::getAll()->where('id', $this->attributes['property_type'])->first();
+    return $propertyType ? $propertyType->name : "";
+}
 
-    public function getSpaceTypeNameAttribute()
-    {   
-        // comment by ankit 06/11/2024
-        //return SpaceType::getAll()->where('id', $this->attributes['space_type'])->first()->name;
-        // add by ankit 06/11/2024
-        \Log::info('test warehouse value and space_type: ' . $this->attributes['space_type']);
 
-        $spaceType = SpaceType::getAll()->where('id', $this->attributes['space_type'])->first();
-        if ($spaceType) {
-            return $spaceType->name;
-        }
-        // add by ankit 06/11/2024
-        $warehouseType = warehouetype::getAll()->where('id', $this->attributes['space_type'])->first();
-        if ($warehouseType) {
-            return $warehouseType->name;
-        }
+    public function getSpaceTypeNameAttribute(){   
+    
+    \Log::info('test warehouse value and space_type: ' . ($this->attributes['space_type'] ?? 'not set'));
+    if (!isset($this->attributes['space_type'])) {
+        return null; 
     }
+    $spaceType = SpaceType::getAll()->where('id', $this->attributes['space_type'])->first();
+    if ($spaceType) {
+        return $spaceType->name;
+    }
+    $warehouseType = WarehouseType::getAll()->where('id', $this->attributes['space_type'])->first();
+    if ($warehouseType) {
+        return $warehouseType->name;
+    }
+    return null;
+}
+
 
     public function getStepsCompletedAttribute()
     {
         $result = PropertySteps::where('property_id', $this->attributes['id'])->first();
-
-        if ($this->attributes['amenities'] == NULL) {
-            $amenities = 0;
-        } else {
-            $amenities = 1;
+        $amenities = isset($this->attributes['amenities']) && $this->attributes['amenities'] !== null ? 1 : 0;
+        if ($result === null) {
+            return 7;
         }
-
-        return 7 - ($result->basics + $result->description + $result->location + $result->photos + $result->pricing + $result->booking + $amenities);
+        $completedSteps = $result->basics + $result->description + $result->location + 
+                          $result->photos + $result->pricing + $result->booking + $amenities;
+        return 7 - $completedSteps;
     }
+    
 
     public function getMissedStepAttribute()
     {
