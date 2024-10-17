@@ -30,7 +30,7 @@ use App\Models\{
     warehouetype,
     FloorType,
     ProperTypeOptionset,
-    PropertyMetadata,
+    PropertyMetadata
 };
 
 class PropertyController extends Controller
