@@ -193,7 +193,6 @@ class PropertyController extends Controller
             $data['ProperTypeOptionset']   = ProperTypeOptionset::where('property_type_id',$property->property_type)->get();
         } elseif ($step == 'description') {
             if ($request->isMethod('post')) {
-
                 $rules = array(
                     'name'     => 'required|max:50',
                     'summary'  => 'required|max:1000',
@@ -220,11 +219,9 @@ class PropertyController extends Controller
                     $property->for_property = $request->for_property;
                     $property->slug     = Common::pretty_url($request->name);
                     $property->save();
-
                     $property_description              = PropertyDescription::where('property_id', $property_id)->first();
                     $property_description->summary     = $request->summary;
                     $property_description->save();
-
                     $property_steps    = PropertySteps::where('property_id', $property_id)->first();
                     $property_steps->description = 1;
                     $property_steps->save();

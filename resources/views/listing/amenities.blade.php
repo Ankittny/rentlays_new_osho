@@ -54,65 +54,68 @@
                             @else
                                 @foreach ($amenities_type as $row_type)
                                     @if($row_type->id == 1 || $row_type->id == 2 || $row_type->id == 3 || $row_type->id == 4 || $row_type->id == 5) 
+                                        @if(($row_type->id == 4 || $row_type->id == 5) && ($result->for_property != 'pms' && $result->for_property != 'pmsandrantlays'))
+                                                @break
+                                        @endif
                                         <div class="col-md-12 p-0 mt-4 border rounded-3 ">
-                                            <div class="row">
-                                                <div class="col-md-12 pl-4 main-panelbg mb-4">
-                                                    <h4 class="text-18 font-weight-700 pl-0 pr-0 pt-4 pb-4">{{ $row_type->name }}
-                                                        @if ($row_type->name == 'Common Amenities')
-                                                            <input type="hidden" id="amenity_type_id" value="{{ $row_type->id }}">
-                                                            <span class="text-danger">*</span>
+                                                <div class="row">
+                                                    <div class="col-md-12 pl-4 main-panelbg mb-4">
+                                                        <h4 class="text-18 font-weight-700 pl-0 pr-0 pt-4 pb-4">{{ $row_type->name }}
+                                                            @if ($row_type->name == 'Common Amenities')
+                                                                <input type="hidden" id="amenity_type_id" value="{{ $row_type->id }}">
+                                                                <span class="text-danger">*</span>
+                                                            @endif
+                                                        </h4>
+                                                        @if ($row_type->description != '')
+                                                            <p class="text-muted">{{ $row_type->description }}</p>
                                                         @endif
-                                                    </h4>
-                                                    @if ($row_type->description != '')
-                                                        <p class="text-muted">{{ $row_type->description }}</p>
+                                                    </div>
+                                                    @if(!($row_type->id == 5))
+                                                    <div class="col-md-12 pl-4 pr-4 pt-0 pb-4">
+                                                        <div class="row">
+                                                            @foreach ($amenities as $amenity)
+                                                                @if ($amenity->type_id == $row_type->id)
+                                                                    <div class="col-md-6">
+                                                                        <label class="label-large label-inline amenity-label mt-4 checkboxmrgn">
+                                                                            <input type="checkbox" value="{{ $amenity->id }}" name="amenities[]" data-saving="{{ $row_type->id }}" {{ in_array($amenity->id, $property_amenities) ? 'checked' : '' }}>
+                                                                            <span>{{ $amenity->title }}</span>
+                                                                        </label>
+                                                                        <span>&nbsp;</span>
+                                                                        @if ($amenity->description != '')
+                                                                            <span data-toggle="tooltip" class="icon" title="{{ $amenity->description }}"></span>
+                                                                        @endif
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                            <span class="ml-4" id="at_least_one"><br></span>
+                                                        </div>
+                                                    </div>
+                                                    @else
+                                                    <div class="col-md-12 pl-4 pr-4 pt-0 pb-4">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label class="label-large label-inline">{{ __('Property Square fit') }}</label>
+                                                                    <input type="text" class="form-control" name="property_square" value="{{ $result->property_square ?? '' }}" data-saving="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label class="label-large label-inline">{{ __('How many Floor') }}</label>
+                                                                    <input type="text" class="form-control" name="number_of_floor" value="{{ $result->number_of_floor ?? '' }}" data-saving="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label class="label-large label-inline">{{ __('How many rooms') }}</label>
+                                                                    <input type="text" class="form-control" name="number_of_rooms" value="{{ $result->number_of_rooms ?? '' }}" data-saving="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     @endif
                                                 </div>
-                                                @if(!($row_type->id == 5))
-                                                <div class="col-md-12 pl-4 pr-4 pt-0 pb-4">
-                                                    <div class="row">
-                                                        @foreach ($amenities as $amenity)
-                                                            @if ($amenity->type_id == $row_type->id)
-                                                                <div class="col-md-6">
-                                                                    <label class="label-large label-inline amenity-label mt-4 checkboxmrgn">
-                                                                        <input type="checkbox" value="{{ $amenity->id }}" name="amenities[]" data-saving="{{ $row_type->id }}" {{ in_array($amenity->id, $property_amenities) ? 'checked' : '' }}>
-                                                                        <span>{{ $amenity->title }}</span>
-                                                                    </label>
-                                                                    <span>&nbsp;</span>
-                                                                    @if ($amenity->description != '')
-                                                                        <span data-toggle="tooltip" class="icon" title="{{ $amenity->description }}"></span>
-                                                                    @endif
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                        <span class="ml-4" id="at_least_one"><br></span>
-                                                    </div>
-                                                </div>
-                                                @else
-                                                <div class="col-md-12 pl-4 pr-4 pt-0 pb-4">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label class="label-large label-inline">{{ __('Property Square fit') }}</label>
-                                                                <input type="text" class="form-control" name="property_square" value="{{ $result->property_square ?? '' }}" data-saving="">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label class="label-large label-inline">{{ __('How many Floor') }}</label>
-                                                                <input type="text" class="form-control" name="number_of_floor" value="{{ $result->number_of_floor ?? '' }}" data-saving="">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label class="label-large label-inline">{{ __('How many rooms') }}</label>
-                                                                <input type="text" class="form-control" name="number_of_rooms" value="{{ $result->number_of_rooms ?? '' }}" data-saving="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @endif
                                             </div>
-                                        </div>
                                     @endif
                                 @endforeach
                             @endif
