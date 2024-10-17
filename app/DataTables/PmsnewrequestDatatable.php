@@ -16,13 +16,10 @@ class PmsnewrequestDatatable extends DataTable
         $pms_new_request = $this->query();
         return datatables()
             ->of($pms_new_request)
-            // ->addColumn('action', function ($pms_new_request) {
-            //     $edit = '';
-            //     if (Common::has_permission(Auth::guard('admin')->user()->id, 'edit_properties')) {
-            //         $edit = '<a href="' . url('admin/listing/' . $pms_new_request->id . '/basics') . '" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></a>&nbsp;';
-            //     }
-            //     return $edit;
-            // })
+            ->addColumn('action', function ($pms_new_request) {
+                $view = '<a href="' . url('admin/view-pms-request/' . $pms_new_request->id) . '" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#view-pms-request" data-id="' . $pms_new_request->id . '"><i class="fa fa-eye"></i></a>&nbsp;';
+                return $view;
+            })
             ->addColumn('getSupervisor.username', function ($pms_new_request) {
                 return $pms_new_request->getSupervisor ? $pms_new_request->getSupervisor->username : 'Not Assigned';
             })
@@ -80,7 +77,7 @@ class PmsnewrequestDatatable extends DataTable
             ->addColumn(['data' => 'status', 'name' => 'status', 'title' => 'Status'])
             ->addColumn(['data' => 'getSupervisor.username', 'name' => 'getSupervisor.username', 'title' => 'Assign To Supervisor', 'orderable' => false, 'searchable' => false])  // Same here
             ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Date'])
-            // ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Action', 'orderable' => false, 'searchable' => false])
+            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Action', 'orderable' => false, 'searchable' => false])
             ->parameters(dataTableOptions());
     }
     
