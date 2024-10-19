@@ -3,6 +3,7 @@ namespace App\Http\Helpers;
 
 use View, Session, DateTime, Cache;
 use App\Models\{
+    Admin,
     Meta,
     Notification,
     Permissions,
@@ -577,7 +578,16 @@ class Common {
                 return "sitemanager";
             }else if($check_role==4){
                 return "helpdesk";
+            }else if($check_role==1){
+                return "admin";
             }
+        }
+
+        public static function get_all_superviser()
+        {
+            $data= RoleAdmin::where('role_id', 5)->get();
+            $user_name=Admin::whereIn('id', $data->pluck('admin_id',))->pluck('username','id');
+            return $user_name;
         }
 
         
