@@ -385,10 +385,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 		});
 
 		Route::group(['middleware' => 'permission:manage_designation'], function () {
-			Route::get('settings/designation', 'DesignationController@index');
-			Route::match(array('GET', 'POST'), 'settings/add-designation', 'DesignationController@add');
-			Route::match(array('GET', 'POST'), 'settings/edit-designation/{id}', 'DesignationController@update');
-			Route::get('settings/delete-designation/{id}', 'DesignationController@delete');
+			Route::get('designation', 'DesignationController@index')->name('designation');
+			Route::match(array('GET', 'POST'), 'add-designation', 'DesignationController@add');
+			Route::match(array('GET', 'POST'), 'edit-designation/{id}', 'DesignationController@update');
+			Route::get('delete-designation/{id}', 'DesignationController@delete');
 		});
 
 		Route::match(array('GET', 'POST'), 'settings/api-informations', 'SettingsController@apiInformations')->middleware(['permission:api_informations']);
