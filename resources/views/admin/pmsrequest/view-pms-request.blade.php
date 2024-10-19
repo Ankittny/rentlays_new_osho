@@ -5,11 +5,11 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>
+      {{-- <h1>
         Pms New Request Detail
         <small>Control panel</small>
-      </h1>
-      @include('admin.common.breadcrumb')
+      </h1> --}}
+     {{-- // @include('admin.common.breadcrumb') --}}
     </section>
 
     <!-- Main content -->
@@ -28,6 +28,21 @@
               <div class="row w-75 mx-auto">
                 <div class="col-sm-12">
                   <table class="table table-bordered">
+                      <tr>
+                        <th>Area Site Engineer</th>
+                        <td>
+                          <select onchange="myFunction(this)" id="site_engineer" class="form-control">
+                            <option value="">Area Site Engineer</option>
+                              @foreach($site_engineer as $value)
+                                <option value="{{ $value->id }}">{{ ucfirst($value->username) }}</option>
+                              @endforeach
+                          </select>
+                        </td>
+                      </tr>
+                    <tr>
+                        <th>Property Owner Email</th>
+                        <td>{{ $user_property->email ?? '' }}</td>
+                      </tr>
                     <tr>
                       <th >Property Owner Name</th>
                       <td>{{ ucfirst($user_property->first_name) ?? '' }} {{ ucfirst($user_property->last_name) ?? '' }}</td>
@@ -108,4 +123,22 @@
     </section>
   </div>
 @endsection
+
+<script>
+  var id = "{{ $pms_request->id }}";
+  function myFunction(x) {
+    $.Ajax({
+      type: "POST",
+      url: "sdfsdfsdf",
+      data: {
+        _token: "{{ csrf_token() }}",
+        id: id,
+        id: x.value
+      },
+      success: function(data) {
+        console.log(data);
+      }
+    })
+  }
+</script>
 
