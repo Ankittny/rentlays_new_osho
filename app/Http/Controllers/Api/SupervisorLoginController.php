@@ -35,7 +35,6 @@ class SupervisorLoginController extends Controller
         }
 
         $check_type_user = Common::get_roles($user->id);
-        dd($check_type_user);
         if($check_type_user != "supervisor" && $check_type_user != "sitemanager"){
             return response(['message' => 'You dont have permission to access this page'], 401);
         }
