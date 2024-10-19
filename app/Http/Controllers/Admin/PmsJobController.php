@@ -736,16 +736,20 @@ class PmsJobController extends Controller
         }
 
         $user_role = Roles::where('id', $user_role_id->role_id)->pluck('display_name')->first();
-        $pms_new_request = PmsHelpdesk::with(['getHelpdesk:username,id', 'getSupervisor:username,id', 'property_name:name,id'])
+        $pms_new_request = PmsHelpdesk::with(['getHelpdesk:username,id', 'getSupervisor:username,id', 'property_name'])
         ->where('status', 'New Task');
-
         if ($user_role === 'supervisor') {
             $pms_new_request->where('assign_to_supervisor', Auth::guard('admin')->user()->id);
         } elseif ($user_role === 'helpdesk') {
             $pms_new_request->where('helpdesk_user_id', Auth::guard('admin')->user()->id);
         }    
         $pms_request= $pms_new_request->first();
-        return view('admin.pmsrequest.view-pms-request', compact('pms_request'));
+        if($pms_request->property_name){
+        $user_property=User::where('id',$pms_request->property_name->host_id)->first();
+        }else{
+            $user_property=0;
+        }
+        return view('admin.pmsrequest.view-pms-request', compact('pms_request','user_property'));
     }
   
 }
