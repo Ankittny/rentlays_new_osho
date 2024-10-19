@@ -384,6 +384,13 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 			Route::match(array('GET', 'POST'), 'settings/edit_meta/{id}', 'MetasController@update');
 		});
 
+		Route::group(['middleware' => 'permission:manage_designation'], function () {
+			Route::get('settings/designation', 'DesignationController@index');
+			Route::match(array('GET', 'POST'), 'settings/add-designation', 'DesignationController@add');
+			Route::match(array('GET', 'POST'), 'settings/edit-designation/{id}', 'DesignationController@update');
+			Route::get('settings/delete-designation/{id}', 'DesignationController@delete');
+		});
+
 		Route::match(array('GET', 'POST'), 'settings/api-informations', 'SettingsController@apiInformations')->middleware(['permission:api_informations']);
 		Route::match(array('GET', 'POST'), 'settings/google-recaptcha-api-information', 'SettingsController@googleRecaptchaInformation')->middleware(['permission:google_recaptcha']);
 		Route::match(array('GET', 'POST'), 'settings/payment-methods', 'SettingsController@paymentMethods')->middleware(['permission:payment_settings']);

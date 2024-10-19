@@ -29,6 +29,22 @@
                 <div class="col-sm-12">
                   <table class="table table-bordered">
                     <tr>
+                      <th >Property Owner Name</th>
+                      <td>{{ ucfirst($user_property->first_name) ?? '' }} {{ ucfirst($user_property->last_name) ?? '' }}</td>
+                    </tr>
+                    <tr>
+                      <th >Property Owner Email</th>
+                      <td>{{ $user_property->email ?? '' }}</td>
+                    </tr>
+                    <tr>
+                      <th >Property Owner Phone</th>
+                      <td>{{ $user_property->phone ?? '' }}</td>
+                    </tr>
+                    <tr>
+                      <th >Property Owner Country</th>
+                      <td>{{ $user_property->country ?? '' }}</td>
+                    </tr>
+                    <tr>
                       <th >Property Name</th>
                       <td>{{ $pms_request->property_name->name ?? '' }}</td>
                     </tr>
