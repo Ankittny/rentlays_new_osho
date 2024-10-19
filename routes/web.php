@@ -390,6 +390,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 			Route::match(array('GET', 'POST'), 'edit-designation/{id}', 'DesignationController@update');
 			Route::get('delete-designation/{id}', 'DesignationController@delete');
 		});
+		Route::group(['middleware' => 'permission:add_employee'], function () {
+			Route::get('employee', 'EmployeeController@index')->name('employee');
+			Route::match(array('GET', 'POST'), 'add-employee', 'EmployeeController@add');
+			Route::match(array('GET', 'POST'), 'edit-employee/{id}', 'EmployeeController@update');
+			Route::get('delete-employee/{id}', 'EmployeeController@delete');
+		});
 
 		Route::match(array('GET', 'POST'), 'settings/api-informations', 'SettingsController@apiInformations')->middleware(['permission:api_informations']);
 		Route::match(array('GET', 'POST'), 'settings/google-recaptcha-api-information', 'SettingsController@googleRecaptchaInformation')->middleware(['permission:google_recaptcha']);
