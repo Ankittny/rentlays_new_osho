@@ -29,6 +29,9 @@
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'pms_new_request'))
 				<li class="{{ (Route::current()->uri() == 'admin/pms-new-request') || (Route::current()->uri() == 'admin/pms-new-request') }}"><a href="{{ url('admin/pms-new-request') }}"><i class="fa fa-quote-left"></i><span>Pms New Request</span></a></li>
 			@endif
+			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'manage_designation'))
+				<li class="{{ (Route::current()->uri() == 'admin/designation') || (Route::current()->uri() == 'admin/designation') }}"><a href="{{ url('admin/designation') }}"><i class="fa fa-quote-left"></i><span>Designation Master</span></a></li>
+			@endif
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'manage_pages'))
 				<li class="{{ (Route::current()->uri() == 'admin/pages') || (Route::current()->uri() == 'admin/add-page') || (Route::current()->uri() == 'admin/edit-page/{id}') ? 'active' : ''  }}"><a href="{{ url('admin/pages') }}"><i class="fa fa-newspaper-o"></i><span>Static Pages</span></a></li>
 			@endif
