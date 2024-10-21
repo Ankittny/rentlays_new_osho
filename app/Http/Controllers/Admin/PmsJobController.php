@@ -737,7 +737,7 @@ class PmsJobController extends Controller
             return PmsHelpdesk::where('status', 'New Task');
         }
         $user_role = Roles::where('id', $user_role_id->role_id)->pluck('display_name')->first();
-        $pms_new_request = PmsHelpdesk::with(['getHelpdesk:username,id', 'getSupervisor:username,id', 'property_name'])
+        $pms_new_request = PmsHelpdesk::with(['getHelpdesk:username,id', 'getSupervisor', 'property_name'])
         ->where('status', 'New Task')->where('id', $id);
         // if ($user_role === 'supervisor') {
         //     $site_engineer = Admin::where('user_id',Auth::guard('admin')->user()->id)->get();

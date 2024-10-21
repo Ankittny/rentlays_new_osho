@@ -29,18 +29,26 @@
               <div class="row w-75 mx-auto">
                 <div class="col-sm-12">
                   <table class="table table-bordered">
-                      <tr>
-                        <th>Area Site Engineer</th>
-                        <td>
-                          <select onchange="myFunction(this)" id="site_engineer" class="form-control">
-                            <option value=""> -- Select Area Site Engineer --</option>
-                              @foreach($employee as $value)
-                                <option value="{{ $value->id }}" {{ $pms_request->assign_to_sitemanager == $value->id ? 'selected' : ''}}>{{ ucfirst($value->name) }}</option>
-                              @endforeach
-                          </select>
-                          
-                        </td>
-                      </tr>
+                    @php
+                      $get_role=App\Http\Helpers\Common::get_roles(Auth::guard('admin')->user()->id);
+                    @endphp
+                    @if($get_role != 'sitemanager')
+                    <tr>
+                      <th>Area Site Engineer</th>
+                      <td>
+                        @php
+                          $get_site_engineer=App\Http\Helpers\Common::getSiteEngineer($pms_request->getSupervisor->pincode);
+                        @endphp
+                        <select onchange="myFunction(this)" id="site_engineer" class="form-control">
+                          <option value=""> -- Select Area Site Engineer --</option>
+                            @foreach($get_site_engineer as $value)
+                              <option value="{{ $value->id }}" {{ $pms_request->assign_to_sitemanager == $value->id ? 'selected' : ''}}>{{ ucfirst($value->username) }}</option>
+                            @endforeach
+                        </select>
+                        
+                      </td>
+                    </tr>
+                    @endif
                     <tr>
                         <th>Property Owner Email</th>
                         <td>{{ $user_property->email ?? '' }}</td>

@@ -590,6 +590,12 @@ class Common {
             return $user_name;
         }
 
+        public static function getSiteEngineer($value)
+        {
+            $data= RoleAdmin::where('role_id', 6)->get();
+            $user_name=Admin::whereIn('id', $data->pluck('admin_id'))->where('pincode',$value)->get();
+            return $user_name;
+        }
         
     
 
