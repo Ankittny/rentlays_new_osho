@@ -164,6 +164,14 @@
                                     <span class="text-danger">{{ $errors->first("date_of_end") }}</span>
                                 </div>
                             </div>
+
+                            <div class="form-group row mt-3 date_of_end">
+                                <label for="date_of_end" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Password</label>
+                                <div class="col-sm-6">
+                                    <input type="password" name="password" class="form-control f-14" id="password">
+                                   
+                                </div>
+                            </div>
                             <div class="form-group row mt-3 status">
                                 <label for="status" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Status</label>
                                 <div class="col-sm-6">

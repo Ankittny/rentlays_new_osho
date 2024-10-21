@@ -37,6 +37,7 @@ class EmployeeController extends Controller
                 'aadhaar_back' => 'required|image',
                 'date_of_joining' => 'required|date',
                 'date_of_end' => 'nullable|date',
+                'password' => 'required',
                 'status' => 'required',
             ]);
     
@@ -46,6 +47,7 @@ class EmployeeController extends Controller
             $employee->phone = $request->mobile;
             $employee->supervisor_id = $request->supervisor_id;
             $employee->address = $request->address;
+            $employee->password = bcrypt($request->password);
             if ($request->hasFile('pan_photo')) {
                 $panPhoto = $request->file('pan_photo');
                 $panPhotoName = uniqid() . '_' . $panPhoto->getClientOriginalName();
@@ -92,6 +94,7 @@ class EmployeeController extends Controller
                 'designation_id' => 'required',
                 'date_of_joining' => 'required|date',
                 'date_of_end' => 'nullable|date',
+                'password' => 'required',
                 'status' => 'required',
             ]);
             // Update fields
@@ -101,6 +104,7 @@ class EmployeeController extends Controller
             $employee->phone = $request->mobile;
             $employee->address = $request->address;
             $employee->supervisor_id = $request->supervisor_id;
+            $employee->password = bcrypt($request->password);
             if ($request->hasFile('pan_photo')) {
                 // Delete old PAN photo if it exists
                 if ($employee->pan_photo && file_exists(public_path(parse_url($employee->pan_photo, PHP_URL_PATH)))) {
