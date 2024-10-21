@@ -15,7 +15,7 @@
                         <div class="box box_info">
                             <div class="box-header">
                                 <h3 class="box-title">Employee Management</h3>
-                                <div class="pull-right"><a class="btn btn-success f-14" href="{{ url('admin/add-employee') }}">Add Designation</a></div>
+                                <div class="pull-right"><a class="btn btn-success f-14" href="{{ url('admin/add-employee') }}">Add Employee</a></div>
                             </div>
                             @if (Session::has('success'))
                             <div class="success_email_settings">

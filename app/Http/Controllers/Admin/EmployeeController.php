@@ -22,8 +22,8 @@ class EmployeeController extends Controller
     public function add(Request $request)
     {
         if (! $request->isMethod('post')) {
-            $designations = \App\Models\Designation::all();
-            return view('admin.employee.add',compact('designations'));
+            $deparment_list = \App\Models\PmsDepartmentMaster::all();
+            return view('admin.employee.add',compact('deparment_list'));
         } else {
             $request->validate([
                 'name' => 'required',
@@ -80,8 +80,8 @@ class EmployeeController extends Controller
     {
         if (! $request->isMethod('post')) {
             $employee = \App\Models\Employee::find($request->id);
-            $designations = \App\Models\Designation::all();
-            return view('admin.employee.edit', compact('employee','designations'));
+            $deparment_list = \App\Models\PmsDepartmentMaster::all();
+            return view('admin.employee.edit', compact('employee','deparment_list'));
         } elseif ($request->isMethod('post')) {
             $request->validate([
                 'name' => 'required',

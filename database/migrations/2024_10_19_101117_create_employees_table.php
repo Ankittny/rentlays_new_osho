@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('aadhar_front_image');
             $table->string('aadhar_back_image');
             $table->date('joining_date');
-            $table->date('date_of_end');
+            $table->date('date_of_end')->nullable();
             $table->string('status');
             $table->timestamps();
         });

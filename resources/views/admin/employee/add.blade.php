@@ -57,13 +57,13 @@
                                 </div>
                             </div>
                             <div class="form-group row mt-3 designation_id">
-                                <label for="designation_id" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Designation ID
+                                <label for="designation_id" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Department
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-sm-6">
                                     <select class="form-control f-14 validate_field" name="designation_id" id="designation_id">
-                                        <option value="">--Select Designation--</option>
-                                        @foreach($designations as $key => $value)
+                                        <option value="">--Select Department--</option>
+                                        @foreach($deparment_list as $key => $value)
                                             <option value="{{ $value->id }}">{{ $value->name }}</option>
                                         @endforeach
                                     </select>
