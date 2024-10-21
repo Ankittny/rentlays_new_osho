@@ -22,7 +22,7 @@ class AppointManagerController extends Controller
                     ->where('role_admin.role_id', '6')
                     ->select('admin.id', 'admin.username')
                     ->get();
-                $data['department'] = PmsDepartmentMaster::select('id','name','description','status')->where('status','1')->latest()->get();
+                $data['department'] = PmsDepartmentMaster::select('id','name','description','status')->where('status','Active')->latest()->get();
                 return view('admin.appoint_manager.add',$data);
             } catch (\Exception $e) {
                 return redirect()->back()->with('error', $e->getMessage());
@@ -76,7 +76,7 @@ class AppointManagerController extends Controller
                 ->where('role_admin.role_id', '6')
                 ->select('admin.id', 'admin.username')
                 ->get();
-            $data['department'] = PmsDepartmentMaster::select('id','name','description','status')->where('status','1')->latest()->get();
+            $data['department'] = PmsDepartmentMaster::select('id','name','description','status')->where('status','Active')->latest()->get();
             $data['result'] = PmsAppointManager::find($request->id);
             return view('admin.appoint_manager.edit',$data);
         }elseif(request()->isMethod('post')){
