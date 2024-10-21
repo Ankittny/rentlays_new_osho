@@ -1,7 +1,7 @@
 <aside class="main-sidebar">
 	<div class="left_logo_box">
 		<a href="/">
-			<img src="/public/backend/dist/img/logo.png" alt="" >
+			<img src="{{asset('/public/backend/dist/img/logo.png')}}" alt="" >
 		</a>
 		
 	</div>
@@ -168,11 +168,11 @@
 	<div class="left_blue_shadow"></div>
 	<div class="left_red_shadow"></div>
 
-	<div class="spinner-wrap">
+	{{-- <div class="spinner-wrap">
         <div class="spinner-item"></div>
         <div class="spinner-item spinner-item--2"></div>
         <div class="spinner-item spinner-item--3"></div>
         <div class="spinner-item spinner-item--4"></div>
-    </div>
+    </div> --}}
 
 </aside>
