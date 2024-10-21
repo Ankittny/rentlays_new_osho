@@ -25,9 +25,6 @@
                             enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="box-body">
-
-
-                   
                                 <div class="form-group row mt-3">
                                     <label for="exampleInputPassword1"
                                         class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Name<span
@@ -42,7 +39,6 @@
                                         @endif
                                     </div>
                                 </div>
-
                                 <div class="form-group row mt-3">
                                     <label for="exampleInputPassword1"
                                         class="control-label col-sm-3 fw-bold text-md-end mb-2">Description<span
@@ -56,11 +52,6 @@
                                         @endif
                                     </div>
                                 </div>
-
-
-
-
-
                                 <div class="form-group row mt-3">
                                     <label for="exampleInputPassword1"
                                         class="control-label col-sm-3 fw-bold text-md-end mb-2">Status</label>
