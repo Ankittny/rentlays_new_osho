@@ -54,8 +54,8 @@
                             @else
                                 @foreach ($amenities_type as $row_type)
                                     @if($row_type->id == 1 || $row_type->id == 2 || $row_type->id == 3 || $row_type->id == 4 || $row_type->id == 5) 
-                                        @if(($row_type->id == 4 || $row_type->id == 5) && ($result->for_property != 'pms' && $result->for_property != 'pmsandrantlays'))
-                                                @break
+                                        @if($row_type->id == 3)
+                                            @continue
                                         @endif
                                         <div class="col-md-12 p-0 mt-4 border rounded-3 ">
                                                 <div class="row">
