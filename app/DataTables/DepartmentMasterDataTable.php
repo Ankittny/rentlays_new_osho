@@ -21,9 +21,9 @@ class DepartmentMasterDataTable extends DataTable
 
                     $edit = '<a href="' . url('admin/edit-department-master/' . $department_master->id).'" class="btn btn-xs btn-primary"><i class="fa fa-edit"></i></a>&nbsp;';
                 }
-                if (Common::has_permission(\Auth::guard('admin')->user()->id, 'delete_department_master')) {
-                    $delete = '<a href="' . url('admin/delete-department-master/' . $department_master->id) . '" class="btn btn-xs btn-danger delete-warning"><i class="fa fa-trash"></i></a>';
-                }
+                // if (Common::has_permission(\Auth::guard('admin')->user()->id, 'delete_department_master')) {
+                //     $delete = '<a href="' . url('admin/delete-department-master/' . $department_master->id) . '" class="btn btn-xs btn-danger delete-warning"><i class="fa fa-trash"></i></a>';
+                // }
                 return $edit . $delete;
             })
 

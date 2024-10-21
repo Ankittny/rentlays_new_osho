@@ -24,6 +24,7 @@
               </div>
             </div>
             <!-- /.box-header -->
+            
             <div class="box-body">
               <div class="row w-75 mx-auto">
                 <div class="col-sm-12">
@@ -32,11 +33,12 @@
                         <th>Area Site Engineer</th>
                         <td>
                           <select onchange="myFunction(this)" id="site_engineer" class="form-control">
-                            <option value="">Area Site Engineer</option>
-                              @foreach($site_engineer as $value)
-                                <option value="{{ $value->id }}">{{ ucfirst($value->username) }}</option>
+                            <option value=""> -- Select Area Site Engineer --</option>
+                              @foreach($employee as $value)
+                                <option value="{{ $value->id }}" {{ $pms_request->assign_to_sitemanager == $value->id ? 'selected' : ''}}>{{ ucfirst($value->name) }}</option>
                               @endforeach
                           </select>
+                          
                         </td>
                       </tr>
                     <tr>
@@ -168,4 +170,26 @@
     })
   }
 </script>
-
+<script>
+  function myFunction(event) {
+    var site_engineer_id = event.value;
+    $.ajax({
+      url: "{{ url('admin/area-site-engineer') }}",
+      type: "POST",
+      data: {
+        "_token": "{{ csrf_token() }}",
+        "site_engineer_id": site_engineer_id,
+        "pms_request_id": "{{ $pms_request->id }}",
+      },
+      success: function (response) {
+        if (response.success) {
+          alert(response.message);  
+          window.location.reload();
+        } else {
+          alert(response.message);
+          window.location.reload();
+        }
+      }
+    });
+  }
+</script>

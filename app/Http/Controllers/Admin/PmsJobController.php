@@ -41,6 +41,7 @@ use App\Models\PmsOnboard;
 use App\Models\PmsJobApproval;
 use App\Models\User;
 use App\Models\Employee;
+use App\Models\PmsDepartmentMaster;
 use App\Models\PmsSubscriptionIds;
 use App\Models\PmsRecurringPackage;
 use App\Models\PmsRecurringService;
@@ -48,7 +49,6 @@ use Illuminate\Support\Facades\DB;
 use Auth;
 use Carbon\Carbon;
 use App\Models\PmsPackageHistory;
-
 use Validator, Common;
 
 class PmsJobController extends Controller
@@ -738,24 +738,39 @@ class PmsJobController extends Controller
         }
         $user_role = Roles::where('id', $user_role_id->role_id)->pluck('display_name')->first();
         $pms_new_request = PmsHelpdesk::with(['getHelpdesk:username,id', 'getSupervisor:username,id', 'property_name'])
-        ->where('status', 'New Task');
-        if ($user_role === 'supervisor') {
-            $site_engineer = Admin::where('user_id',Auth::guard('admin')->user()->id)->get();
-            $pms_new_request->where('assign_to_supervisor', Auth::guard('admin')->user()->id);
-        } elseif ($user_role === 'helpdesk') {
-            $pms_new_request->where('helpdesk_user_id', Auth::guard('admin')->user()->id);
-        } elseif ($user_role === 'Admin') {
-            $site_engineer = Admin::join('role_admin', 'admin.id', '=', 'role_admin.admin_id')
-                ->select('admin.*')->where('role_admin.role_id',6)
-                ->get();
-        }   
+        ->where('status', 'New Task')->where('id', $id);
+        // if ($user_role === 'supervisor') {
+        //     $site_engineer = Admin::where('user_id',Auth::guard('admin')->user()->id)->get();
+        //     $pms_new_request->where('assign_to_supervisor', Auth::guard('admin')->user()->id);
+        // } elseif ($user_role === 'helpdesk') {
+        //     $pms_new_request->where('helpdesk_user_id', Auth::guard('admin')->user()->id);
+        // } elseif ($user_role === 'Admin') {
+        //     $site_engineer = Admin::join('role_admin', 'admin.id', '=', 'role_admin.admin_id')
+        //         ->select('admin.*')->where('role_admin.role_id',6)
+        //         ->get();
+        // }   
         $pms_request= $pms_new_request->first();
         if($pms_request->property_name){
            $user_property=User::where('id',$pms_request->property_name->host_id)->first();
         }else{
             $user_property=0;
         }
-        return view('admin.pmsrequest.view-pms-request', compact('pms_request','user_property','site_engineer'));
+        $employee = Employee::where('designation_id', 14); 
+        $get_user_role = Common::get_roles(Auth::guard('admin')->user()->id);
+        if ($get_user_role != 'admin') {
+            $employee->where('supervisor_id', Auth::guard('admin')->user()->id);
+        }
+        $employee = $employee->get(); 
+        return view('admin.pmsrequest.view-pms-request', compact('pms_request','user_property','site_engineer','employee'));
+    }
+
+    public function area_site_engineer(Request $request)
+    {
+        PmsHelpdesk::where('id', $request->pms_request_id)->update([
+            'id' => $request->pms_request_id,
+            'assign_to_sitemanager' => $request->site_engineer_id
+        ]);
+        return response()->json(['success' => true,'message' => 'Assign Successfully']);
     }
   
 }
