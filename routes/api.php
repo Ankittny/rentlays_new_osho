@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\LoginEmployee;
 
 Route::group(['prefix' => 'v1'], function () {
     Route::post('login', 'Api\LoginController@login');
@@ -67,9 +68,14 @@ Route::group(['prefix' => 'v1'], function () {
 });    
 
 
-Route::group(['prefix' => 'supervisor/v1'], function () {
+Route::group(['prefix' => 'v1/supervisor'], function () {
     Route::post('login', 'Api\SupervisorLoginController@login');
 });
+
+Route::group(['prefix' => 'v1/siteengineer'], function () {
+    Route::post('/login', [LoginEmployee::class, 'Login']);
+});
+
 
 
 
