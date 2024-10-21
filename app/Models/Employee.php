@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-    use HasApiTokens,Authenticatable, CanResetPassword;
+    // use HasApiTokens,Authenticatable, CanResetPassword;
     use HasFactory;
 }
