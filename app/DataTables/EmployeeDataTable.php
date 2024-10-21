@@ -4,6 +4,8 @@ namespace App\DataTables;
 
 use App\Models\Employee;
 use Yajra\DataTables\Services\DataTable;
+use Illuminate\Support\Facades\Auth;
+use App\Models\RoleAdmin;
 
 class EmployeeDataTable extends DataTable
 {
@@ -49,6 +51,10 @@ class EmployeeDataTable extends DataTable
     public function query()
     {
         $query = Employee::query();
+        $role_id = RoleAdmin::getAll()->where('admin_id', Auth::guard('admin')->user()->id)->first();
+        if($role_id->role_id != 1){
+            $query->where('supervisor_id', $role_id->admin_id);
+        }
         return $this->applyScopes($query);
     }
 

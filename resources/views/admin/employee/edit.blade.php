@@ -53,19 +53,41 @@
                                 </div>
                             </div>
                             <div class="form-group row mt-3 designation_id">
-                                <label for="designation_id" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Designation ID
+                                <label for="designation_id" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Department
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-sm-6">
                                     <select class="form-control f-14 validate_field" name="designation_id" id="designation_id">
-                                        <option value="">--Select Designation--</option>
-                                        @foreach($designations as $key => $value)
+                                        <option value="">--Select Department--</option>
+                                        @foreach($deparment_list as $key => $value)
                                             <option value="{{ $value->id }}" {{ $value->id == $employee->designation_id ? 'selected' : '' }}>{{ $value->name }}</option>
                                         @endforeach
                                     </select>
                                     <span class="text-danger">{{ $errors->first("designation_id") }}</span>
                                 </div>
                             </div>
+                            @php
+                                $get_role = App\Http\Helpers\Common::get_roles(Auth::guard('admin')->user()->id);
+                                $get_all_superviser = App\Http\Helpers\Common::get_all_superviser();
+                            @endphp
+                            @if ($get_role == 'admin')
+                            <div class="form-group row mt-3">
+                                <label for="supervisor_id" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Select Supervisor
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-6">
+                                    <select class="form-control f-14 validate_field" name="supervisor_id" id="supervisor_id">
+                                        <option value="">--Select Supervisor--</option>
+                                        @foreach ($get_all_superviser as $key => $value)
+                                            <option value="{{ $key }}" {{ old('supervisor_id', $employee->supervisor_id) == $key ? 'selected' : '' }}>{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger">{{ $errors->first("supervisor_id") }}</span>
+                                </div>
+                            </div>
+                            @else
+                            <input type="hidden" name="supervisor_id" id="supervisor_id" value="{{ Auth::guard('admin')->user()->id }}">
+                            @endif
                             <div class="form-group row mt-3 mobile">
                                 <label for="mobile" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Mobile
                                     <span class="text-danger">*</span>
@@ -102,28 +124,7 @@
                                     <span class="text-danger">{{ $errors->first("pincode") }}</span>
                                 </div>
                             </div>
-                            @php
-                                $get_role = App\Http\Helpers\Common::get_roles(Auth::guard('admin')->user()->id);
-                                $get_all_superviser = App\Http\Helpers\Common::get_all_superviser();
-                            @endphp
-                            @if ($get_role == 'admin')
-                            <div class="form-group row mt-3">
-                                <label for="supervisor_id" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Select Supervisor
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <div class="col-sm-6">
-                                    <select class="form-control f-14 validate_field" name="supervisor_id" id="supervisor_id">
-                                        <option value="">--Select Supervisor--</option>
-                                        @foreach ($get_all_superviser as $key => $value)
-                                            <option value="{{ $key }}" {{ old('supervisor_id', $employee->supervisor_id) == $key ? 'selected' : '' }}>{{ $value }}</option>
-                                        @endforeach
-                                    </select>
-                                    <span class="text-danger">{{ $errors->first("supervisor_id") }}</span>
-                                </div>
-                            </div>
-                            @else
-                            <input type="hidden" name="supervisor_id" id="supervisor_id" value="{{ Auth::guard('admin')->user()->id }}">
-                            @endif
+                          
                             
                             <div class="form-group row mt-3 aadhaar_front">
                                 <label for="aadhaar_front" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Aadhaar Front

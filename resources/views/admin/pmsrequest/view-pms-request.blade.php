@@ -92,6 +92,30 @@
                       <td>{{ $pms_request->description ?? ''  }}</td>
                     </tr>
                     <tr>
+                      <th>Bedrooms</th>
+                      <td>{{ $pms_request->property_name->bedrooms ?? ''  }}</td>
+                    </tr>
+                    <tr>
+                      <th>Beds</th>
+                      <td>{{ $pms_request->property_name->beds ?? ''  }}</td>
+                    </tr>
+                    <tr>
+                      <th>Bathrooms</th>
+                      <td>{{ $pms_request->property_name->bathrooms ?? ''  }}</td>
+                    </tr>
+                    <tr>
+                      <th>Property Square Feet</th>
+                      <td>{{ $pms_request->property_name->property_square ?? ''  }}</td>
+                    </tr>
+                    <tr>
+                      <th>Number Of Floor</th>
+                      <td>{{ $pms_request->property_name->number_of_floor ?? ''  }}</td>
+                    </tr>
+                    <tr>
+                      <th>Number Of Rooms</th>
+                      <td>{{ $pms_request->property_name->number_of_rooms ?? ''  }}</td>
+                    </tr>
+                    <tr>
                       <th>Amenities</th>
                       <td>
                         @php
