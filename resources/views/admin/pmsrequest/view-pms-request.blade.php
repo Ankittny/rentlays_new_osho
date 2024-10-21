@@ -102,12 +102,15 @@
                         <ul class="list-group">
                             @foreach ($amenities_type as $row_type)
                                 @if (count($amenities->where('type_id', $row_type->id)->whereIn('id', $amenities_data)) > 0)
-                                    <li class="list-group-item text-bold">{{ $row_type->name }}</li>
-                                @endif
-                            @endforeach
-                            @foreach ($amenities as $data)
-                                @if (in_array($data->id, $amenities_data))
-                                    <li class="list-group-item">{{ $data->title }}</li>
+                                    <li class="list-group-item "> <p class="text-bold text-decoration-underline">{{ $row_type->name }}</p>
+                                        <ul class="list-group">
+                                            @foreach ($amenities->where('type_id', $row_type->id) as $data)
+                                                @if (in_array($data->id, $amenities_data))
+                                                    <li class="list-group-item">{{ $data->title }}</li>
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                    </li>
                                 @endif
                             @endforeach
                         </ul>
