@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cache;
 
-class warehouetype extends Model
+class Warehouetype extends Model
 {
     use HasFactory;
     protected $table   = 'ware_house_type';

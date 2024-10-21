@@ -20,6 +20,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 use App\Models\PropertyPhotos;
+use App\Models\Warehouetype;
 use Auth;
 
 
