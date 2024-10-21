@@ -66,8 +66,8 @@
                                         class="control-label col-sm-3 fw-bold text-md-end mb-2">Status</label>
                                     <div class="col-sm-8">
                                         <select class="form-control f-14" name="status" id="status">
-                                            <option value="1">Active</option>
-                                            <option value="0">Inactive</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
                                         </select>
                                     </div>
                                 </div>

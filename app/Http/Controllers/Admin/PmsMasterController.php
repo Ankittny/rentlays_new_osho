@@ -437,8 +437,6 @@ class PmsMasterController extends Controller
 
     public function departmentIndex(DepartmentMasterDataTable $dataTable)
     {
-
-        
         return $dataTable->render('admin.pms-master.department-master.view');
     }
     public function departmentAdd(Request $request)
