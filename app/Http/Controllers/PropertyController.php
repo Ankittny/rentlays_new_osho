@@ -27,7 +27,7 @@ use App\Models\{
     Country,
     Amenities,
     AmenityType,
-    warehouetype,
+    Warehouetype,
     FloorType,
     ProperTypeOptionset,
     PropertyMetadata
@@ -83,7 +83,7 @@ class PropertyController extends Controller
                 $property                  = new Properties;
                 $property->host_id         = Auth::id();
                 if($request->space_type=="8" || $request->space_type=="7"){
-                  $property->name            = warehouetype::getAll()->find($request->space_type)->name . ' in ' . $request->city;
+                  $property->name            = Warehouetype::getAll()->find($request->space_type)->name . ' in ' . $request->city;
                 } else {
                   $property->name            = SpaceType::getAll()->find($request->space_type)->name . ' in ' . $request->city;
                 }
@@ -125,7 +125,7 @@ class PropertyController extends Controller
 
         $data['property_type'] = PropertyType::getAll()->where('status', 'Active')->pluck('name', 'id');
         $data['space_type']    = SpaceType::getAll()->where('status', 'Active')->pluck('name', 'id');
-        $data['warehouse']    = warehouetype::getAll()->where('status', 'Active')->pluck('name', 'id');
+        $data['warehouse']    = Warehouetype::getAll()->where('status', 'Active')->pluck('name', 'id');
 
         return view('property.create', $data);
     }
@@ -187,7 +187,7 @@ class PropertyController extends Controller
             $data['property_type']  = PropertyType::getAll()->where('status', 'Active')->pluck('name', 'id');
             $data['space_type']     = SpaceType::getAll()->pluck('name', 'id');
             // add by ankit 06/11/2024
-            $data['warehouse_type']     = warehouetype::getAll()->pluck('name', 'id');
+            $data['warehouse_type']     = Warehouetype::getAll()->pluck('name', 'id');
             $data['floor_type']         = FloorType::getAll()->pluck('name', 'id');
             $property                   = Properties::find($property_id);
             $data['ProperTypeOptionset']   = ProperTypeOptionset::where('property_type_id',$property->property_type)->get();
