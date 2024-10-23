@@ -793,7 +793,7 @@ class PmsJobController extends Controller
 
     public function pms_history($id)
     {
-      $pms_history = PmsHistory::with(['getHelpdesk:username,id', 'getSupervisor:username,id', 'property_name'])->where('id',$id)->first();
+      $pms_history = PmsHistory::with(['getHelpdesk:username,id', 'getSupervisor', 'property_name'])->where('id',$id)->first();
       if($pms_history->property_name){
         $user_property=User::where('id',$pms_history->property_name->host_id)->first();
      }else{
