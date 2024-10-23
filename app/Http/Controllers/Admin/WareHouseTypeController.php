@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\DataTables\WareHouseTypeDataTable;
 use Illuminate\Http\Request;
-use App\Models\warehouetype;
+use App\Models\Warehouetype;
 use Validator, Cache, Common;
 
 class WareHouseTypeController extends Controller
