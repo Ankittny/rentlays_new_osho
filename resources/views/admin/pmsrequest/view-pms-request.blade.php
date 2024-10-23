@@ -22,9 +22,17 @@
               <div class="box-tools pull-right">
                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
               </div>
+              {{-- history  --}}
+              @php
+                $pms_onboard_id =App\Models\PmsHistory::where('pms_onboard_id',$pms_request->id)->pluck('id')->first();
+              @endphp
+              @if($pms_onboard_id)
               <a href="{{url('admin/pms-request-history')}}/{{$pms_request->id}}">
                 <button type="button"  class="btn btn-primary float-end"><i class="fa fa-user"></i> History</button>
               </a>
+              @endif
+
+              {{--end history  --}}
             </div>
             <!-- /.box-header -->
             
@@ -43,7 +51,7 @@
                         <th>Area Site Engineer</th>
                         <td>
                           @php
-                            $get_site_engineer=App\Http\Helpers\Common::getSiteEngineer($pms_request->getSupervisor->pincode);
+                            $get_site_engineer=App\Http\Helpers\Common::getSiteEngineer($pms_request->getSupervisor->pincode ?? null);
                           @endphp
                           <select onchange="myFunction(this)" id="site_engineer" class="form-control" name="site_engineer">
                             <option value=""> -- Select Area Site Engineer --</option>
