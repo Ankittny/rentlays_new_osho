@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\warehouetype;
+use App\Models\Warehouetype;
 use Yajra\DataTables\Services\DataTable;
 
 class WareHouseTypeDataTable extends DataTable

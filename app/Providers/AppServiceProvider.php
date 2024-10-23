@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
         // $this->defaultHomeLanguage();
         // //For Age check is the user 18 or not
          // $this->checkAge();
-
+        
     }
 
     //For Home Currency Custom Validation Check
