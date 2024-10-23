@@ -83,7 +83,7 @@ class Properties extends Model
     if ($spaceType) {
         return $spaceType->name;
     }
-    $warehouseType = WarehouseType::getAll()->where('id', $this->attributes['space_type'])->first();
+    $warehouseType = Warehouetype::getAll()->where('id', $this->attributes['space_type'])->first();
     if ($warehouseType) {
         return $warehouseType->name;
     }
