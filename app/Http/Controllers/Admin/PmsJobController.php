@@ -24,6 +24,7 @@ use App\Http\Controllers\{Controller, EmailController};
 use App\DataTables\PmsInventoryDataTable;
 use App\DataTables\PmsnewrequestDatatable;
 use App\DataTables\PmsJobDataTable;
+use App\DataTables\PmsRequestHistoryDataTable;
 use App\Models\Testimonials;
 use App\Models\Properties;
 use App\Models\Admin;
@@ -36,11 +37,12 @@ use App\Models\PmsJobs;
 use App\Models\PmsJobsItems;
 use App\Models\PmsServiceMaster;
 use App\Models\RoleAdmin;
-use App\models\Roles;
+use App\Models\Roles;
 use App\Models\PmsOnboard;
 use App\Models\PmsJobApproval;
 use App\Models\User;
 use App\Models\Employee;
+use App\Models\PmsHistory;
 use App\Models\PmsDepartmentMaster;
 use App\Models\PmsSubscriptionIds;
 use App\Models\PmsRecurringPackage;
@@ -737,7 +739,7 @@ class PmsJobController extends Controller
             return PmsHelpdesk::where('status', 'New Task');
         }
         $user_role = Roles::where('id', $user_role_id->role_id)->pluck('display_name')->first();
-        $pms_new_request = PmsHelpdesk::with(['getHelpdesk:username,id', 'getSupervisor:username,id', 'property_name'])
+        $pms_new_request = PmsHelpdesk::with(['getHelpdesk:username,id', 'getSupervisor', 'property_name'])
         ->where('status', 'New Task')->where('id', $id);
         // if ($user_role === 'supervisor') {
         //     $site_engineer = Admin::where('user_id',Auth::guard('admin')->user()->id)->get();
@@ -771,6 +773,33 @@ class PmsJobController extends Controller
             'assign_to_sitemanager' => $request->site_engineer_id
         ]);
         return response()->json(['success' => true,'message' => 'Assign Successfully']);
+    }
+
+    public function store_pms_request(Request $request)
+    {
+        $request_data = $request->except('_token');
+        $request_data['amenities'] = implode(',',$request->amenities);
+        $request_data['assign_to_sitemanager'] = Auth::guard('admin')->user()->id;
+        $data= PmsHistory::create($request_data);
+        return redirect()->back()->with('message','Data Inserted Successfully');
+    }
+
+    
+
+    public function pms_request_history(PmsRequestHistoryDataTable $dataTable, $id)
+    {
+        return $dataTable->with(['id' => $id])->render('admin.pmsrequest.pms-request-history');
+    }
+
+    public function pms_history($id)
+    {
+      $pms_history = PmsHistory::with(['getHelpdesk:username,id', 'getSupervisor:username,id', 'property_name'])->where('id',$id)->first();
+      if($pms_history->property_name){
+        $user_property=User::where('id',$pms_history->property_name->host_id)->first();
+     }else{
+         $user_property=0;
+     }
+      return view('admin.pmsrequest.pms-history',compact('pms_history','user_property'));
     }
   
 }

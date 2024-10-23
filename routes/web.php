@@ -191,6 +191,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 	});
 	Route::get('pms-new-request', 'PmsJobController@pms_new_request');
 	Route::get('view-pms-request/{id}', 'PmsJobController@view_pms_request');
+	Route::post('view-pms-request/{id}', 'PmsJobController@store_pms_request');
+	Route::get('pms-request-history/{id}', 'PmsJobController@pms_request_history');
+	Route::get('pms-history/{id}', 'PmsJobController@pms_history');
 	Route::post('area-site-engineer', 'PmsJobController@area_site_engineer');
 	Route::get('properties', 'PropertiesController@index')->middleware(['permission:properties']);
 	Route::match(array('GET', 'POST'), 'add-properties', 'PropertiesController@add')->middleware(['permission:add_properties']);

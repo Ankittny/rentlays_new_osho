@@ -47,6 +47,8 @@ class PmsnewrequestDatatable extends DataTable
             $pms_new_request->where('assign_to_supervisor', Auth::guard('admin')->user()->id);
         } elseif ($user_role === 'helpdesk') {
             $pms_new_request->where('helpdesk_user_id', Auth::guard('admin')->user()->id);
+        }elseif ($user_role === 'sitemanager'){
+            $pms_new_request->where('assign_to_sitemanager', Auth::guard('admin')->user()->id);
         }
 
         // Handle date filters
