@@ -69,7 +69,9 @@ class AppServiceProvider extends ServiceProvider
         // $this->defaultHomeLanguage();
         // //For Age check is the user 18 or not
          // $this->checkAge();
-        
+         if($this->app->environment('production')) {
+            \URL::forceScheme('https');
+        }
     }
 
     //For Home Currency Custom Validation Check
