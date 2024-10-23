@@ -53,7 +53,7 @@
                           @php
                             $get_site_engineer=App\Http\Helpers\Common::getSiteEngineer($pms_request->getSupervisor->pincode ?? null);
                           @endphp
-                          <select onchange="myFunction(this)" id="site_engineer" class="form-control" name="site_engineer">
+                          <select onchange="myFunction(this)" id="site_engineer" @if($get_role == 'helpdesk') disabled  @endif class="form-control" name="site_engineer">
                             <option value=""> -- Select Area Site Engineer --</option>
                               @foreach($get_site_engineer as $value)
                                 <option value="{{ $value->id }}" {{ $pms_request->assign_to_sitemanager == $value->id ? 'selected' : ''}}>{{ ucfirst($value->username) }}</option>
