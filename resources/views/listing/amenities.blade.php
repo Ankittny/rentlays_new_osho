@@ -95,19 +95,19 @@
                                                         <div class="row">
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label class="label-large label-inline">{{ __('Property Square fit') }}</label>
+                                                                    <label class="label-large label-inline">{{ __('Property Area(meter)') }}</label>
                                                                     <input type="text" class="form-control" name="property_square" value="{{ $result->property_square ?? '' }}" data-saving="">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label class="label-large label-inline">{{ __('How many Floor') }}</label>
+                                                                    <label class="label-large label-inline">{{ __('No Of Floors') }}</label>
                                                                     <input type="text" class="form-control" name="number_of_floor" value="{{ $result->number_of_floor ?? '' }}" data-saving="">
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
-                                                                    <label class="label-large label-inline">{{ __('How many rooms') }}</label>
+                                                                    <label class="label-large label-inline">{{ __('No Of Rooms') }}</label>
                                                                     <input type="text" class="form-control" name="number_of_rooms" value="{{ $result->number_of_rooms ?? '' }}" data-saving="">
                                                                 </div>
                                                             </div>

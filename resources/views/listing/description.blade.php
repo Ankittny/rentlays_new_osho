@@ -23,9 +23,9 @@
 									<div class="col-md-12 pl-5 pr-5">
 										<label>{{ __('For Property') }} <span class="text-danger">*</span></label>
 										<select name="for_property" id="for" class="form-control text-16 mt-2">
-											<option value="rentlays"> For Rentlays</option>
+											<option value="rentlays"> For Rentalys</option>
 											<option value="pms">For Pms</option>
-											<option value="pmsandrentlays">For Pms&Rantlays</option>
+											<option value="pmsandrentlays">For Pms&Rentalys</option>
 										</select>
 										<span class="text-danger">{{ $errors->first('for_property') }}</span>
 									</div>

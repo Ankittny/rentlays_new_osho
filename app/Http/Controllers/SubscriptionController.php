@@ -35,7 +35,7 @@ class SubscriptionController extends Controller
             //    return redirect()->back()->with('success','Query not Run!');
             // }
         } else {
-            $data['title']   = "Rentlays Subscribe";
+            $data['title']   = "Rentalys Subscribe";
             $data['package'] = PmsRecurringPackage::latest()->get();
             $data['properties'] = Properties::where('slug',$slug)->select('id')->latest()->first();
             return view('subscription.view',$data);
