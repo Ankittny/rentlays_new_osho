@@ -128,28 +128,127 @@
                       <tr>
                         <th>Amenities</th>
                         <td>
-                          @php
-                            $amenities_type = App\Models\AmenityType::all();
-                            $amenities_data=explode(',',$pms_history->amenities);
-                            $amenities = App\Models\Amenities::whereIn('id',explode(',',$pms_history->amenities))->get();
-                          @endphp
-                          <ul class="list-group">
-                            @foreach ($amenities_type as $row_type)
-                                @if (count($amenities->where('type_id', $row_type->id)->whereIn('id', $amenities_data)) > 0)
-                                    <li class="list-group-item "> <p class="text-bold text-decoration-underline">{{ $row_type->name }}</p>
-                                        <ul class="list-group">
-                                            @foreach ($amenities->where('type_id', $row_type->id) as $data)
-                                                @if (in_array($data->id, $amenities_data))
-                                                    <li class="list-group-item">{{ $data->title }}</li>
-                                                @endif
-                                            @endforeach
-                                        </ul>
-                                    </li>
-                                @endif
-                            @endforeach
-                          </ul>
+                            @php
+                                $amenities_type = App\Models\AmenityType::all();
+                                $amenities_data = explode(',', $pms_history->amenities);
+                                $amenities = App\Models\Amenities::whereIn('id', $amenities_data)->get();
+                            @endphp
+                            <ul class="list-group">
+                                @foreach ($amenities_type as $row_type)
+                                    @if (count($amenities->where('type_id', $row_type->id)->whereIn('id', $amenities_data)) > 0)
+                                        <li class="list-group-item">
+                                            <p class="mb-2 text-bold text-decoration-underline">{{ $row_type->name }}</p>
+                                            <ul class="list-group mb-0">
+                                                @foreach ($amenities->where('type_id', $row_type->id) as $data)
+                                                    @if (in_array($data->id, $amenities_data))
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span>{{ $data->title }}</span>
+                                                            <div class="d-flex align-items-center">
+                                                                <!-- Amenity Status Radios -->
+                                                                <div class="form-check form-check-inline me-2">
+                                                                    <input class="form-check-input amenities_status_yes" 
+                                                                           type="radio"  disabled
+                                                                           name="amenities_status[{{ $data->id }}]" 
+                                                                           value="yes"
+                                                                           @if(isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'yes') checked @endif
+                                                                           @if($get_role != 'sitemanager') disabled @endif 
+                                                                           onchange="showRemark(this, {{ $data->id }})">
+                                                                    <label class="form-check-label" for="is_working_{{ $data->id }}_yes">Yes</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline me-2">
+                                                                    <input class="form-check-input amenities_status_no"  disabled
+                                                                           type="radio" 
+                                                                           name="amenities_status[{{ $data->id }}]" 
+                                                                           value="no"
+                                                                           @if(isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'no') checked @endif
+                                                                           @if($get_role != 'sitemanager') disabled @endif 
+                                                                           onchange="showRemark(this, {{ $data->id }})">
+                                                                    <label class="form-check-label" for="is_working_{{ $data->id }}_no">No</label>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <!-- Remarks Field -->
+                                                        <div id="remarks_{{ $data->id }}" style="display:{{ isset($pms_history->remarks[$data->id]) && $pms_history->amenities_status[$data->id] == 'no' ? 'block' : 'none' }}" class="ms-4">
+                                                            <label for="remarks[{{ $data->id }}]">Remarks</label>
+                                                            <input type="text" name="remarks[{{ $data->id }}]" disabled
+                                                                   class="form-control mb-2"
+                                                                   value="{{ $pms_history->remarks[$data->id] ?? '' }}"
+                                                                   @if($get_role != 'sitemanager') disabled @endif>
+                                                        </div>
+                                                        
+                                                        <div id="working_options_{{ $data->id }}"  class="working_options" style="display:{{ isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'yes' ? 'block' : 'none'}}">
+                                                            {{-- working --}}
+                                                          <b>Working Options</b> 
+                                                          <br>
+                                                            <div class="form-check form-check-inline">
+                                                              <input class="form-check-input" 
+                                                                    type="radio" 
+                                                                    name="working[{{ $data->id }}]"  
+                                                                    value="working"  disabled
+                                                                    @if($get_role != 'sitemanager') disabled @endif 
+                                                                    id="is_repairing_{{ $data->id }}_working" 
+                                                                    @if(isset($pms_history->working[$data->id]) && $pms_history->working[$data->id] == 'working') checked @endif
+                                                                    onchange="showRepairing(this, {{ $data->id }})">
+                                                              <label class="form-check-label" for="is_repairing_{{ $data->id }}_working">
+                                                                  Working
+                                                              </label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" 
+                                                                      type="radio" 
+                                                                      name="working[{{ $data->id }}]" 
+                                                                      value="not_working"  disabled
+                                                                      @if($get_role != 'sitemanager') disabled @endif 
+                                                                      @if(isset($pms_history->working[$data->id]) && $pms_history->working[$data->id] == 'not_working') checked @endif
+                                                                      id="is_repairing_{{ $data->id }}_not_working" 
+                                                                      onchange="showRepairing(this, {{ $data->id }})">
+                                                                <label class="form-check-label" for="is_repairing_{{ $data->id }}_not_working">
+                                                                    Not Working
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Repairing Options -->
+                                                        <div id="repairing_options_{{ $data->id }}"  class="repairing_options" style="display:{{ isset($pms_history->working[$data->id]) && $pms_history->working[$data->id] == 'not_working' ? 'block' : 'none'}}">
+                                                          <b>Repairing Options</b> 
+                                                          <br>  
+                                                          <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" disabled
+                                                                       type="radio" 
+                                                                       name="repairing[{{ $data->id }}]" 
+                                                                       value="in_repairing"
+                                                                       @if(isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'in_repairing') checked @endif
+                                                                       @if($get_role != 'sitemanager') disabled @endif 
+                                                                       onchange="showEstimatedCost(this, {{ $data->id }})">
+                                                                <label class="form-check-label" for="is_repairing_{{ $data->id }}_in_repairing">In Repairing</label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" disabled
+                                                                       type="radio" 
+                                                                       name="repairing[{{ $data->id }}]" 
+                                                                       value="out_repairing"
+                                                                       @if(isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'out_repairing') checked @endif
+                                                                       @if($get_role != 'sitemanager') disabled @endif 
+                                                                       onchange="showEstimatedCost(this, {{ $data->id }})">
+                                                                <label class="form-check-label" for="is_repairing_{{ $data->id }}_out_repairing">Out Repairing</label>
+                                                            </div>
+                                                            <div id="estimated_cost_{{ $data->id }}" style="display:{{ isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'in_repairing' ? 'block' : 'none' }}" class="mt-2">
+                                                                <label for="estimated_cost[{{ $data->id }}]">Estimated Cost</label>
+                                                                <input type="text" name="estimated_cost[{{ $data->id }}]" disabled
+                                                                       class="form-control"
+                                                                       value="{{ $pms_history->estimated_cost[$data->id] ?? '' }}"
+                                                                       @if($get_role != 'sitemanager') disabled @endif>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </ul>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
                         </td>
-                      </tr>
+                    </tr>
+                    
                     </table>
                 </div>
               </div>
