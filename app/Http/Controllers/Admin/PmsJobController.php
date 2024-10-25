@@ -777,12 +777,34 @@ class PmsJobController extends Controller
 
     public function store_pms_request(Request $request)
     {
+        $amenityStatus = [];
+        $repairStatus = [];
+        $cost = [];
+        $remark = [];
+        $working = [];
+        $repairing=[];
+        foreach ($request->input('amenities', []) as $amenityId => $value) {
+            $amenityStatus[$amenityId] = $request->input('amenities_status')[$amenityId] ?? '';
+            $repairStatus[$amenityId] = $request->input('repairing')[$amenityId] ?? '';
+            $cost[$amenityId] = $request->input('estimated_cost')[$amenityId] ?? '';
+            $remark[$amenityId] = $request->input('remarks')[$amenityId] ?? '';
+            $repairing[$amenityId] = $request->input('repairing')[$amenityId] ?? '';
+            $working[$amenityId] = $request->input('working')[$amenityId] ?? '';
+        } 
         $request_data = $request->except('_token');
-        $request_data['amenities'] = implode(',',$request->amenities);
+        $request_data['amenities'] = implode(',', array_keys($request->input('amenities', [])));
+
+        $request_data['amenities_status'] = json_encode($amenityStatus);
+        $request_data['repair_status'] = json_encode($repairStatus);
+        $request_data['estimated_cost'] = json_encode($cost);
+        $request_data['repairing'] = json_encode($repairing);
+        $request_data['remarks'] = json_encode($remark);
+        $request_data['working'] = json_encode($working);
         $request_data['assign_to_sitemanager'] = Auth::guard('admin')->user()->id;
-        $data= PmsHistory::create($request_data);
-        return redirect()->back()->with('message','Data Inserted Successfully');
+        $data = PmsHistory::create($request_data);
+        return redirect()->back()->with('message', 'Data Inserted Successfully');
     }
+    
 
     
 
@@ -794,6 +816,12 @@ class PmsJobController extends Controller
     public function pms_history($id)
     {
       $pms_history = PmsHistory::with(['getHelpdesk:username,id', 'getSupervisor', 'property_name'])->where('id',$id)->first();
+      $pms_history->amenities_status = json_decode($pms_history->amenities_status, true);
+      $pms_history->repair_status = json_decode($pms_history->repair_status, true);
+      $pms_history->estimated_cost = json_decode($pms_history->estimated_cost, true);
+      $pms_history->repairing = json_decode($pms_history->repairing, true);
+      $pms_history->remarks = json_decode($pms_history->remarks, true);
+      $pms_history->working = json_decode($pms_history->working, true);
       if($pms_history->property_name){
         $user_property=User::where('id',$pms_history->property_name->host_id)->first();
      }else{

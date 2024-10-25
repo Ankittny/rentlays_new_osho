@@ -172,22 +172,144 @@
                             @foreach ($amenities_type as $row_type)
                             @if (count($amenities->where('type_id', $row_type->id)->whereIn('id', $amenities_data)) > 0)
                             <li class="list-group-item "> 
-                                  {{-- <input type="hidden" name="amenities_type[]" value="{{ $row_type->id }}"> --}}
                                   <p class="text-bold text-decoration-underline">{{ $row_type->name }}</p>
                                   <ul class="list-group">
                                     @foreach ($amenities->where('type_id', $row_type->id) as $data)
-                                      {{-- @if (in_array($data->id, $amenities_data)) --}}
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             {{ $data->title }}
-                                            <input type="checkbox" name="amenities[]" @if($get_role != 'sitemanager') disabled @endif {{ in_array($data->id, $amenities_data) ? 'checked' : '' }} value="{{ $data->id }}">
+                                            <input type="checkbox" name="amenities[{{ $data->id }}]" 
+                                                  @if($get_role != 'sitemanager') disabled @endif 
+                                                  {{ in_array($data->id, $amenities_data) ? 'checked' : '' }} 
+                                                  value="{{ $data->id }}"
+                                                  {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>
+                        
+                                            <div class="form-check">
+                                                <input class="form-check-input amenities_status_yes" 
+                                                      type="radio" 
+                                                      name="amenities_status[{{ $data->id }}]" 
+                                                      value="yes" 
+                                                      @if($get_role != 'sitemanager') disabled @endif 
+                                                      onchange="showRemark(this, {{ $data->id }})" 
+                                                      {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>
+                                                <label class="form-check-label" for="is_working_{{ $data->id }}_yes">Yes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input amenities_status_no" 
+                                                      type="radio" 
+                                                      name="amenities_status[{{ $data->id }}]" 
+                                                      value="no" 
+                                                      @if($get_role != 'sitemanager') disabled @endif 
+                                                      onchange="showRemark(this, {{ $data->id }})"
+                                                      {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>
+                                                <label class="form-check-label" for="is_working_{{ $data->id }}_no">No</label>
+                                            </div>
+                                          
                                         </li>
-                                      {{-- @endif --}}
+                        
+                                        <!-- Remarks and Working Options -->
+                                        <div id="remarks_{{ $data->id }}" style="display:none">
+                                          <label>Remarks</label>
+                                          <input type="text" name="remarks[{{ $data->id }}]" 
+                                                @if($get_role != 'sitemanager') disabled @endif  
+                                                class="form-control">
+                                        </div>
+                                  
+                                        <div id="working_options_{{ $data->id }}"  class="working_options" style="display:none">
+                                            {{-- working --}}
+                                           <b>Working Options</b> 
+                                            <div class="form-check">
+                                              <input class="form-check-input" 
+                                                    type="radio" 
+                                                    name="working[{{ $data->id }}]"  
+                                                    value="working" 
+                                                    @if($get_role != 'sitemanager') disabled @endif 
+                                                    id="is_repairing_{{ $data->id }}_working" 
+                                                    onchange="showRepairing(this, {{ $data->id }})">
+                                              <label class="form-check-label" for="is_repairing_{{ $data->id }}_working">
+                                                  Working
+                                              </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" 
+                                                      type="radio" 
+                                                      name="working[{{ $data->id }}]" 
+                                                      value="not_working" 
+                                                      @if($get_role != 'sitemanager') disabled @endif 
+                                                      id="is_repairing_{{ $data->id }}_not_working" 
+                                                      onchange="showRepairing(this, {{ $data->id }})">
+                                                <label class="form-check-label" for="is_repairing_{{ $data->id }}_not_working">
+                                                    Not Working
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div id="repairing_options_{{ $data->id }}"  class="repairing_options" style="display:none">
+                                          {{-- repairing --}}
+                                          <b>Repairing Options</b> 
+
+                                          <div class="form-check">
+                                              <input class="form-check-input" 
+                                                    type="radio" 
+                                                    name="repairing[{{ $data->id }}]"  
+                                                    value="in_repairing" 
+                                                    @if($get_role != 'sitemanager') disabled @endif 
+                                                    id="is_repairing_{{ $data->id }}_in_repairing" 
+                                                    onchange="showEstimatedCost(this, {{ $data->id }})">
+                                              <label class="form-check-label" for="is_repairing_{{ $data->id }}_in_repairing">
+                                                  In Repairing
+                                              </label>
+                                          </div>
+                                          <div class="form-check">
+                                              <input class="form-check-input" 
+                                                    type="radio" 
+                                                    name="repairing[{{ $data->id }}]" 
+                                                    value="out_repairing" 
+                                                    @if($get_role != 'sitemanager') disabled @endif 
+                                                    id="is_repairing_{{ $data->id }}_out_repairing" 
+                                                    onchange="showEstimatedCost(this, {{ $data->id }})">
+                                              <label class="form-check-label" for="is_repairing_{{ $data->id }}_out_repairing">
+                                                  Out Repairing
+                                              </label>
+                                          </div>
+                                          <div id="estimated_cost_{{ $data->id }}" style="display:none;">
+                                              <label>Estimated Cost</label>
+                                              <input type="text" name="estimated_cost[{{ $data->id }}]" 
+                                                    @if($get_role != 'sitemanager') disabled @endif  
+                                                    class="form-control">
+                                          </div>
+                                        </div>
+                                    <script>
+                                        function showRepairing(el, id){
+                                            if(el.value == 'working'){
+                                                document.getElementById("repairing_options_"+id).style.display="none";
+                                            }else if(el.value == 'not_working'){
+                                                document.getElementById("repairing_options_"+id).style.display="block";
+                                            }
+                                        }
+                                        function showRemark(el, id){
+                                            if(el.value == 'no'){
+                                                document.getElementById("remarks_"+id).style.display="block";
+                                                document.getElementById("working_options_"+id).style.display="none";
+                                            }else if(el.value == 'yes'){
+                                                document.getElementById("remarks_"+id).style.display="none";
+                                                document.getElementById("working_options_"+id).style.display="block";
+                                            }
+                                        }
+                        
+                                        function showEstimatedCost(el, id){
+                                            if(el.value == 'in_repairing'){
+                                                document.getElementById("estimated_cost_"+id).style.display="block";
+                                            }else if(el.value == 'out_repairing'){
+                                                document.getElementById("estimated_cost_"+id).style.display="none";
+                                            }
+                                        }
+                                    </script>
                                     @endforeach
                                   </ul>
                                 </li>
                               @endif
                             @endforeach
                           </ul>
+                        
                         </td>
                       </tr>
                     </table>
