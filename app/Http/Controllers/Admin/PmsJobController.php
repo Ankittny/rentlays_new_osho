@@ -26,7 +26,6 @@ use App\DataTables\PmsnewrequestDatatable;
 use App\DataTables\PmsJobDataTable;
 use App\DataTables\PmsRequestHistoryDataTable;
 use App\Models\Testimonials;
-use App\Models\Properties;
 use App\Models\Admin;
 use App\Models\PmsHelpdesk;
 use App\Models\PmsInventoryProducts;
@@ -42,16 +41,19 @@ use App\Models\PmsOnboard;
 use App\Models\PmsJobApproval;
 use App\Models\User;
 use App\Models\Employee;
+use App\Models\Properties;
 use App\Models\PmsHistory;
 use App\Models\PmsDepartmentMaster;
 use App\Models\PmsSubscriptionIds;
 use App\Models\PmsRecurringPackage;
 use App\Models\PmsRecurringService;
 use Illuminate\Support\Facades\DB;
+use Mail;
 use Auth;
 use Carbon\Carbon;
 use App\Models\PmsPackageHistory;
 use Validator, Common;
+use Pdf;
 
 class PmsJobController extends Controller
 {
@@ -802,6 +804,37 @@ class PmsJobController extends Controller
         $request_data['working'] = json_encode($working);
         $request_data['assign_to_sitemanager'] = Auth::guard('admin')->user()->id;
         $data = PmsHistory::create($request_data);
+        $user_id = Properties::find($request->property_id)->host_id;
+        $user = User::where('id', $user_id)->first();
+
+        $amenitiesStatus = json_decode($data["amenities_status"], true);
+        $working = json_decode($data["working"], true);
+        $repairStatus = json_decode($data["repair_status"], true);
+        $estimatedCost = json_decode($data["estimated_cost"], true);
+
+        
+        foreach ($amenitiesStatus as $key => $status) {
+            if ($status === "yes" && isset($working[$key]) && $working[$key] === "not_working" && isset($repairStatus[$key]) && $repairStatus[$key] === "in_repairing" && isset($estimatedCost[$key]) && !empty($estimatedCost[$key])) {
+                $pdf = \PDF::loadView('emails.amentities', ['data' => $data, 'user' => $user]);
+                $pdfFileName = 'amentities.pdf';
+                $pdfDirectory = storage_path('app/public/invoices/');
+                if (!file_exists($pdfDirectory)) {
+                    mkdir($pdfDirectory, 0755, true);
+                }
+                $pdfPath = $pdfDirectory . $pdfFileName;
+                $pdf->save($pdfPath);
+                Mail::send('emails.amentities', ['data' => $data, 'user' => $user], function ($m) use ($user, $pdfPath, $pdfFileName) {
+                    $m->from(env('MAIL_FROM_ADDRESS'), $user->first_name.' '.$user->last_name)
+                      ->to($user->email)
+                      ->subject('Please Check Your Amentities')
+                      ->attach($pdfPath, [
+                          'as' => $pdfFileName,
+                          'mime' => 'application/pdf',
+                      ]);
+                });
+            }
+            break;
+        }
         return redirect()->back()->with('message', 'Data Inserted Successfully');
     }
     
