@@ -816,12 +816,24 @@ class PmsJobController extends Controller
     public function pms_history($id)
     {
       $pms_history = PmsHistory::with(['getHelpdesk:username,id', 'getSupervisor', 'property_name'])->where('id',$id)->first();
-      $pms_history->amenities_status = json_decode($pms_history->amenities_status, true);
-      $pms_history->repair_status = json_decode($pms_history->repair_status, true);
-      $pms_history->estimated_cost = json_decode($pms_history->estimated_cost, true);
-      $pms_history->repairing = json_decode($pms_history->repairing, true);
-      $pms_history->remarks = json_decode($pms_history->remarks, true);
-      $pms_history->working = json_decode($pms_history->working, true);
+      if(!empty($pms_history->amenities_status)){
+        $pms_history->amenities_status = json_decode($pms_history->amenities_status, true);
+      }
+      if(!empty($pms_history->repair_status)){
+        $pms_history->repair_status = json_decode($pms_history->repair_status, true);
+      }
+      if(!empty($pms_history->estimated_cost)){
+        $pms_history->estimated_cost = json_decode($pms_history->estimated_cost, true);
+      }
+      if(!empty($pms_history->repairing)){
+        $pms_history->repairing = json_decode($pms_history->repairing, true);
+      }
+      if(!empty($pms_history->remarks)){
+        $pms_history->remarks = json_decode($pms_history->remarks, true);
+      }
+      if(!empty($pms_history->working)){
+        $pms_history->working = json_decode($pms_history->working, true);
+      }
       if($pms_history->property_name){
         $user_property=User::where('id',$pms_history->property_name->host_id)->first();
      }else{
