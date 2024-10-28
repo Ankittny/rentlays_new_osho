@@ -33,6 +33,7 @@ use App\Models\PmsInventoryBrandMaster;
 use App\Models\PmsInventoryCategoryMasters;
 use App\Models\PmsInventorySubcategoryMasters;
 use App\Models\PmsJobs;
+use App\Models\PayoutSetting;
 use App\Models\PmsJobsItems;
 use App\Models\PmsServiceMaster;
 use App\Models\RoleAdmin;
@@ -43,11 +44,13 @@ use App\Models\User;
 use App\Models\Employee;
 use App\Models\Properties;
 use App\Models\PmsHistory;
+use App\Models\Withdrawal;
 use App\Models\PmsDepartmentMaster;
 use App\Models\PmsSubscriptionIds;
 use App\Models\PmsRecurringPackage;
 use App\Models\PmsRecurringService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Mail;
 use Auth;
 use Carbon\Carbon;
@@ -784,7 +787,8 @@ class PmsJobController extends Controller
         $cost = [];
         $remark = [];
         $working = [];
-        $repairing=[];
+        $repairing = [];
+    
         foreach ($request->input('amenities', []) as $amenityId => $value) {
             $amenityStatus[$amenityId] = $request->input('amenities_status')[$amenityId] ?? '';
             $repairStatus[$amenityId] = $request->input('repairing')[$amenityId] ?? '';
@@ -792,10 +796,11 @@ class PmsJobController extends Controller
             $remark[$amenityId] = $request->input('remarks')[$amenityId] ?? '';
             $repairing[$amenityId] = $request->input('repairing')[$amenityId] ?? '';
             $working[$amenityId] = $request->input('working')[$amenityId] ?? '';
-        } 
+        }
+    
         $request_data = $request->except('_token');
         $request_data['amenities'] = implode(',', array_keys($request->input('amenities', [])));
-
+    
         $request_data['amenities_status'] = json_encode($amenityStatus);
         $request_data['repair_status'] = json_encode($repairStatus);
         $request_data['estimated_cost'] = json_encode($cost);
@@ -803,18 +808,30 @@ class PmsJobController extends Controller
         $request_data['remarks'] = json_encode($remark);
         $request_data['working'] = json_encode($working);
         $request_data['assign_to_sitemanager'] = Auth::guard('admin')->user()->id;
-        $data = PmsHistory::create($request_data);
+    
+        // Save the data and reload it from the database to ensure completeness
+        $createdData = PmsHistory::create($request_data);
+        $data = PmsHistory::find($createdData->id);
+    
         $user_id = Properties::find($request->property_id)->host_id;
         $user = User::where('id', $user_id)->first();
-
-        $amenitiesStatus = json_decode($data["amenities_status"], true);
-        $working = json_decode($data["working"], true);
-        $repairStatus = json_decode($data["repair_status"], true);
-        $estimatedCost = json_decode($data["estimated_cost"], true);
-
-        
+    
+        $amenitiesStatus = json_decode($data->amenities_status, true);
+        $working = json_decode($data->working, true);
+        $repairStatus = json_decode($data->repair_status, true);
+        $estimatedCost = json_decode($data->estimated_cost, true);
+    
         foreach ($amenitiesStatus as $key => $status) {
             if ($status === "yes" && isset($working[$key]) && $working[$key] === "not_working" && isset($repairStatus[$key]) && $repairStatus[$key] === "in_repairing" && isset($estimatedCost[$key]) && !empty($estimatedCost[$key])) {
+                // Generate PDF with the reloaded data
+                $paymentLink = URL::temporarySignedRoute(
+                    'pms-payment-request', 
+                    now()->addMinutes(10), 
+                    [
+                        'pmsid' => $createdData->id,
+                        'id' => $user_id
+                    ]
+                );
                 $pdf = \PDF::loadView('emails.amentities', ['data' => $data, 'user' => $user]);
                 $pdfFileName = 'amentities.pdf';
                 $pdfDirectory = storage_path('app/public/invoices/');
@@ -823,21 +840,31 @@ class PmsJobController extends Controller
                 }
                 $pdfPath = $pdfDirectory . $pdfFileName;
                 $pdf->save($pdfPath);
-                Mail::send('emails.amentities', ['data' => $data, 'user' => $user], function ($m) use ($user, $pdfPath, $pdfFileName) {
-                    $m->from(env('MAIL_FROM_ADDRESS'), $user->first_name.' '.$user->last_name)
-                      ->to($user->email)
-                      ->subject('Please Check Your Amentities')
-                      ->attach($pdfPath, [
-                          'as' => $pdfFileName,
-                          'mime' => 'application/pdf',
-                      ]);
+               
+                Mail::send('emails.amentities', ['data' => $data, 'user' => $user, 'paymentLink' => $paymentLink], function ($m) use ($user, $pdfPath, $pdfFileName) {
+                    $m->from(env('MAIL_FROM_ADDRESS'), $user->first_name . ' ' . $user->last_name)
+                        ->to($user->email)
+                        ->subject('Please Check Your Amentities')
+                        ->attach($pdfPath, [
+                            'as' => $pdfFileName,
+                            'mime' => 'application/pdf',
+                        ]);
                 });
             }
             break;
         }
+    
         return redirect()->back()->with('message', 'Data Inserted Successfully');
     }
     
+    public function pms_payment_request(Request $request,$id = null,$pmsid = null)
+    {
+        if (!$request->hasValidSignature()) {
+            return response()->json(['error' => 'Invalid or expired link.'], 403);
+        }
+        $data = PmsHistory::find($pmsid);
+        return view('admin.pmsrequest.payment-request',compact('data'));
+    }
 
     
 
@@ -874,6 +901,35 @@ class PmsJobController extends Controller
      }
       return view('admin.pmsrequest.pms-history',compact('pms_history','user_property'));
     }
+
+    public function amount_pay(Request $request)
+    {
+        if($request->status == 'pay'){
+            $property_owner_id = Properties::find($request->property_id)->host_id;
+            $user = User::where('id', $property_owner_id)->first();
+            $payout_id = PayoutSetting::create([
+                    'user_id' => $property_owner_id,
+                    'type'=> 1,
+                    'email' => $user->email,
+                    'is_active' => 1,
+                    'selected'=>'Yes',
+            ]);
+            Withdrawal::create([
+                'user_id' => $property_owner_id,
+                'payout_id'=> $payout_id->id,
+                'currency_id' => '3',
+                'payment_method_id'=> 1,
+                'uuid'=> $request->unique_id,
+                'subtotal' => $request->amount,
+                'amount' => $request->amount,
+                'status' => 'Success',
+            ]);
+            return view('admin.pmsrequest.payment-successfull');
+        }else{
+            return redirect(url('/'));
+        }
+    }
+   
   
 }
 

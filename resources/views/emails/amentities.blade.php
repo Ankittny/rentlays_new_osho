@@ -55,6 +55,12 @@
             </tbody>
         </table>
         <h3 class="text-right mt-4">Total Cost: ₹{{ number_format($totalCost, 2) }}</h3>
+        @isset($paymentLink)
+        <div class="text-center mt-4">
+            <a class="btn btn-primary" href="{{$paymentLink ?? null}}" class="btn btn-success">Payment link </a>
+        </div>
+        @endisset
     </div>
   </body>
 </html>
+
