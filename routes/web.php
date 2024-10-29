@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Session;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// payment request 
+Route::get('pms-payment-request/{pmsid?}/{id?}', 'App\Http\Controllers\Admin\PmsJobController@pms_payment_request')->name('pms-payment-request');
+Route::get('pms-payment-approve/{pmsid}/{id?}', 'App\Http\Controllers\Admin\PmsJobController@approve_pms_payment')->name('pms-payment-approve');
+Route::post('amount-pay', 'App\Http\Controllers\Admin\PmsJobController@amount_pay')->name('amount-pay');
+// end payment request
 
 Route::get('enable-debugger', 'HomeController@activateDebugger');
 
@@ -192,6 +197,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 	Route::get('pms-new-request', 'PmsJobController@pms_new_request');
 	Route::get('view-pms-request/{id}', 'PmsJobController@view_pms_request');
 	Route::post('view-pms-request/{id}', 'PmsJobController@store_pms_request');
+
 	Route::get('pms-request-history/{id}', 'PmsJobController@pms_request_history');
 	Route::get('pms-history/{id}', 'PmsJobController@pms_history');
 	Route::post('area-site-engineer', 'PmsJobController@area_site_engineer');
@@ -474,6 +480,7 @@ Route::get('users/payment_verification/{secret?}', 'LoginController@payment_veri
 
 Route::get('googleAuthenticate', 'LoginController@googleAuthenticate');
 Route::get('facebookAuthenticate', 'LoginController@facebookAuthenticate');
+
 
 //only can view if user is logged in
 Route::get('users/confirm_email/{code?}', 'UserController@confirmEmail');

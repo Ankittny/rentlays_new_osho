@@ -45,8 +45,6 @@ class PayoutListDataTable extends DataTable
         $to       = isset(request()->to) ? setDateForDb(request()->to) : null;
     
         $query = Withdrawal::with('user', 'currency', 'payment_methods')->where('user_id', Auth::id());
-       
-
         if (!empty($from)) {
             $query->whereDate('withdrawals.created_at', '>=', $from);
         }
