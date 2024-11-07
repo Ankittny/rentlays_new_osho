@@ -27,7 +27,7 @@
 				<li class="{{ (Route::current()->uri() == 'admin/amenities') || (Route::current()->uri() == 'admin/add-amenities') || (Route::current()->uri() == 'admin/edit-amenities/{id}') ? 'active' : ''  }}"><a href="{{ url('admin/amenities') }}"><i class="fa fa-bullseye"></i><span>Amenities</span></a></li>
 			@endif
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'pms_new_request'))
-				<li class="{{ (Route::current()->uri() == 'admin/pms-new-request') || (Route::current()->uri() == 'admin/pms-new-request') }}"><a href="{{ url('admin/pms-new-request') }}"><i class="fa fa-quote-left"></i><span>Pms New Request</span></a></li>
+				<li class="{{ (Route::current()->uri() == 'admin/pms-new-request') || (Route::current()->uri() == 'admin/pms-new-request') }}"><a href="{{ url('admin/pms-new-request') }}"><i class="fa fa-quote-left"></i><span>PMS New Request</span></a></li>
 			@endif
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'manage_designation'))
 				<li class="{{ (Route::current()->uri() == 'admin/designation') || (Route::current()->uri() == 'admin/designation') }}"><a href="{{ url('admin/designation') }}"><i class="fa fa-quote-left"></i><span>Designation Master</span></a></li>
@@ -90,7 +90,7 @@
 			<li class="treeview {{ (Route::current()->uri() == 'admin/brand-master' || Route::current()->uri() == 'admin/department-master' || Route::current()->uri() == 'admin/recurring-service-master' || Route::current()->uri() == 'admin/recurring-packages-master' || Route::current()->uri() == 'admin/vendor-master' || Route::current()->uri() == 'admin/service-master'  || Route::current()->uri() == 'admin/category-master' || Route::current()->uri() == 'admin/sub-category-master') ? 'active' : ''    }}">
 		
 				<a href="#">
-				  <i class="fa fa-bar-chart-o"></i> <span>Pms Master</span><i class="fa fa-angle-left pull-right"></i>
+				  <i class="fa fa-bar-chart-o"></i> <span>PMS Master</span><i class="fa fa-angle-left pull-right"></i>
 				</a>
 
 				<ul class="treeview-menu">
@@ -144,10 +144,10 @@
 			
 			@endif
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'pms_inventory'))
-			  <li class="{{ (Route::current()->uri() == 'admin/pms_inventory') || (Route::current()->uri() == 'admin/edit-pms-inventory/{id}') || (Route::current()->uri() == 'admin/add-pms-inventory') ? 'active' : ''  }}"><a href="{{ url('admin/pms_inventory') }}"><i class="fa fa-quote-left"></i><span>Pms Inventory</span></a></li>
+			  <li class="{{ (Route::current()->uri() == 'admin/pms_inventory') || (Route::current()->uri() == 'admin/edit-pms-inventory/{id}') || (Route::current()->uri() == 'admin/add-pms-inventory') ? 'active' : ''  }}"><a href="{{ url('admin/pms_inventory') }}"><i class="fa fa-quote-left"></i><span>PMS Inventory</span></a></li>
 			@endif
 			@if(Helpers::has_permission(Auth::guard('admin')->user()->id, 'pms_job'))
-			<li class="{{ (Route::current()->uri() == 'admin/pms_job') || (Route::current()->uri() == 'admin/edit-pms-job/{id}') || (Route::current()->uri() == 'admin/add-pms-job') ? 'active' : ''  }}"><a href="{{ url('admin/pms_job') }}"><i class="fa fa-quote-left"></i><span>Pms Job</span></a></li>
+			<li class="{{ (Route::current()->uri() == 'admin/pms_job') || (Route::current()->uri() == 'admin/edit-pms-job/{id}') || (Route::current()->uri() == 'admin/add-pms-job') ? 'active' : ''  }}"><a href="{{ url('admin/pms_job') }}"><i class="fa fa-quote-left"></i><span>PMS Job</span></a></li>
 			@endif
 
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'manage_email_template'))

@@ -5,7 +5,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
 	<h1>
-	Pms  Request History
+	PMS  Request History
 	<small>Control panel</small>
 	</h1>
 @include('admin.common.breadcrumb')
@@ -19,7 +19,7 @@
 		<div class="col-xs-12">
 			<div class="box">
 				<div class="box-header">
-					<h3 class="box-title">Pms  Request History</h3>
+					<h3 class="box-title">PMS  Request History</h3>
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body">

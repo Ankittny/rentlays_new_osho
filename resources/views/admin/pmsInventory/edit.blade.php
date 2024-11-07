@@ -9,8 +9,8 @@
       <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-   Pms Inventory
-      <small>Edit  Pms Inventory</small>
+   PMS Inventory
+      <small>Edit  PMS Inventory</small>
     </h1>
   @include('admin.common.breadcrumb')
   </section>

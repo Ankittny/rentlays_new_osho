@@ -293,6 +293,26 @@ class PropertyController extends Controller
             $data['country']       = Country::pluck('name', 'short_name');
         } elseif ($step == 'amenities') {
             if ($request->isMethod('post') && is_array($request->amenities)) {
+                $rules = array(
+                    'property_square'     => 'required|max:50',
+                    'number_of_floor'  => 'required|max:1000',
+                    'number_of_rooms'  => 'required|max:1000'
+                );
+
+                $fieldNames = array(
+                    'property_square'     => 'Property Square',
+                    'number_of_floor'  => 'Number of Floor',
+                    'number_of_rooms'  => 'Number of Rooms'
+                );
+
+                $validator = Validator::make($request->all(), $rules);
+                $validator->setAttributeNames($fieldNames);
+
+                if ($validator->fails())
+                {
+                    return back()->withErrors($validator)->withInput();
+                }
+
                 $rooms            = Properties::find($request->id);
                 $rooms->amenities = implode(',', $request->amenities);
                 $rooms->property_square =$request->property_square ?? null;

@@ -6,7 +6,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       {{-- <h1>
-        Pms New Request Detail
+        PMS New Request Detail
         <small>Control panel</small>
       </h1> --}}
      {{-- // @include('admin.common.breadcrumb') --}}
@@ -18,7 +18,7 @@
         <div class="col-xs-12">
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">Pms  Request Detail</h3>
+              <h3 class="box-title">PMS  Request Detail</h3>
               <div class="box-tools pull-right">
                 <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
               </div>
