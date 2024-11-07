@@ -11,8 +11,8 @@ use App\Http\{
 use App\Rules\GoogleReCaptcha;
 use Illuminate\Support\Facades\Cache;
 use App\DataTables\TransactionDataTable;
-use App\dataTables\JobApprovalDataTable;
-use App\dataTables\PackageListDataTable;
+use App\DataTables\JobApprovalDataTable;
+use App\DataTables\PackageListDataTable;
 use Auth, Validator, Socialite, DateTime, Hash, DB, Session, Common;
 use Pdf;
 use Mail;
