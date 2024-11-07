@@ -213,7 +213,7 @@
                                     </div>
                                     @if(App\Models\RoleAdmin::where('admin_id',Auth('admin')->user()->id)->first()->role_id == '3' || App\Models\RoleAdmin::where('admin_id',Auth('admin')->user()->id)->first()->role_id=='1')
                                     <div class="col-md-4">
-                                        <label class="label-large fw-bold">Verified For Pms</label>
+                                        <label class="label-large fw-bold">Verified For PMS</label>
                                         <select name="verified" class="form-control f-14">
                                             <option value="Pending"
                                                 {{ $result->is_verified_pms == 'Pending' ? 'selected' : '' }}>Pending

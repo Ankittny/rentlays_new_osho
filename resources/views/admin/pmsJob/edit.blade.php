@@ -8,8 +8,8 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Pms Job
-                <small>Edit Pms Job</small>
+                PMS Job
+                <small>Edit PMS Job</small>
             </h1>
             <!-- @include('admin.common.breadcrumb') -->
         </section>

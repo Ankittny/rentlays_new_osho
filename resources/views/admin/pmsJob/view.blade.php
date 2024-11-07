@@ -5,7 +5,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
 	<h1>
-	Pms Job
+	PMS Job
 	<small>Control panel</small>
 	</h1>
 @include('admin.common.breadcrumb')
@@ -19,9 +19,9 @@
 		<div class="col-xs-12">
 			<div class="box">
 				<div class="box-header">
-					<h3 class="box-title">Pms Job</h3>
+					<h3 class="box-title">PMS Job</h3>
 					@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'add_pms_job'))
-						<div class="pull-right"><a class="btn btn-success f-14" href="{{ url('admin/add-pms-job') }}">Add Pms job</a></div>
+						<div class="pull-right"><a class="btn btn-success f-14" href="{{ url('admin/add-pms-job') }}">Add PMS job</a></div>
 					@endif
 				</div>
 				<!-- /.box-header -->
