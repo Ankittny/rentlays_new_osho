@@ -191,7 +191,7 @@
                                                       @if($get_role != 'sitemanager') disabled @endif 
                                                       onchange="showRemark(this, {{ $data->id }})" 
                                                       {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>
-                                                <label class="form-check-label" for="is_working_{{ $data->id }}_yes">Yes</label>
+                                                <label class="form-check-label" for="is_working_{{ $data->id }}_yes" {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>Yes</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input amenities_status_no" 
@@ -201,7 +201,7 @@
                                                       @if($get_role != 'sitemanager') disabled @endif 
                                                       onchange="showRemark(this, {{ $data->id }})"
                                                       {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>
-                                                <label class="form-check-label" for="is_working_{{ $data->id }}_no">No</label>
+                                                <label class="form-check-label" for="is_working_{{ $data->id }}_no" {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>No</label>
                                             </div>
                                           
                                         </li>
@@ -245,7 +245,6 @@
                                         <div id="repairing_options_{{ $data->id }}"  class="repairing_options" style="display:none">
                                           {{-- repairing --}}
                                           <b>Repairing Options</b> 
-
                                           <div class="form-check">
                                               <input class="form-check-input" 
                                                     type="radio" 
@@ -255,9 +254,21 @@
                                                     id="is_repairing_{{ $data->id }}_in_repairing" 
                                                     onchange="showEstimatedCost(this, {{ $data->id }})">
                                               <label class="form-check-label" for="is_repairing_{{ $data->id }}_in_repairing">
-                                                  In Repairing
+                                                  Can We Repair
                                               </label>
                                           </div>
+                                          <div class="form-check">
+                                            <input class="form-check-input" 
+                                                  type="radio" 
+                                                  name="repairing[{{ $data->id }}]"  
+                                                  value="replace" 
+                                                  @if($get_role != 'sitemanager') disabled @endif 
+                                                  id="is_repairing_{{ $data->id }}_in_repairing" 
+                                                  onchange="showEstimatedCost(this, {{ $data->id }})">
+                                            <label class="form-check-label" for="is_repairing_{{ $data->id }}_in_repairing">
+                                                Can We Replace
+                                            </label>
+                                        </div>
                                           <div class="form-check">
                                               <input class="form-check-input" 
                                                     type="radio" 
@@ -296,7 +307,7 @@
                                         }
                         
                                         function showEstimatedCost(el, id){
-                                            if(el.value == 'in_repairing'){
+                                            if(el.value == 'in_repairing' || el.value == 'replace'){
                                                 document.getElementById("estimated_cost_"+id).style.display="block";
                                             }else if(el.value == 'out_repairing'){
                                                 document.getElementById("estimated_cost_"+id).style.display="none";

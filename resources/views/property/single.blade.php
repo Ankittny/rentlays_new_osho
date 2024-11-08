@@ -4,6 +4,37 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('public/css/glyphicon.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('public/js/ninja/ninja-slider.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('public/css/single-property.min.css') }}">
+    <style>
+        /* Custom style for the info window */
+        .info-window-content {
+        font-family: Arial, sans-serif;
+        max-width: 300px;
+        }
+        .info-window-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        }
+        .info-window-category {
+        font-style: italic;
+        color: #555;
+        }
+        .info-window-address {
+        margin: 10px 0;
+        }
+        .info-window-photo {
+        width: 100%;
+        height: auto;
+        margin-top: 10px;
+        }
+        .info-window-link {
+        color: #1E90FF;
+        text-decoration: none;
+        font-size: 14px;
+        margin-top: 10px;
+        display: inline-block;
+        }
+    </style>
 @endpush
 
 @section('main')
@@ -11,7 +42,6 @@
 
 <input type="hidden" id="front_date_format_type" value="{{ Session::get('front_date_format_type') }}">
 <div class="main-panel mt-50 ">
-
 
 
 
@@ -1684,7 +1714,7 @@
 <div class="container-fluid container-fluid-90 mt-70">
     <div class="row mt-5">
         <div class="col-md-12">
-            <div id="room-detail-map" class="single-map-w"></div>
+            <div id="map" style="height: 500px; width: 100%;"></div>
         </div>
     </div>
 </div>
@@ -2116,7 +2146,118 @@ e.stopPropagation();
 
     <script type="text/javascript" src="{{ asset('public/js/single-property.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/js/front.min.js') }}"></script>
-    
+    <script type="text/javascript" src="{{ asset('public/js/listings.min.js') }}"></script>
+    <script type="text/javascript" src='https://maps.google.com/maps/api/js?key={{ config("vrent.google_map_key") }}&libraries=places'></script>
+    <script type="text/javascript">
+        'use strict'
+        function initMap() {
+        // Retrieve latitude and longitude from Blade
+        let latitude = "{{ $result->property_address->latitude != '' ? $result->property_address->latitude : 0 }}";
+        let longitude = "{{ $result->property_address->longitude != '' ? $result->property_address->longitude : 0 }}";
+        // Check if the latitude and longitude are valid (not 0)
+        if (latitude == 0 || longitude == 0) {
+            alert('Invalid latitude or longitude.');
+            return; // Stop the map from initializing if coordinates are invalid
+        }
+        // Initialize the map using the latitude and longitude from Blade
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+            zoom: 15,
+        });
+
+        // Create a marker for the user's location
+        const marker = new google.maps.Marker({
+            position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+            map: map,
+            title: "Property Location"
+        });
+
+        // Create a circle to represent the 1 km radius
+        const circle = new google.maps.Circle({
+            map: map,
+            radius: 1000, // 1 km radius
+            center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.2
+        });
+
+        // Initialize the PlacesService
+        const service = new google.maps.places.PlacesService(map);
+        const radius = 1000;  // 1 km radius
+
+        // Perform the nearby search for different categories
+        const categories = [
+            { name: 'School/College', keywords: 'school OR college' },
+            { name: 'Hospital/Clinic', keywords: 'hospital OR clinic' },
+            { name: 'Public Transport', keywords: 'bus stop OR metro station' },
+            { name: 'Restaurants/Cafes', keywords: 'restaurant OR cafe' },
+            { name: 'Supermarket', keywords: 'supermarket' },
+            { name: 'Playground', keywords: 'playground' },
+            { name: 'Walking/Jogging Track', keywords: 'walking track OR jogging track' },
+            { name: 'Sports Complex', keywords: 'sports complex' },
+            { name: 'Parking Facility', keywords: 'parking' },
+        ];
+
+        categories.forEach(category => {
+            service.textSearch({
+            location: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+            radius: radius,
+            query: category.keywords  
+            }, (results, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                // Loop through the results, filter by distance, and add them to the map
+                results.forEach(place => {
+                const placeLocation = place.geometry.location;
+                const userLocation = new google.maps.LatLng(latitude, longitude);
+
+                // Calculate the distance between user's location and the place
+                const distance = google.maps.geometry.spherical.computeDistanceBetween(userLocation, placeLocation);
+
+                // Only add the place if it's within 1km
+                if (distance <= radius) {
+                    // Create a marker for each place
+                    const placeMarker = new google.maps.Marker({
+                    position: placeLocation,
+                    map: map,
+                    title: place.name
+                    });
+
+                    // Create an info window for each marker
+                    const infowindow = new google.maps.InfoWindow();
+
+                    // Check if the place has photos and set the content
+                    const photoUrl = place.photos && place.photos.length > 0 ? place.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 }) : null;
+                    const photoHtml = photoUrl ? `<img src="${photoUrl}" class="info-window-photo" alt="${place.name}" />` : '';
+
+                    // Set content for the info window
+                    const content = `
+                    <div class="info-window-content">
+                        <div class="info-window-header">${place.name}</div>
+                        <div class="info-window-category">Category: ${category.name}</div>
+                        <div class="info-window-address">${place.formatted_address}</div>
+                        ${photoHtml}
+                        <a href="https://www.google.com/maps/search/?q=${encodeURIComponent(place.name)}" target="_blank" class="info-window-link">View on Google Maps</a>
+                    </div>
+                    `;
+                    infowindow.setContent(content);
+                    // Open the info window when the marker is clicked
+                    google.maps.event.addListener(placeMarker, 'click', () => {
+                    infowindow.open(map, placeMarker);
+                    });
+                }
+                });
+            }
+            });
+        });
+        }
+        // Initialize the map when the window is loaded
+        window.onload = function() {
+        initMap();
+        };
+   </script>
 @endsection
 
 
