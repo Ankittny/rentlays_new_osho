@@ -540,7 +540,6 @@ class PropertyController extends Controller
             return view('property.pending_property');
 
         } else {
-
             if ( empty($result) ) {
                 abort('404');
             }

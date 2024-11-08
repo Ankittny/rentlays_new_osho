@@ -224,6 +224,19 @@
                                                             <div class="form-check form-check-inline">
                                                                 <input class="form-check-input" disabled
                                                                        type="radio" 
+                                                                       name="repairing[{{ $data->id }}]"  
+                                                                       value="replace" 
+                                                                       @if(isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'replace') checked @endif
+                                                                       @if($get_role != 'sitemanager') disabled @endif 
+                                                                       id="is_repairing_{{ $data->id }}_in_repairing" 
+                                                                       onchange="showEstimatedCost(this, {{ $data->id }})">
+                                                                <label class="form-check-label" for="is_repairing_{{ $data->id }}_in_repairing">
+                                                                    Can We Replace
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" disabled
+                                                                       type="radio" 
                                                                        name="repairing[{{ $data->id }}]" 
                                                                        value="out_repairing"
                                                                        @if(isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'out_repairing') checked @endif
@@ -231,7 +244,7 @@
                                                                        onchange="showEstimatedCost(this, {{ $data->id }})">
                                                                 <label class="form-check-label" for="is_repairing_{{ $data->id }}_out_repairing">Out Repairing</label>
                                                             </div>
-                                                            <div id="estimated_cost_{{ $data->id }}" style="display:{{ isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'in_repairing' ? 'block' : 'none' }}" class="mt-2">
+                                                            <div id="estimated_cost_{{ $data->id }}" style="display:{{ isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'in_repairing' || $pms_history->repairing[$data->id] == 'replace' ? 'block' : 'none' }}" class="mt-2">
                                                                 <label for="estimated_cost[{{ $data->id }}]">Estimated Cost</label>
                                                                 <input type="text" name="estimated_cost[{{ $data->id }}]" disabled
                                                                        class="form-control"

@@ -784,6 +784,7 @@ class PmsJobController extends Controller
     {
         $amenityStatus = [];
         $repairStatus = [];
+        $replaceStatus = [];
         $cost = [];
         $remark = [];
         $working = [];
@@ -792,6 +793,7 @@ class PmsJobController extends Controller
         foreach ($request->input('amenities', []) as $amenityId => $value) {
             $amenityStatus[$amenityId] = $request->input('amenities_status')[$amenityId] ?? '';
             $repairStatus[$amenityId] = $request->input('repairing')[$amenityId] ?? '';
+            $replaceStatus[$amenityId] = $request->input('replace')[$amenityId] ?? '';
             $cost[$amenityId] = $request->input('estimated_cost')[$amenityId] ?? '';
             $remark[$amenityId] = $request->input('remarks')[$amenityId] ?? '';
             $repairing[$amenityId] = $request->input('repairing')[$amenityId] ?? '';
@@ -800,9 +802,9 @@ class PmsJobController extends Controller
     
         $request_data = $request->except('_token');
         $request_data['amenities'] = implode(',', array_keys($request->input('amenities', [])));
-    
         $request_data['amenities_status'] = json_encode($amenityStatus);
         $request_data['repair_status'] = json_encode($repairStatus);
+        $request_data['replace_status'] = json_encode($replaceStatus);
         $request_data['estimated_cost'] = json_encode($cost);
         $request_data['repairing'] = json_encode($repairing);
         $request_data['remarks'] = json_encode($remark);
@@ -881,6 +883,9 @@ class PmsJobController extends Controller
       }
       if(!empty($pms_history->repair_status)){
         $pms_history->repair_status = json_decode($pms_history->repair_status, true);
+      }
+      if(!empty($pms_history->replace_status)){
+        $pms_history->replace_status = json_decode($pms_history->replace_status, true);
       }
       if(!empty($pms_history->estimated_cost)){
         $pms_history->estimated_cost = json_decode($pms_history->estimated_cost, true);

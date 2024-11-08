@@ -294,7 +294,6 @@ class PropertiesController extends Controller
             }
             $data['country']       = Country::pluck('name', 'short_name');
         } elseif ($step == 'amenities') {
-           
             if ($request->isMethod('post') && is_array($request->amenities)) {
                 $rooms = Properties::find($request->id);
             if($rooms->property_type==29){
@@ -468,7 +467,6 @@ class PropertiesController extends Controller
         } elseif ($step == 'calender') {
             $data['calendar'] = $calendar->generate($request->id);
         }
-
         return view("admin.listing.$step", $data);
     }
 
