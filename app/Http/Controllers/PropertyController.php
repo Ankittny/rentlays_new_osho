@@ -707,4 +707,8 @@ class PropertyController extends Controller
 
     }
 
+    public function downloadPropertyAgreement(Request $request)
+    {
+        dd($request->id);
+    }
 }

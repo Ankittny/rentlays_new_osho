@@ -197,6 +197,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 	Route::get('pms-new-request', 'PmsJobController@pms_new_request');
 	Route::get('view-pms-request/{id}', 'PmsJobController@view_pms_request');
 	Route::post('view-pms-request/{id}', 'PmsJobController@store_pms_request');
+	Route::post('update-pms-history/{id}', 'PmsJobController@update_pms_history');
 
 	Route::get('pms-request-history/{id}', 'PmsJobController@pms_request_history');
 	Route::get('pms-history/{id}', 'PmsJobController@pms_history');
@@ -510,6 +511,7 @@ Route::group(['middleware' => ['guest:users', 'locale']], function () {
     Route::match(['get', 'post'], 'reviews/details', 'UserController@reviewDetails');
 
     Route::match(array('GET', 'POST'),'properties', 'PropertyController@userProperties');
+	Route::get('download-agreement/{id}', 'PropertyController@downloadPropertyAgreement');
     Route::match(array('GET', 'POST'),'property/create', 'PropertyController@create');
     Route::match(array('GET', 'POST'),'listing/{id}/photo_message', 'PropertyController@photoMessage')->middleware(['checkUserRoutesPermissions']);
     Route::match(array('GET', 'POST'),'listing/{id}/photo_delete', 'PropertyController@photoDelete')->middleware(['checkUserRoutesPermissions']);

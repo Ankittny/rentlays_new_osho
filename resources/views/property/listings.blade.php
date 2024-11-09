@@ -188,6 +188,16 @@
                                                             </a>
                                                         </div>
                                                     @endif
+                                                    @if($property->status == "Listed")
+                                                    <div class="col-6 col-sm-12">
+                                                        <a href="{{ url('download-agreement/'.$property->id) }}">
+                                                            <div class="text-color text-color-hover text-14 text-right text-sm-center mt-0 mt-md-3 p-2">
+                                                                <i class="fas fa-download"></i>
+                                                                {{ __('Download Agreement') }}
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
