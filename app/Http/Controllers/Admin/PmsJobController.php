@@ -823,9 +823,8 @@ class PmsJobController extends Controller
         $repairStatus = json_decode($data->repair_status, true);
         $estimatedCost = json_decode($data->estimated_cost, true);
     
-        foreach ($amenitiesStatus as $key => $status) {
+        foreach ($amenitiesStatus as $key => $status) { 
             if ($status === "yes" && isset($working[$key]) && $working[$key] === "not_working" && isset($repairStatus[$key]) && ($repairStatus[$key] === "in_repairing" || $repairStatus[$key] === "replace") && isset($estimatedCost[$key]) && !empty($estimatedCost[$key])) {
-                // Generate PDF with the reloaded data
                 $paymentLink = URL::temporarySignedRoute(
                     'pms-payment-request', 
                     now()->addMinutes(10), 
@@ -852,10 +851,9 @@ class PmsJobController extends Controller
                             'mime' => 'application/pdf',
                         ]);
                 });
+                 break;
             }
-            break;
         }
-    
         return redirect()->back()->with('message', 'Data Inserted Successfully');
     }
     
@@ -922,7 +920,7 @@ class PmsJobController extends Controller
         if (!$request->hasValidSignature()) {
             return response()->json(['error' => 'Invalid or expired link.'], 403);
         }
-        $data = PmsHistory::find($pmsid);
+        $data = PmsHistory::find($id);
         return view('admin.pmsrequest.payment-request',compact('data'));
     }
 

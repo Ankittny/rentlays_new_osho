@@ -200,7 +200,7 @@
                                                         <div class="col-6 col-sm-12 text-right text-sm-center mt-0 mt-md-3 p-2">
                                                             <p class="text-color">
                                                                 <i class="fas fa-clock"></i>
-                                                                {{ __('Your document upload is waiting for approval') }}
+                                                                {{ __('Your Document Upload Is Waiting For Approval') }}
                                                             </p>
                                                         </div>
                                                         @elseif($property->agreement_status == "unapprove")

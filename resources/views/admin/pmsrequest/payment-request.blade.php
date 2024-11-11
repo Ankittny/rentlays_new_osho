@@ -47,7 +47,7 @@
                 </thead>
                 <tbody>
                   @foreach ($amenitiesStatus as $key => $status)
-                    @if ($status === "yes" && isset($working[$key]) && $working[$key] === "not_working" && isset($repairStatus[$key]) && $repairStatus[$key] === "in_repairing" && isset($estimatedCost[$key]) && !empty($estimatedCost[$key]))
+                    @if ($status === "yes" && isset($working[$key]) && $working[$key] === "not_working" && isset($repairStatus[$key]) && ( $repairStatus[$key] === "in_repairing" || $repairStatus[$key] === "replace") && isset($estimatedCost[$key]) && !empty($estimatedCost[$key]))
                       @php
                           $cost = floatval($estimatedCost[$key]);
                           $totalCost += $cost;

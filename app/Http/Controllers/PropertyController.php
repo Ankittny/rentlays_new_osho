@@ -758,7 +758,16 @@ class PropertyController extends Controller
         }
         return response()->json(['success' => false, 'message' => 'No agreement uploaded'], 404);
     }
-
+    
+    public function agreement_download(Request $request)
+    {
+        $property = Properties::find($request->id);
+        if ($property && $property->agreement_upload) {
+            $file = Storage::disk('public')->path($property->agreement_upload);
+            return response()->download($file, basename($property->agreement_upload));
+        }
+        return response()->json(['success' => false, 'message' => 'No agreement uploaded'], 404);
+    }
     
 
     public function updateAgreementStatus(Request $request)
