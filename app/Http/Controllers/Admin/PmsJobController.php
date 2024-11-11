@@ -824,7 +824,7 @@ class PmsJobController extends Controller
         $estimatedCost = json_decode($data->estimated_cost, true);
     
         foreach ($amenitiesStatus as $key => $status) {
-            if ($status === "yes" && isset($working[$key]) && $working[$key] === "not_working" && isset($repairStatus[$key]) && $repairStatus[$key] === "in_repairing" && isset($estimatedCost[$key]) && !empty($estimatedCost[$key])) {
+            if ($status === "yes" && isset($working[$key]) && $working[$key] === "not_working" && isset($repairStatus[$key]) && ($repairStatus[$key] === "in_repairing" || $repairStatus[$key] === "replace") && isset($estimatedCost[$key]) && !empty($estimatedCost[$key])) {
                 // Generate PDF with the reloaded data
                 $paymentLink = URL::temporarySignedRoute(
                     'pms-payment-request', 
