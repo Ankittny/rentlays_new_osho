@@ -181,7 +181,8 @@
                                                   @if($get_role != 'sitemanager') disabled @endif 
                                                   {{ in_array($data->id, $amenities_data) ? 'checked' : '' }} 
                                                   value="{{ $data->id }}"
-                                                  {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>
+                                                  {{-- {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }} --}}
+                                                  >
                         
                                             <div class="form-check">
                                                 <input class="form-check-input amenities_status_yes" 
@@ -190,7 +191,8 @@
                                                       value="yes" 
                                                       @if($get_role != 'sitemanager') disabled @endif 
                                                       onchange="showRemark(this, {{ $data->id }})" 
-                                                      {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>
+                                                      {{-- {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }} --}}
+                                                      >
                                                 <label class="form-check-label" for="is_working_{{ $data->id }}_yes" {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>Yes</label>
                                             </div>
                                             <div class="form-check">
@@ -200,7 +202,8 @@
                                                       value="no" 
                                                       @if($get_role != 'sitemanager') disabled @endif 
                                                       onchange="showRemark(this, {{ $data->id }})"
-                                                      {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>
+                                                      {{-- {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }} --}}
+                                                      >
                                                 <label class="form-check-label" for="is_working_{{ $data->id }}_no" {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>No</label>
                                             </div>
                                           
