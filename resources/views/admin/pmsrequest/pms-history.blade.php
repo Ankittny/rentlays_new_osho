@@ -271,8 +271,33 @@
                         </td>
                      </tr>
                     </table>
-                      @if($get_role == 'admin') 
+                      @if($get_role == 'admin')
+                        @if($pms_history->property_name->agreement_status == 'Uploaded')
+                        <a href="{{url('admin/view-agreement'.'/'.$pms_history->property_name->id)}}"  onclick="downloadFile(event, this.href)"class="btn btn-primary float-end ">
+                            View Agreement
+                        </a>
+                        @elseif ($pms_history->property_name->agreement_status == 'Downloaded')
+                        <button type="button" class="btn btn-primary float-end " >Waiting for Agreement Upload</button>
+                        @elseif($pms_history->property_name->agreement_status == 'View by Admin')
+                        <form  method="POST" id="updateAgreementStatusForm" class="w-25">
+                          @csrf
+                          <select name="agreement_status" id="agreement_status" class="form-control" onchange="toggleUnapproveComment()">
+                              <option value="approve">Approve</option>
+                              <option value="unapprove">Unapprove</option>
+                          </select>
+                          <div id="unapprove_comment_div" style="display:none;">
+                              <label for="unapprove_comment">Comment</label>
+                              <input type="text" name="unapprove_comment" id="unapprove_comment" class="form-control" value="{{ $pms_history->property_name->unapprove_comment ?? '' }}">
+                          </div>
+                          <button type="button" class="btn btn-primary float-end mt-2" id="submitAgreementStatus">Submit</button>
+                        </form>
+                        @elseif(!in_array($pms_history->property_name->agreement_status, ['Uploaded', 'View by Admin', 'approve', 'unapprove','Downloaded']))
                         <button type="submit" class="btn btn-primary float-end ">Send Agreement To Owner</button>
+                        @elseif($pms_history->property_name->agreement_status == 'unapprove')
+                        <button type="button" class="btn btn-primary float-end " >Waiting for again Agreement Upload</button>
+                        @elseif($pms_history->property_name->agreement_status == 'approve')
+                        <button type="button" class="btn btn-primary float-end ">Property  Approved</button>
+                        @endif
                       @endif
                   </form>
                 </div>
@@ -284,6 +309,7 @@
     </section>
   </div>
 @endsection
+@push('scripts')
 <script>
   function showRepairing(el, id){
       if(el.value == 'working'){
@@ -309,4 +335,54 @@
           document.getElementById("estimated_cost_"+id).style.display="none";
       }
   }
+  function toggleUnapproveComment() {
+      var agreementStatus = $('#agreement_status').val();
+      if (agreementStatus === 'unapprove') {
+          $('#unapprove_comment_div').show();
+      } else {
+          $('#unapprove_comment_div').hide();
+      }
+  }
+
+  $('#submitAgreementStatus').on('click', function(e) {
+      e.preventDefault();
+      var url = '{{ url('admin/update-agreement-status/' . $pms_history->property_name->id) }}';
+      var agreementStatus = $('#agreement_status').val();
+      if (agreementStatus === 'unapprove') {
+          var unapproveComment = $('#unapprove_comment').val();
+      }else {
+          var unapproveComment = '';
+      }
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+          url: url,
+          type: 'POST',
+          data: {
+              'agreement_status': agreementStatus,
+              'unapprove_comment': unapproveComment},
+          success: function(response) {
+              alert('Agreement status updated successfully');
+              location.reload();
+          },
+          error: function(xhr) {
+              location.reload();
+              alert('An error occurred while updating agreement status');
+          }
+      });
+  });
+  function downloadFile(event, url) {
+      event.preventDefault(); 
+      var iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+      setTimeout(function() {
+          location.reload();
+      }, 1000); 
+  }
 </script>
+@endpush

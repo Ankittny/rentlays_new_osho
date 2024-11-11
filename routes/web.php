@@ -19,6 +19,8 @@ Route::get('pms-payment-request/{pmsid?}/{id?}', 'App\Http\Controllers\Admin\Pms
 Route::get('pms-payment-approve/{pmsid}/{id?}', 'App\Http\Controllers\Admin\PmsJobController@approve_pms_payment')->name('pms-payment-approve');
 Route::post('amount-pay', 'App\Http\Controllers\Admin\PmsJobController@amount_pay')->name('amount-pay');
 // end payment request
+Route::get('admin/view-agreement/{id}', 'App\Http\Controllers\PropertyController@view_agreement')->name('admin-view-agreement');
+Route::post('admin/update-agreement-status/{id}', 'App\Http\Controllers\PropertyController@updateAgreementStatus')->name('update-agreement-status');
 
 Route::get('enable-debugger', 'HomeController@activateDebugger');
 
@@ -512,6 +514,7 @@ Route::group(['middleware' => ['guest:users', 'locale']], function () {
 
     Route::match(array('GET', 'POST'),'properties', 'PropertyController@userProperties');
 	Route::get('download-agreement/{id}', 'PropertyController@downloadPropertyAgreement');
+	Route::post('upload-agreement/{id}', 'PropertyController@uploadPropertyAgreement');
     Route::match(array('GET', 'POST'),'property/create', 'PropertyController@create');
     Route::match(array('GET', 'POST'),'listing/{id}/photo_message', 'PropertyController@photoMessage')->middleware(['checkUserRoutesPermissions']);
     Route::match(array('GET', 'POST'),'listing/{id}/photo_delete', 'PropertyController@photoDelete')->middleware(['checkUserRoutesPermissions']);

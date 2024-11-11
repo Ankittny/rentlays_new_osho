@@ -910,6 +910,9 @@ class PmsJobController extends Controller
                         'mime' => 'application/pdf',
                     ]);
             });
+            $property = Properties::find($request->property_id);
+            $property->agreement_status = 'Agreement-Send';
+            $property->save();
         }
         return redirect()->back()->with('message', 'Data Inserted Successfully');
     }
