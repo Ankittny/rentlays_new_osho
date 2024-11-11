@@ -33,12 +33,12 @@
                     $totalCost = 0;
                     $amenitiesStatus = json_decode($data["amenities_status"], true);
                     $working = json_decode($data["working"], true);
-                    $repairStatus = json_decode($data["repair_status"], true);
+                    $repairStatus = json_decode($data["repair_status"] ?? $data['replace_status'], true);
                     $estimatedCost = json_decode($data["estimated_cost"], true);
                 @endphp
 
                 @foreach ($amenitiesStatus as $key => $status)
-                    @if ($status === "yes" && isset($working[$key]) && $working[$key] === "not_working" && isset($repairStatus[$key]) && $repairStatus[$key] === "in_repairing" && isset($estimatedCost[$key]) && !empty($estimatedCost[$key]))
+                    @if ($status === "yes" && isset($working[$key]) && $working[$key] === "not_working" && isset($repairStatus[$key]) && ($repairStatus[$key] === "in_repairing" || $repairStatus[$key] === "replace") && isset($estimatedCost[$key]) && !empty($estimatedCost[$key]))
                         @php
                             $cost = floatval($estimatedCost[$key]);
                             $totalCost += $cost;

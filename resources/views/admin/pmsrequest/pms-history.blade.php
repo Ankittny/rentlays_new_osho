@@ -161,6 +161,9 @@
                                                                            value="yes"
                                                                            @if(isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'yes') checked @endif
                                                                            @if($get_role != 'admin') disabled @endif 
+                                                                           @if($pms_history->property_name->agreement_status == 'approve')
+                                                                               disabled
+                                                                           @endif
                                                                            onchange="showRemark(this, {{ $data->id }})">
                                                                     <label class="form-check-label" for="is_working_{{ $data->id }}_yes">Yes</label>
                                                                 </div>
@@ -171,6 +174,9 @@
                                                                            value="no"
                                                                            @if(isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'no') checked @endif
                                                                            @if($get_role != 'admin') disabled @endif 
+                                                                           @if($pms_history->property_name->agreement_status == 'approve')
+                                                                               disabled
+                                                                           @endif
                                                                            onchange="showRemark(this, {{ $data->id }})">
                                                                     <label class="form-check-label" for="is_working_{{ $data->id }}_no">No</label>
                                                                 </div>
@@ -182,7 +188,7 @@
                                                             <input type="text" name="remarks[{{ $data->id }}]" 
                                                                    class="form-control mb-2"
                                                                    value="{{ $pms_history->remarks[$data->id] ?? '' }}"
-                                                                   @if($get_role != 'admin') disabled @endif>
+                                                                   @if($get_role != 'admin') disabled @endif >
                                                         </div>
                                                         
                                                         <div id="working_options_{{ $data->id }}"  class="working_options" style="display:{{ isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'yes' ? 'block' : 'none'}}">
@@ -195,6 +201,9 @@
                                                                     name="working[{{ $data->id }}]"  
                                                                     value="working"  
                                                                     @if($get_role != 'admin') disabled @endif 
+                                                                    @if($pms_history->property_name->agreement_status == 'approve')
+                                                                        disabled
+                                                                    @endif
                                                                     id="is_repairing_{{ $data->id }}_working" 
                                                                     @if(isset($pms_history->working[$data->id]) && $pms_history->working[$data->id] == 'working') checked @endif
                                                                     onchange="showRepairing(this, {{ $data->id }})">
@@ -208,6 +217,9 @@
                                                                       name="working[{{ $data->id }}]" 
                                                                       value="not_working"  
                                                                       @if($get_role != 'admin') disabled @endif 
+                                                                      @if($pms_history->property_name->agreement_status == 'approve')
+                                                                          disabled
+                                                                      @endif
                                                                       @if(isset($pms_history->working[$data->id]) && $pms_history->working[$data->id] == 'not_working') checked @endif
                                                                       id="is_repairing_{{ $data->id }}_not_working" 
                                                                       onchange="showRepairing(this, {{ $data->id }})">
@@ -237,6 +249,9 @@
                                                                        value="replace" 
                                                                        @if(isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'replace') checked @endif
                                                                        @if($get_role != 'admin') disabled @endif 
+                                                                       @if($pms_history->property_name->agreement_status == 'approve')
+                                                                            disabled
+                                                                        @endif  
                                                                        id="is_repairing_{{ $data->id }}_in_repairing" 
                                                                        onchange="showEstimatedCost(this, {{ $data->id }})">
                                                                 <label class="form-check-label" for="is_repairing_{{ $data->id }}_in_repairing">
@@ -250,6 +265,9 @@
                                                                        value="out_repairing"
                                                                        @if(isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'out_repairing') checked @endif
                                                                        @if($get_role != 'admin') disabled @endif 
+                                                                       @if($pms_history->property_name->agreement_status == 'approve')
+                                                                        disabled
+                                                                    @endif  
                                                                        onchange="showEstimatedCost(this, {{ $data->id }})">
                                                                 <label class="form-check-label" for="is_repairing_{{ $data->id }}_out_repairing">Out Repairing</label>
                                                             </div>
@@ -258,7 +276,11 @@
                                                                 <input type="text" name="estimated_cost[{{ $data->id }}]" 
                                                                        class="form-control"
                                                                        value="{{ $pms_history->estimated_cost[$data->id] ?? '' }}"
-                                                                       @if($get_role != 'admin') disabled @endif>
+                                                                       @if($get_role != 'admin') disabled @endif
+                                                                       @if($pms_history->property_name->agreement_status == 'approve')
+                                                                            disabled
+                                                                        @endif  
+                                                                       >
                                                             </div>
                                                         </div>
                                                     @endif
@@ -277,7 +299,7 @@
                             View Agreement
                         </a>
                         @elseif ($pms_history->property_name->agreement_status == 'Downloaded')
-                        <button type="button" class="btn btn-primary float-end " >Waiting for Agreement Upload</button>
+                        <button type="button" class="btn btn-primary float-end " >Waiting For Agreement Upload</button>
                         @elseif($pms_history->property_name->agreement_status == 'View by Admin')
                         <form  method="POST" id="updateAgreementStatusForm" class="w-25">
                           @csrf
@@ -294,9 +316,12 @@
                         @elseif(!in_array($pms_history->property_name->agreement_status, ['Uploaded', 'View by Admin', 'approve', 'unapprove','Downloaded']))
                         <button type="submit" class="btn btn-primary float-end ">Send Agreement To Owner</button>
                         @elseif($pms_history->property_name->agreement_status == 'unapprove')
-                        <button type="button" class="btn btn-primary float-end " >Waiting for again Agreement Upload</button>
+                        <button type="button" class="btn btn-primary float-end " >Waiting For Again Agreement Upload</button>
                         @elseif($pms_history->property_name->agreement_status == 'approve')
-                        <button type="button" class="btn btn-primary float-end ">Property  Approved</button>
+                          <a href="{{url('admin/agreement-download'.'/'.$pms_history->property_name->id)}}"  onclick="downloadFile(event, this.href)"class="btn btn-primary float-end ">
+                              Download Agreement
+                          </a>
+                          <button type="button" class="btn btn-primary float-end " style="margin-right: 10px">Property  Approved</button>
                         @endif
                       @endif
                   </form>

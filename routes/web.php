@@ -20,6 +20,7 @@ Route::get('pms-payment-approve/{pmsid}/{id?}', 'App\Http\Controllers\Admin\PmsJ
 Route::post('amount-pay', 'App\Http\Controllers\Admin\PmsJobController@amount_pay')->name('amount-pay');
 // end payment request
 Route::get('admin/view-agreement/{id}', 'App\Http\Controllers\PropertyController@view_agreement')->name('admin-view-agreement');
+Route::get('admin/agreement-download/{id}', 'App\Http\Controllers\PropertyController@agreement_download')->name('admin-agreement-download');
 Route::post('admin/update-agreement-status/{id}', 'App\Http\Controllers\PropertyController@updateAgreementStatus')->name('update-agreement-status');
 
 Route::get('enable-debugger', 'HomeController@activateDebugger');
