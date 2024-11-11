@@ -30,8 +30,10 @@ use App\Models\{
     Warehouetype,
     FloorType,
     ProperTypeOptionset,
-    PropertyMetadata
+    PropertyMetadata,
+    User
 };
+use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
 {
@@ -702,9 +704,69 @@ class PropertyController extends Controller
     public function unauthenticationFavourite($id) 
     {
         Session::put('favourite_property', $id);
-
         return redirect('login');
 
     }
 
+    public function downloadPropertyAgreement(Request $request)
+    {
+        $user_id = Properties::find($request->id)->host_id;
+        $user = User::where('id', $user_id)->first();
+        if ($user) {
+            $property = Properties::where('id', $request->id)->first();
+            if ($request->routeIs('admin-download-agreement')) {
+                $property->agreement_status = 'View by Admin';
+            } else {
+                $property->agreement_status = 'Downloaded';
+            }
+            $property->save();
+            $pdf = \PDF::loadView('emails.aggrement', ['user' => $user]);
+            return $pdf->download('aggrement.pdf');
+        }
+    }
+
+    public function uploadPropertyAgreement(Request $request)
+    {
+        $request->validate([
+            'agreement_file' => 'required|mimes:pdf,doc,docx|max:2048',
+        ]);
+        if ($request->file('agreement_file')) {
+            $file = $request->file('agreement_file');
+            $property = Properties::find($request->id);
+            if ($property->agreement_upload) {
+                Storage::disk('public')->delete($property->agreement_upload);
+            }
+            $path = $file->store('property_agreements', 'public');
+            $property->agreement_upload = $path;
+            $property->agreement_status = 'Uploaded';
+            $property->save();
+            return redirect()->back()->with('success', 'Agreement uploaded successfully');
+        }
+        return response()->json(['success' => false, 'message' => 'Failed to upload agreement']);
+    }
+
+
+    
+    public function view_agreement(Request $request)
+    {
+        $property = Properties::find($request->id);
+        if ($property && $property->agreement_upload) {
+            $property->agreement_status = 'View by Admin';
+            $property->save();
+            $file = Storage::disk('public')->path($property->agreement_upload);
+            return response()->download($file, basename($property->agreement_upload));
+        }
+        return response()->json(['success' => false, 'message' => 'No agreement uploaded'], 404);
+    }
+
+    
+
+    public function updateAgreementStatus(Request $request)
+    {
+        $property = Properties::where('id', $request->id)->first();
+        $property->agreement_status = $request->agreement_status;
+        $property->unapprove_comment = $request->unapprove_comment ?? null;
+        $property->save();
+        return response()->json(['success' => true, 'message' => 'Agreement status updated successfully']);
+    }
 }

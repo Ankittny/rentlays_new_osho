@@ -19,6 +19,8 @@ Route::get('pms-payment-request/{pmsid?}/{id?}', 'App\Http\Controllers\Admin\Pms
 Route::get('pms-payment-approve/{pmsid}/{id?}', 'App\Http\Controllers\Admin\PmsJobController@approve_pms_payment')->name('pms-payment-approve');
 Route::post('amount-pay', 'App\Http\Controllers\Admin\PmsJobController@amount_pay')->name('amount-pay');
 // end payment request
+Route::get('admin/view-agreement/{id}', 'App\Http\Controllers\PropertyController@view_agreement')->name('admin-view-agreement');
+Route::post('admin/update-agreement-status/{id}', 'App\Http\Controllers\PropertyController@updateAgreementStatus')->name('update-agreement-status');
 
 Route::get('enable-debugger', 'HomeController@activateDebugger');
 
@@ -197,6 +199,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 	Route::get('pms-new-request', 'PmsJobController@pms_new_request');
 	Route::get('view-pms-request/{id}', 'PmsJobController@view_pms_request');
 	Route::post('view-pms-request/{id}', 'PmsJobController@store_pms_request');
+	Route::post('update-pms-history/{id}', 'PmsJobController@update_pms_history');
 
 	Route::get('pms-request-history/{id}', 'PmsJobController@pms_request_history');
 	Route::get('pms-history/{id}', 'PmsJobController@pms_history');
@@ -510,6 +513,8 @@ Route::group(['middleware' => ['guest:users', 'locale']], function () {
     Route::match(['get', 'post'], 'reviews/details', 'UserController@reviewDetails');
 
     Route::match(array('GET', 'POST'),'properties', 'PropertyController@userProperties');
+	Route::get('download-agreement/{id}', 'PropertyController@downloadPropertyAgreement');
+	Route::post('upload-agreement/{id}', 'PropertyController@uploadPropertyAgreement');
     Route::match(array('GET', 'POST'),'property/create', 'PropertyController@create');
     Route::match(array('GET', 'POST'),'listing/{id}/photo_message', 'PropertyController@photoMessage')->middleware(['checkUserRoutesPermissions']);
     Route::match(array('GET', 'POST'),'listing/{id}/photo_delete', 'PropertyController@photoDelete')->middleware(['checkUserRoutesPermissions']);

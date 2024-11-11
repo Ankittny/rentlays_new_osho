@@ -1,5 +1,11 @@
 @extends('admin.template')
-
+@push('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrql/4R3yP9QqiTm6+6K9e7g2e5Tz1e9mr3v1+PjVt1uX2rrGZPjB7g5IP5Vd+qf5A5J3u3j2HU1YA==" crossorigin="anonymous" />
+<!-- Include jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- Include Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-tHtwcwUz1pD1UnWZn2kTEZg3OoR/BE04nND1q3zB3lsOWShy3f6Gtye5Yl9xZHt9pJ+Qq/uwZ8AO7zFt8G8mXw==" crossorigin="anonymous"></script>
+@endpush
 @section('main')
 
 
@@ -31,14 +37,16 @@
                         <label for="exampleInputPassword1"
                             class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Property</label>
                         <div class="col-sm-8">
-                            <select name="property_id" class="form-control f-14" required>
-                              <option value=""> Select Property</option>
-                              @foreach ($property as $key => $value)
+                      
+                            <select name="property_id" class="form-control f-14 select2" required>
+                                <option value="">Select Property</option>
+                                @foreach ($property as $key => $value)
                                   <option data-icon-class="icon-star-alt" value="{{ $value->id }}">
-                                      {{ $value->name  }}
+                                    {{ $value->name }}
                                   </option>
-                              @endforeach
+                                @endforeach
                             </select>
+                          
                         </div>
                     </div>
                     <div class="form-group row mt-3">
@@ -164,6 +172,14 @@
 
 @section('validate_script')
     <script type="text/javascript" src="{{ asset('public/backend/dist/js/validate.min.js') }}"></script>	
+    <script>
+        $(document).ready(function() {
+          $('.select2').select2({
+            placeholder: 'Select Property',
+            allowClear: true
+          });
+        });
+      </script>
 @endsection
 
 

@@ -859,6 +859,64 @@ class PmsJobController extends Controller
         return redirect()->back()->with('message', 'Data Inserted Successfully');
     }
     
+    public function update_pms_history(Request $request)
+    {
+        $amenityStatus = [];
+        $repairStatus = [];
+        $replaceStatus = [];
+        $cost = [];
+        $remark = [];
+        $working = [];
+        $repairing = [];
+
+        foreach ($request->input('amenities', []) as $amenityId => $value) {
+            $amenityStatus[$amenityId] = $request->input('amenities_status')[$amenityId] ?? '';
+            $repairStatus[$amenityId] = $request->input('repair_status')[$amenityId] ?? '';
+            $replaceStatus[$amenityId] = $request->input('replace_status')[$amenityId] ?? '';
+            $cost[$amenityId] = $request->input('estimated_cost')[$amenityId] ?? '';
+            $remark[$amenityId] = $request->input('remarks')[$amenityId] ?? '';
+            $repairing[$amenityId] = $request->input('repairing')[$amenityId] ?? '';
+            $working[$amenityId] = $request->input('working')[$amenityId] ?? '';
+        }
+        $request_data = PmsHistory::findOrFail($request->id);
+        $request_data->fill([
+            'amenities' => implode(',', array_keys($request->input('amenities', []))),
+            'amenities_status' => json_encode($amenityStatus),
+            'repair_status' => json_encode($repairStatus),
+            'replace_status' => json_encode($replaceStatus),
+            'estimated_cost' => json_encode($cost),
+            'repairing' => json_encode($repairing),
+            'remarks' => json_encode($remark),
+            'working' => json_encode($working),
+        ]);
+        $request_data->save();
+        $user_id = Properties::find($request->property_id)->host_id;
+        $user = User::where('id', $user_id)->first();
+        if ($user) {
+            $pdf = \PDF::loadView('emails.aggrement', ['data' => $request_data, 'user' => $user]);
+            $pdfFileName = 'aggrement.pdf';
+            $pdfDirectory = storage_path('app/public/invoices/');
+            if (!file_exists($pdfDirectory)) {
+                mkdir($pdfDirectory, 0755, true);
+            }
+            $pdfPath = $pdfDirectory . $pdfFileName;
+            $pdf->save($pdfPath);
+            Mail::send('emails.aggrement', ['data' => $request_data, 'user' => $user], function ($m) use ($user, $pdfPath, $pdfFileName) {
+                $m->from(env('MAIL_FROM_ADDRESS'), $user->first_name . ' ' . $user->last_name)
+                    ->to($user->email)
+                    ->subject('Please Check The Aggrement')
+                    ->attach($pdfPath, [
+                        'as' => $pdfFileName,
+                        'mime' => 'application/pdf',
+                    ]);
+            });
+            $property = Properties::find($request->property_id);
+            $property->agreement_status = 'Agreement-Send';
+            $property->save();
+        }
+        return redirect()->back()->with('message', 'Data Inserted Successfully');
+    }
+
     public function pms_payment_request(Request $request,$id = null,$pmsid = null)
     {
         if (!$request->hasValidSignature()) {

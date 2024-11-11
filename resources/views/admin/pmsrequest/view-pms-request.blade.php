@@ -288,32 +288,7 @@
                                                     class="form-control">
                                           </div>
                                         </div>
-                                    <script>
-                                        function showRepairing(el, id){
-                                            if(el.value == 'working'){
-                                                document.getElementById("repairing_options_"+id).style.display="none";
-                                            }else if(el.value == 'not_working'){
-                                                document.getElementById("repairing_options_"+id).style.display="block";
-                                            }
-                                        }
-                                        function showRemark(el, id){
-                                            if(el.value == 'no'){
-                                                document.getElementById("remarks_"+id).style.display="block";
-                                                document.getElementById("working_options_"+id).style.display="none";
-                                            }else if(el.value == 'yes'){
-                                                document.getElementById("remarks_"+id).style.display="none";
-                                                document.getElementById("working_options_"+id).style.display="block";
-                                            }
-                                        }
-                        
-                                        function showEstimatedCost(el, id){
-                                            if(el.value == 'in_repairing' || el.value == 'replace'){
-                                                document.getElementById("estimated_cost_"+id).style.display="block";
-                                            }else if(el.value == 'out_repairing'){
-                                                document.getElementById("estimated_cost_"+id).style.display="none";
-                                            }
-                                        }
-                                    </script>
+                                   
                                     @endforeach
                                   </ul>
                                 </li>
@@ -376,6 +351,32 @@
         }
       }
     });
+  }
+</script>
+<script>
+  function showRepairing(el, id){
+      if(el.value == 'working'){
+          document.getElementById("repairing_options_"+id).style.display="none";
+      }else if(el.value == 'not_working'){
+          document.getElementById("repairing_options_"+id).style.display="block";
+      }
+  }
+  function showRemark(el, id){
+      if(el.value == 'no'){
+          document.getElementById("remarks_"+id).style.display="block";
+          document.getElementById("working_options_"+id).style.display="none";
+      }else if(el.value == 'yes'){
+          document.getElementById("remarks_"+id).style.display="none";
+          document.getElementById("working_options_"+id).style.display="block";
+      }
+  }
+
+  function showEstimatedCost(el, id){
+      if(el.value == 'in_repairing' || el.value == 'replace'){
+          document.getElementById("estimated_cost_"+id).style.display="block";
+      }else if(el.value == 'out_repairing'){
+          document.getElementById("estimated_cost_"+id).style.display="none";
+      }
   }
 </script>
 

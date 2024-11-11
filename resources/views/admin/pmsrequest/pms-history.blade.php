@@ -28,6 +28,10 @@
             <div class="box-body">
               <div class="row w-75 mx-auto">
                 <div class="col-sm-12">
+                  <form action="{{ url('admin/update-pms-history', $pms_history->id) }}" method="POST">
+                    <input type="hidden" value="{{ $pms_history->property_id }}" name="property_id">
+                    @csrf
+                    @method('Post')
                     <table class="table table-bordered">
                       @php
                         $get_role=App\Http\Helpers\Common::get_roles(Auth::guard('admin')->user()->id);
@@ -145,23 +149,28 @@
                                                             <span>{{ $data->title }}</span>
                                                             <div class="d-flex align-items-center">
                                                                 <!-- Amenity Status Radios -->
+                                                                <input type="hidden" name="amenities[{{ $data->id }}]" 
+                                                                @if($get_role != 'admin') disabled @endif 
+                                                                {{ in_array($data->id, $amenities_data) ? 'checked' : '' }} 
+                                                                value="{{ $data->id }}"
+                                                                {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>
                                                                 <div class="form-check form-check-inline me-2">
                                                                     <input class="form-check-input amenities_status_yes" 
-                                                                           type="radio"  disabled
+                                                                           type="radio"  
                                                                            name="amenities_status[{{ $data->id }}]" 
                                                                            value="yes"
                                                                            @if(isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'yes') checked @endif
-                                                                           @if($get_role != 'sitemanager') disabled @endif 
+                                                                           @if($get_role != 'admin') disabled @endif 
                                                                            onchange="showRemark(this, {{ $data->id }})">
                                                                     <label class="form-check-label" for="is_working_{{ $data->id }}_yes">Yes</label>
                                                                 </div>
                                                                 <div class="form-check form-check-inline me-2">
-                                                                    <input class="form-check-input amenities_status_no"  disabled
+                                                                    <input class="form-check-input amenities_status_no"  
                                                                            type="radio" 
                                                                            name="amenities_status[{{ $data->id }}]" 
                                                                            value="no"
                                                                            @if(isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'no') checked @endif
-                                                                           @if($get_role != 'sitemanager') disabled @endif 
+                                                                           @if($get_role != 'admin') disabled @endif 
                                                                            onchange="showRemark(this, {{ $data->id }})">
                                                                     <label class="form-check-label" for="is_working_{{ $data->id }}_no">No</label>
                                                                 </div>
@@ -170,10 +179,10 @@
                                                         <!-- Remarks Field -->
                                                         <div id="remarks_{{ $data->id }}" style="display:{{ isset($pms_history->remarks[$data->id]) && $pms_history->amenities_status[$data->id] == 'no' ? 'block' : 'none' }}" class="ms-4">
                                                             <label for="remarks[{{ $data->id }}]">Remarks</label>
-                                                            <input type="text" name="remarks[{{ $data->id }}]" disabled
+                                                            <input type="text" name="remarks[{{ $data->id }}]" 
                                                                    class="form-control mb-2"
                                                                    value="{{ $pms_history->remarks[$data->id] ?? '' }}"
-                                                                   @if($get_role != 'sitemanager') disabled @endif>
+                                                                   @if($get_role != 'admin') disabled @endif>
                                                         </div>
                                                         
                                                         <div id="working_options_{{ $data->id }}"  class="working_options" style="display:{{ isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'yes' ? 'block' : 'none'}}">
@@ -184,8 +193,8 @@
                                                               <input class="form-check-input" 
                                                                     type="radio" 
                                                                     name="working[{{ $data->id }}]"  
-                                                                    value="working"  disabled
-                                                                    @if($get_role != 'sitemanager') disabled @endif 
+                                                                    value="working"  
+                                                                    @if($get_role != 'admin') disabled @endif 
                                                                     id="is_repairing_{{ $data->id }}_working" 
                                                                     @if(isset($pms_history->working[$data->id]) && $pms_history->working[$data->id] == 'working') checked @endif
                                                                     onchange="showRepairing(this, {{ $data->id }})">
@@ -197,8 +206,8 @@
                                                                 <input class="form-check-input" 
                                                                       type="radio" 
                                                                       name="working[{{ $data->id }}]" 
-                                                                      value="not_working"  disabled
-                                                                      @if($get_role != 'sitemanager') disabled @endif 
+                                                                      value="not_working"  
+                                                                      @if($get_role != 'admin') disabled @endif 
                                                                       @if(isset($pms_history->working[$data->id]) && $pms_history->working[$data->id] == 'not_working') checked @endif
                                                                       id="is_repairing_{{ $data->id }}_not_working" 
                                                                       onchange="showRepairing(this, {{ $data->id }})">
@@ -212,22 +221,22 @@
                                                           <b>Repairing Options</b> 
                                                           <br>  
                                                           <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" disabled
+                                                                <input class="form-check-input" 
                                                                        type="radio" 
                                                                        name="repairing[{{ $data->id }}]" 
                                                                        value="in_repairing"
                                                                        @if(isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'in_repairing') checked @endif
-                                                                       @if($get_role != 'sitemanager') disabled @endif 
+                                                                       @if($get_role != 'admin') disabled @endif 
                                                                        onchange="showEstimatedCost(this, {{ $data->id }})">
                                                                 <label class="form-check-label" for="is_repairing_{{ $data->id }}_in_repairing">In Repairing</label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" disabled
+                                                                <input class="form-check-input" 
                                                                        type="radio" 
                                                                        name="repairing[{{ $data->id }}]"  
                                                                        value="replace" 
                                                                        @if(isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'replace') checked @endif
-                                                                       @if($get_role != 'sitemanager') disabled @endif 
+                                                                       @if($get_role != 'admin') disabled @endif 
                                                                        id="is_repairing_{{ $data->id }}_in_repairing" 
                                                                        onchange="showEstimatedCost(this, {{ $data->id }})">
                                                                 <label class="form-check-label" for="is_repairing_{{ $data->id }}_in_repairing">
@@ -235,21 +244,21 @@
                                                                 </label>
                                                             </div>
                                                             <div class="form-check form-check-inline">
-                                                                <input class="form-check-input" disabled
+                                                                <input class="form-check-input" 
                                                                        type="radio" 
                                                                        name="repairing[{{ $data->id }}]" 
                                                                        value="out_repairing"
                                                                        @if(isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'out_repairing') checked @endif
-                                                                       @if($get_role != 'sitemanager') disabled @endif 
+                                                                       @if($get_role != 'admin') disabled @endif 
                                                                        onchange="showEstimatedCost(this, {{ $data->id }})">
                                                                 <label class="form-check-label" for="is_repairing_{{ $data->id }}_out_repairing">Out Repairing</label>
                                                             </div>
                                                             <div id="estimated_cost_{{ $data->id }}" style="display:{{ isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'in_repairing' || $pms_history->repairing[$data->id] == 'replace' ? 'block' : 'none' }}" class="mt-2">
                                                                 <label for="estimated_cost[{{ $data->id }}]">Estimated Cost</label>
-                                                                <input type="text" name="estimated_cost[{{ $data->id }}]" disabled
+                                                                <input type="text" name="estimated_cost[{{ $data->id }}]" 
                                                                        class="form-control"
                                                                        value="{{ $pms_history->estimated_cost[$data->id] ?? '' }}"
-                                                                       @if($get_role != 'sitemanager') disabled @endif>
+                                                                       @if($get_role != 'admin') disabled @endif>
                                                             </div>
                                                         </div>
                                                     @endif
@@ -260,9 +269,37 @@
                                 @endforeach
                             </ul>
                         </td>
-                    </tr>
-                    
+                     </tr>
                     </table>
+                      @if($get_role == 'admin')
+                        @if($pms_history->property_name->agreement_status == 'Uploaded')
+                        <a href="{{url('admin/view-agreement'.'/'.$pms_history->property_name->id)}}"  onclick="downloadFile(event, this.href)"class="btn btn-primary float-end ">
+                            View Agreement
+                        </a>
+                        @elseif ($pms_history->property_name->agreement_status == 'Downloaded')
+                        <button type="button" class="btn btn-primary float-end " >Waiting for Agreement Upload</button>
+                        @elseif($pms_history->property_name->agreement_status == 'View by Admin')
+                        <form  method="POST" id="updateAgreementStatusForm" class="w-25">
+                          @csrf
+                          <select name="agreement_status" id="agreement_status" class="form-control" onchange="toggleUnapproveComment()">
+                              <option value="approve">Approve</option>
+                              <option value="unapprove">Unapprove</option>
+                          </select>
+                          <div id="unapprove_comment_div" style="display:none;">
+                              <label for="unapprove_comment">Comment</label>
+                              <input type="text" name="unapprove_comment" id="unapprove_comment" class="form-control" value="{{ $pms_history->property_name->unapprove_comment ?? '' }}">
+                          </div>
+                          <button type="button" class="btn btn-primary float-end mt-2" id="submitAgreementStatus">Submit</button>
+                        </form>
+                        @elseif(!in_array($pms_history->property_name->agreement_status, ['Uploaded', 'View by Admin', 'approve', 'unapprove','Downloaded']))
+                        <button type="submit" class="btn btn-primary float-end ">Send Agreement To Owner</button>
+                        @elseif($pms_history->property_name->agreement_status == 'unapprove')
+                        <button type="button" class="btn btn-primary float-end " >Waiting for again Agreement Upload</button>
+                        @elseif($pms_history->property_name->agreement_status == 'approve')
+                        <button type="button" class="btn btn-primary float-end ">Property  Approved</button>
+                        @endif
+                      @endif
+                  </form>
                 </div>
               </div>
             </div>
@@ -272,4 +309,80 @@
     </section>
   </div>
 @endsection
+@push('scripts')
+<script>
+  function showRepairing(el, id){
+      if(el.value == 'working'){
+          document.getElementById("repairing_options_"+id).style.display="none";
+      }else if(el.value == 'not_working'){
+          document.getElementById("repairing_options_"+id).style.display="block";
+      }
+  }
+  function showRemark(el, id){
+      if(el.value == 'no'){
+          document.getElementById("remarks_"+id).style.display="block";
+          document.getElementById("working_options_"+id).style.display="none";
+      }else if(el.value == 'yes'){
+          document.getElementById("remarks_"+id).style.display="none";
+          document.getElementById("working_options_"+id).style.display="block";
+      }
+  }
 
+  function showEstimatedCost(el, id){
+      if(el.value == 'in_repairing' || el.value == 'replace'){
+          document.getElementById("estimated_cost_"+id).style.display="block";
+      }else if(el.value == 'out_repairing'){
+          document.getElementById("estimated_cost_"+id).style.display="none";
+      }
+  }
+  function toggleUnapproveComment() {
+      var agreementStatus = $('#agreement_status').val();
+      if (agreementStatus === 'unapprove') {
+          $('#unapprove_comment_div').show();
+      } else {
+          $('#unapprove_comment_div').hide();
+      }
+  }
+
+  $('#submitAgreementStatus').on('click', function(e) {
+      e.preventDefault();
+      var url = '{{ url('admin/update-agreement-status/' . $pms_history->property_name->id) }}';
+      var agreementStatus = $('#agreement_status').val();
+      if (agreementStatus === 'unapprove') {
+          var unapproveComment = $('#unapprove_comment').val();
+      }else {
+          var unapproveComment = '';
+      }
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+          url: url,
+          type: 'POST',
+          data: {
+              'agreement_status': agreementStatus,
+              'unapprove_comment': unapproveComment},
+          success: function(response) {
+              alert('Agreement status updated successfully');
+              location.reload();
+          },
+          error: function(xhr) {
+              location.reload();
+              alert('An error occurred while updating agreement status');
+          }
+      });
+  });
+  function downloadFile(event, url) {
+      event.preventDefault(); 
+      var iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+      setTimeout(function() {
+          location.reload();
+      }, 1000); 
+  }
+</script>
+@endpush

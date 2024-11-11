@@ -145,7 +145,6 @@
                                                                 @else
                                                                     {{-- commit by ankit 06/03/2024 --}}
                                                                     <label class="toggleSwitch large" onclick="">
-
                                                                         <input type="checkbox" id="status" data-id="{{ $property->id }}" data-status="{{ $property->status }}"  {{ $property->status == "Listed" ? 'checked' : '' }} readonly/>
                                                                         <span>
                                                                             <span>{{ __('Unlisted') }}</span>
@@ -188,6 +187,66 @@
                                                             </a>
                                                         </div>
                                                     @endif
+                                                    @if($property->status == "Listed"  && ($property->agreement_status == 'Agreement-Send' || $property->agreement_status == 'Uploaded' || $property->agreement_status == 'unapprove' || $property->agreement_status == 'approve' || $property->agreement_status == 'View by Admin' || $property->agreement_status == 'Downloaded'))
+                                                        @if($property->agreement_status == 'Agreement-Send')
+                                                        <div class="col-6 col-sm-12 text-right text-sm-center mt-0 mt-md-3 p-2">
+                                                            <a href="{{ url('download-agreement/'.$property->id) }}" onclick="downloadFile(event, this.href)" class="text-color text-color-hover">
+                                                                <i class="fas fa-download"></i>
+                                                                {{ __('Download Agreement') }}
+                                                            </a>
+                                                        </div>
+                                                      
+                                                        @elseif ($property->agreement_status == "Uploaded" || $property->agreement_status == "View by Admin")
+                                                        <div class="col-6 col-sm-12 text-right text-sm-center mt-0 mt-md-3 p-2">
+                                                            <p class="text-color">
+                                                                <i class="fas fa-clock"></i>
+                                                                {{ __('Your document upload is waiting for approval') }}
+                                                            </p>
+                                                        </div>
+                                                        @elseif($property->agreement_status == "unapprove")
+                                                        <div class="col-6 col-sm-12 text-right text-sm-center mt-0 mt-md-3 p-2">
+                                                            <h2>{{$property->unapprove_comment}}</h2>
+                                                            <form action="{{ url('upload-agreement/'.$property->id) }}" method="POST" enctype="multipart/form-data">
+                                                                @csrf
+                                                                <div class="input-group mb-3">
+                                                                    <div class="custom-file">
+                                                                        <input type="file" class="custom-file-input" name="agreement_file" id="customFile" accept=".pdf" onchange="this.form.submit()">
+                                                                        <label class="custom-file-label" for="customFile">{{ __('Upload Agreement') }}</label>
+                                                                        @error('agreement_file')
+                                                                        <span class="invalid-feedback" role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </span>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        @elseif($property->agreement_status == "approve")
+                                                        <div class="col-6 col-sm-12 text-right text-sm-center mt-0 mt-md-3 p-2">
+                                                            <p class="text-color">
+                                                                <i class="fas fa-check-circle"></i>
+                                                                {{ __('Your Property  is approved') }}
+                                                            </p>
+                                                        </div>
+                                                        @elseif($property->agreement_status == "Downloaded")
+                                                        <div class="col-6 col-sm-12 text-right text-sm-center mt-0 mt-md-3 p-2">
+                                                            <form action="{{ url('upload-agreement/'.$property->id) }}" method="POST" enctype="multipart/form-data">
+                                                                @csrf
+                                                                <div class="input-group mb-3">
+                                                                    <div class="custom-file">
+                                                                        <input type="file" class="custom-file-input" name="agreement_file" id="customFile" accept=".pdf" onchange="this.form.submit()">
+                                                                        <label class="custom-file-label" for="customFile">{{ __('Upload Agreement') }}</label>
+                                                                        @error('agreement_file')
+                                                                        <span class="invalid-feedback" role="alert">
+                                                                            <strong>{{ $message }}</strong>
+                                                                        </span>
+                                                                        @enderror
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        @endif
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -220,6 +279,18 @@
     var hasBeen = "{{ __('has been') }}";
 </script>
 <script src="{{ asset('public/js/front.min.js') }}"></script>
+<script>
+    function downloadFile(event, url) {
+        event.preventDefault(); 
+        var iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = url;
+        document.body.appendChild(iframe);
+        setTimeout(function() {
+            location.reload();
+        }, 1000); 
+    }
+</script>
 @endsection
 
 
