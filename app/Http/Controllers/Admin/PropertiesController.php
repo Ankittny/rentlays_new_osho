@@ -43,7 +43,7 @@ use App\Models\{
     Settings,
     Bookings,
     Currency,
-    warehouetype,
+    Warehouetype,
     FloorType,
     RoleAdmin
 };
@@ -97,7 +97,7 @@ class PropertiesController extends Controller
                 $property                  = new Properties;
                 $property->host_id         = $request->host_id;
                 if($request->space_type=="8" || $request->space_type=="7"){
-                    $property->name            = warehouetype::getAll()->find($request->space_type)->name . ' in ' . $request->city;
+                    $property->name            = Warehouetype::getAll()->find($request->space_type)->name . ' in ' . $request->city;
                   } else {
                     $property->name            = SpaceType::getAll()->find($request->space_type)->name . ' in ' . $request->city;
                   }
@@ -140,7 +140,7 @@ class PropertiesController extends Controller
         $data['property_type'] = PropertyType::where('status', 'Active')->pluck('name', 'id');
         $data['space_type']    = SpaceType::where('status', 'Active')->pluck('name', 'id');
         $data['users']         = User::where('status', 'Active')->get();
-        $data['warehouse']    = warehouetype::getAll()->where('status', 'Active')->pluck('name', 'id');
+        $data['warehouse']    = Warehouetype::getAll()->where('status', 'Active')->pluck('name', 'id');
         return view('admin.properties.add', $data);
     }
 
@@ -194,7 +194,7 @@ class PropertiesController extends Controller
             $data['bed_type']       = BedType::pluck('name', 'id');
             $data['property_type']  = PropertyType::where('status', 'Active')->pluck('name', 'id');
             $data['space_type']     = SpaceType::pluck('name', 'id');
-            $data['warehouse_type']     = warehouetype::getAll()->pluck('name', 'id');
+            $data['warehouse_type']     = Warehouetype::getAll()->pluck('name', 'id');
             $data['floor_type']         = FloorType::getAll()->pluck('name', 'id');
 
         } elseif ($step == 'description') {
