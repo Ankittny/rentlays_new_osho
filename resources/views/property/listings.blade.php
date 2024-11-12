@@ -187,7 +187,7 @@
                                                             </a>
                                                         </div>
                                                     @endif
-                                                    @if($property->status == "Listed"  && ($property->agreement_status == 'Agreement-Send' || $property->agreement_status == 'Uploaded' || $property->agreement_status == 'unapprove' || $property->agreement_status == 'approve' || $property->agreement_status == 'View by Admin' || $property->agreement_status == 'Downloaded'))
+                                                    @if(($property->agreement_status == 'Agreement-Send' || $property->agreement_status == 'Uploaded' || $property->agreement_status == 'unapprove' || $property->agreement_status == 'approve' || $property->agreement_status == 'View by Admin' || $property->agreement_status == 'Downloaded'))
                                                         @if($property->agreement_status == 'Agreement-Send')
                                                         <div class="col-6 col-sm-12 text-right text-sm-center mt-0 mt-md-3 p-2">
                                                             <a href="{{ url('download-agreement/'.$property->id) }}" onclick="downloadFile(event, this.href)" class="text-color text-color-hover">
