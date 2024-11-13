@@ -51,7 +51,7 @@ class PmsJobDataTable extends DataTable
         })->join('admin as a', function ($join) {
             $join->on('pms_jobs.user_id', '=', 'a.id');
         });
-        if (($user->username != 'admin') && ($user->username != 'pms') && ($user->username != 'help')) {
+        if (($user->username != 'admin') && ($user->usernaqme != 'pms') && ($user->username != 'help')) {
             $help_desk_user = Admin::where('pincode', $user->pincode)->pluck('id')->toArray();
             $pms_job = $pms_job->whereIn('pms_helpdesks.assign_to_sitemanager', $help_desk_user)->whereIn('pms_helpdesks.assign_to_supervisor', $help_desk_user);
         }

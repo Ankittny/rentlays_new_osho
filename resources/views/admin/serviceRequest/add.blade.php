@@ -37,11 +37,10 @@
                         <label for="exampleInputPassword1"
                             class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Property</label>
                         <div class="col-sm-8">
-                      
                             <select name="property_id" class="form-control f-14 select2" required>
                                 <option value="">Select Property</option>
                                 @foreach ($property as $key => $value)
-                                  <option data-icon-class="icon-star-alt" value="{{ $value->id }}">
+                                  <option data-icon-class="icon-star-alt" value="{{ $value->id }}" class="text-capitalize">
                                     {{ $value->name }}
                                   </option>
                                 @endforeach

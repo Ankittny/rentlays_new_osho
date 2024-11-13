@@ -205,15 +205,11 @@ class EmailController extends Controller
         $data['type']    = $type;
 
         if (env('APP_MODE', '') != 'test') {
-
             if ($emailConfig['driver'] == 'smtp' && $emailConfig['email_status'] == 1) {
-
                 Mail::send('emails.payment_request', $data, function($message) use($user, $data, $subject, $content) {
                     $message->to($user->email, $user->first_name)->subject($subject);
                 });
-
             } elseif ($emailConfig['driver'] == 'sendmail') {
-
                 $this->sendPhpEmail($data,$emailConfig);
             }
         }

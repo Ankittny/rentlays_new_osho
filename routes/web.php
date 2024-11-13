@@ -181,7 +181,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 	Route::group(['middleware' => 'permission:pms_job'], function () {
 		Route::get('pms_job', 'PmsJobController@pms_job_index');
 		Route::get('pms-inventory-getPrice', 'PmsJobController@pms_inventory_getPrice');
-		Route::get("pms-inventory-job-item/{pms_job_id}/{service_id}/{addon_id}/{package_id}", "PmsJobController@getpmsjobitem");
+		Route::get("pms-inventory-job-item/{pms_job_id}/{service_id}/{addon_id}/{package_id?}", "PmsJobController@getpmsjobitem");
 		Route::match(array('GET', 'POST'), 'add-pms-job', 'PmsJobController@pms_job_add');
 		Route::match(array('GET', 'POST'), 'edit-pms-job/{id}', 'PmsJobController@pms_job_update');
 		Route::get('delete-pms-job/{id}', 'PmsJobController@pms_job_delete');
@@ -573,6 +573,15 @@ Route::group(['middleware' => ['guest:users', 'locale']], function () {
 	Route::get('users/job-approval', 'UserController@jobApproval');	
 	Route::post('users/update-job-approval', 'UserController@updateJobApproval');
 	Route::get('users/package-list', 'UserController@packageList');
+	// add service request 
+	Route::get('users/service-request', 'UserController@serviceRequest')->name('users-service-request');
+	Route::get('users/add-service-request', 'UserController@addServiceRequest');
+	Route::post('users/store-service-request', 'UserController@storeServiceRequest');
+	Route::get('users/edit-service-request/{id}', 'UserController@editServiceRequest');
+	Route::post('users/update-service-request/{id}', 'UserController@updateServiceRequest');
+	Route::get('users/delete-service-request/{id}', 'UserController@deleteServiceRequest');
+	// end service request 
+
 	Route::post('users/paynow', 'UserController@paynow');
     Route::post('users/account_transaction_history', 'UserController@getCompletedTransaction');
 	Route::get('users/invoice/{id}', 'UserController@invoice');

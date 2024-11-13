@@ -49,9 +49,11 @@ class ServiceRequestController extends Controller
     public function service_request_add(Request $request,EmailController $emial)
     {
         if (! $request->isMethod('post')) {
-            $data['property'] = PmsOnboard::join('properties', 'pms_onboards.property_id', '=', 'properties.id')
-            ->select('pms_onboards.*', 'properties.*')
-            ->get();
+            // $data['property'] = PmsOnboard::join('properties', 'pms_onboards.property_id', '=', 'properties.id')
+            // ->select('pms_onboards.*', 'properties.*')
+            // ->get();
+            $data['property'] = Properties::where('agreement_status',"approve")->get();
+            // dd($data['property']);
              $data['assign_to_supervisor']  = Admin::join('role_admin', function ($join) {
                 $join->on('admin.id', '=', 'role_admin.admin_id');
             })->select(['admin.*','role_admin.role_id'])->where('role_admin.role_id',5)->get();
@@ -110,10 +112,11 @@ class ServiceRequestController extends Controller
     {
         if (! $request->isMethod('post')) {
             $data['result'] = PmsHelpdesk::find($request->id);
-            $data['property'] = PmsOnboard::join('properties', 'pms_onboards.property_id', '=', 'properties.id')
-            ->select('pms_onboards.*', 'properties.*')
-            ->get();
-            $data['pms_department_master'] = PmsDepartmentMaster::where('status',"1")->latest()->get();
+            // $data['property'] = PmsOnboard::join('properties', 'pms_onboards.property_id', '=', 'properties.id')
+            // ->select('pms_onboards.*', 'properties.*')
+            // ->get();
+            $data['property'] = Properties::where('agreement_status',"approve")->get();
+            $data['pms_department_master'] = PmsDepartmentMaster::where('status',"Active")->latest()->get();
             $adminId = Auth::guard('admin')->user()->id;
             $data['assign_to_supervisor']  = Admin::join('role_admin', function ($join) use ($adminId) {
                 $join->on('admin.id', '=', 'role_admin.admin_id');
@@ -121,11 +124,10 @@ class ServiceRequestController extends Controller
                     $join->where('role_admin.admin_id',$adminId);
                 }
             })->select(['admin.*','role_admin.role_id'])->where('role_admin.role_id',5)->get();
-            
+            $pincode = $data['assign_to_supervisor']->first()->pincode;
             $data['assign_to_sitemanager']  = Admin::join('role_admin', function ($join) {
                 $join->on('admin.id', '=', 'role_admin.admin_id');
-            })->select(['admin.*','role_admin.role_id'])->where('role_admin.role_id',6)->get();
-
+            })->select(['admin.*','role_admin.role_id'])->where('admin.pincode',$pincode)->where('role_admin.role_id',6)->get();
             $data['role'] = RoleAdmin::getAll()->where('admin_id', Auth::guard('admin')->user()->id)->first();
             return view('admin.serviceRequest.edit', $data);
         } elseif ($request->isMethod('post')) {
