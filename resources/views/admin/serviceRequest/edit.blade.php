@@ -155,7 +155,7 @@
                                                 OnChange="OnChangeDepartment(this.value)" @if($result->status=="Completed") disabled @endif>
                                                 <option value="">Select Department</option>
                                                 @foreach ($pms_department_master as $key => $value)
-                                                    <option data-icon-class="icon-star-alt" value="{{ $value->id }}">
+                                                    <option data-icon-class="icon-star-alt  " class="text-capitalize" value="{{ $value->id }}">
                                                         {{ $value->name }}
                                                     </option>
                                                 @endforeach

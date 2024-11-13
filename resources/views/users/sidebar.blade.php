@@ -79,6 +79,23 @@
 						{{ __('Package List') }}
 					</li>
 				</a>
+				@auth
+                @php
+				$property_id = \App\Models\Bookings::where('user_id', Auth::id())->where('status', 'Accepted')->Select('property_id')->first();
+				$property = null;
+				if(isset($property_id) && $property_id->property_id != null){
+					$property = \App\Models\Properties::where('id', $property_id->property_id)->whereIn('for_property',['pms','pmsandrentlays'])->count();
+				}
+				@endphp
+		     	@if(isset($property) && $property > 0)
+				<a class="text-color font-weight-500 mt-1" href="{{ url('users/service-request') }}">
+					<li class="list-group-item vbg-default-hover pl-25  border-0 text-15 dashboardlist {{ (request()->is('users/service-request')) ? 'active-sidebar' : '' }}">
+						<i class="fas fa-list mr-3 text-16 align-middle"></i>
+						{{ __('Services Request') }}
+					</li>
+				</a>
+                 @endif
+				 @endauth
 				<a class="text-color font-weight-500 mt-1" href="{{ url('users/profile') }}">
 					<li class="list-group-item vbg-default-hover pl-25  border-0 text-15 dashboardlist {{ (request()->is('users/profile') || request()->is('users/profile/media') || request()->is('users/edit-verification') || request()->is('users/security')) ? 'active-sidebar' : '' }}">
 						<i class="far fa-user-circle mr-3 text-18 align-middle"></i>

@@ -13,12 +13,14 @@ use Illuminate\Support\Facades\Cache;
 use App\DataTables\TransactionDataTable;
 use App\DataTables\JobApprovalDataTable;
 use App\DataTables\PackageListDataTable;
+use App\DataTables\UserServiceRequestDataTable;
 use Auth, Validator, Socialite, DateTime, Hash, DB, Session, Common;
 use Pdf;
 use Mail;
 use Storage;
 use Carbon\Carbon;
 use App\Models\{
+    UserServiceRequest,
     User,
     UserDetails,
     Country,
@@ -975,6 +977,88 @@ class UserController extends Controller
        public function packageList(PackageListDataTable $dataTable)
       {
         return $dataTable->render('users.package_list');
+       }
+
+       
+       public function serviceRequest(UserServiceRequestDataTable $dataTable)
+       {
+         return $dataTable->render('users.service-request.index');
+       }
+
+       public function addServiceRequest()
+       {
+         $data['title'] = 'Add Service Request';
+         return view('users.service-request.add',compact('data'));
+       }
+
+
+       public function storeServiceRequest(Request $request)
+       {
+         $request->validate([
+            'issue' => 'required|string',
+            'description' => 'required|string',
+            'priority' => 'required|string',
+         ]);
+         $serviceRequest = new UserServiceRequest();
+         $serviceRequest->user_id = Auth::user()->id;
+         $serviceRequest->name = Auth::user()->first_name;
+         if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/service-request/' . $filename);
+            $serviceRequest->image = $filename;
+         }
+         $serviceRequest->issue = $request->issue;
+         $serviceRequest->description = $request->description;
+         $serviceRequest->priority = $request->priority;
+         $serviceRequest->property_id = Bookings::where('user_id',Auth::user()->id)->first('property_id')->property_id;
+         $serviceRequest->save();
+         Common::one_time_message('success', __('Service Request Added Successfully'));
+         return redirect('users/service-request');
+       }
+
+       
+       public function editServiceRequest($id)
+       {
+         $data['serviceRequest'] = UserServiceRequest::find($id);
+         $data['title'] = 'Edit Service Request';
+         return view('users.service-request.edit',compact('data'));
+       }
+
+       public function updateServiceRequest(Request $request,$id)
+       {
+         $request->validate([
+            'issue' => 'required|string',
+            'description' => 'required|string',
+            'priority' => 'required|string',
+         ]);
+         $serviceRequest = UserServiceRequest::find($id);
+         $serviceRequest->issue = $request->issue;
+         $serviceRequest->description = $request->description;
+         $serviceRequest->priority = $request->priority;
+         if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/service-request/' . $filename);
+            if (file_exists($serviceRequest->image)) {
+               unlink($serviceRequest->image);
+            }
+            $serviceRequest->image = $filename;
+         }
+         $serviceRequest->save();
+         Common::one_time_message('success', __('Service Request Updated Successfully'));
+         return redirect('users/service-request');
+       }
+
+       public function deleteServiceRequest($id)
+       {
+         if(UserServiceRequest::find($id)){
+            $serviceRequest = UserServiceRequest::find($id)->delete();
+            Common::one_time_message('success', __('Service Request Deleted Successfully'));
+         }else{
+            Common::one_time_message('error', __('Service Request Not Found'));
+         }
+         return redirect('users/service-request');
        }
    }
 
