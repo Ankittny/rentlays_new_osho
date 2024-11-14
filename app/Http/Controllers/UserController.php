@@ -21,6 +21,7 @@ use Storage;
 use Carbon\Carbon;
 use App\Models\{
     UserServiceRequest,
+    Admin,
     User,
     UserDetails,
     Country,
@@ -994,68 +995,168 @@ class UserController extends Controller
 
        public function storeServiceRequest(Request $request)
        {
-         $request->validate([
-            'issue' => 'required|string',
-            'description' => 'required|string',
-            'priority' => 'required|string',
-         ]);
-         $serviceRequest = new UserServiceRequest();
-         $serviceRequest->user_id = Auth::user()->id;
-         $serviceRequest->name = Auth::user()->first_name;
-         if ($request->hasFile('image')) {
+            $rules = [
+                'issue'        => 'required|max:100',
+                'description'  => 'required|max:200',
+                'image'        => 'required',
+                'priority'     => 'required'
+            ];
+            $fieldNames = [
+                'issue'        => 'Issue',
+                'description'  => 'Description',
+                'image'        => 'Image',
+                'priority'     => 'Priority'
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return back()->withErrors($validator)->withInput();
+            }
+
             $image = $request->file('image');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('images/service-request/' . $filename);
-            $serviceRequest->image = $filename;
-         }
-         $serviceRequest->issue = $request->issue;
-         $serviceRequest->description = $request->description;
-         $serviceRequest->priority = $request->priority;
-         $serviceRequest->property_id = Bookings::where('user_id',Auth::user()->id)->first('property_id')->property_id;
-         $serviceRequest->save();
-         Common::one_time_message('success', __('Service Request Added Successfully'));
-         return redirect('users/service-request');
+            $extension = $image->getClientOriginalExtension();
+            $filename = 'service_req_' . time() . '.' . $extension;
+            $success = $image->move('public/front/images/service_request', $filename);
+            if (!$success) {
+                return back()->withError('Could not upload Image');
+            }
+
+            $property_id = Bookings::where('user_id', Auth::id())->first('property_id')->property_id;
+            $supervisorid = PmsHelpdesk::where('property_id', $property_id)->first();
+            $service_request = new PmsHelpdesk;
+            $service_request->issue = $request->issue;
+            $service_request->image = $filename;
+            $service_request->status = 'Active';
+            $service_request->description = $request->description;
+            $service_request->user_id = Auth::id();
+            $service_request->property_id = $property_id;
+            $service_request->priority = $request->priority;
+            $service_request->assign_to_supervisor = $supervisorid->assign_to_supervisor;
+            $service_request->save();
+
+            $pms_job = new PmsJobs();
+            $pms_job->user_id = $supervisorid->assign_to_supervisor;
+            $pms_job->property_id = $property_id;
+            $pms_job->helpdesk_id = $service_request->id;
+            $pms_job->status = '1';
+            $pms_job->save();
+
+            if (!empty($supervisorid->assign_to_supervisor)) {
+                Mail::send('emails.user-request', ['serviceRequest' => $service_request], function ($m) use ($supervisorid) {
+                    $m->from(env('MAIL_FROM_ADDRESS'))
+                      ->to(Admin::find($supervisorid->assign_to_supervisor)->email)
+                      ->subject('Service Request');
+                });
+            }
+
+            Common::one_time_message('success', __('Service Request Added Successfully'));
+            return redirect('users/service-request');
+            // $request->validate([
+            //     'issue' => 'required|string',
+            //     'description' => 'required|string',
+            //     'priority' => 'required|string',
+            // ]);
+            // $serviceRequest = new UserServiceRequest();
+            // $serviceRequest->user_id = Auth::user()->id;
+            // $serviceRequest->name = Auth::user()->first_name;
+            // if ($request->hasFile('image')) {
+            //     $image = $request->file('image');
+            //     $filename = time() . '.' . $image->getClientOriginalExtension();
+            //     $location = public_path('images/service-request/' . $filename);
+            //     $serviceRequest->image = $filename;
+            // }
+            // $serviceRequest->issue = $request->issue;
+            // $serviceRequest->description = $request->description;
+            // $serviceRequest->priority = $request->priority;
+            // $serviceRequest->property_id = $property_id;
+            // $serviceRequest->save();
        }
 
        
        public function editServiceRequest($id)
        {
-         $data['serviceRequest'] = UserServiceRequest::find($id);
+        //  $data['serviceRequest'] = UserServiceRequest::find($id);
+         $data['serviceRequest'] = PmsHelpdesk::find($id);
          $data['title'] = 'Edit Service Request';
          return view('users.service-request.edit',compact('data'));
        }
 
-       public function updateServiceRequest(Request $request,$id)
-       {
-         $request->validate([
-            'issue' => 'required|string',
-            'description' => 'required|string',
-            'priority' => 'required|string',
-         ]);
-         $serviceRequest = UserServiceRequest::find($id);
-         $serviceRequest->issue = $request->issue;
-         $serviceRequest->description = $request->description;
-         $serviceRequest->priority = $request->priority;
-         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('images/service-request/' . $filename);
-            if (file_exists($serviceRequest->image)) {
-               unlink($serviceRequest->image);
-            }
-            $serviceRequest->image = $filename;
-         }
-         $serviceRequest->save();
-         Common::one_time_message('success', __('Service Request Updated Successfully'));
-         return redirect('users/service-request');
-       }
+    //    public function updateServiceRequest(Request $request,$id)
+    //    {
+    //         $rules = array(
+    //             'issue'           => 'required|max:100',
+    //             'description'    => 'required|max:200',
+    //         );
+    //         $fieldNames = array(
+    //             'issue'           => 'Issue',
+    //             'description'    => 'Description',
+    //             'image'          => 'Image'
+    //         );
+    //         $validator = Validator::make($request->all(), $rules);
+    //         $validator->setAttributeNames($fieldNames);
+    //         if ($validator->fails()) {
+    //             return back()->withErrors($validator)->withInput();
+    //         } else {
+    //             $service_request = PmsHelpdesk::find($request->id);
+    //             $service_request->issue  = $request->issue;
+    //             $service_request->status   = $request->status;
+    //             $service_request->description   = $request->description;
+    //             $service_request->property_id   = $request->property_id;
+    //             $service_request->priority   = $request->priority; 
+    //             $service_request->assign_to_sitemanager   = $request->assign_to_sitemanager; 
+    //             $service_request->assign_to_supervisor   = $request->assign_to_supervisor; 
+    //             $image     =   $request->file('image');
+    //             if ($image) {
+    //                 $extension =   $image->getClientOriginalExtension();
+    //                 $filename  =   'service_req_'.time() . '.' . $extension;
+    //                 $success = $image->move('public/front/images/service_request', $filename);
+    //                 if (! isset($success)) {
+    //                         return back()->withError('Could not upload Image');
+    //                 }
+
+    //                 $service_request->image = $filename;
+    //             }
+    //             $service_request->save();
+    //             PmsJobs::where('helpdesk_id', $request->id)
+    //                 ->update([
+    //                     'user_id' => $request->assign_to_sitemanager,
+    //                     'property_id' => $request->property_id,
+    //                     'helpdesk_id' => $request->id,
+    //                     'status' => '1'
+    //             ]);
+    //             Common::one_time_message('success', 'Updated Successfully');
+    //             return redirect('admin/service_request');
+    //         }
+
+    //      $serviceRequest = UserServiceRequest::find($id);
+    //      $serviceRequest->issue = $request->issue;
+    //      $serviceRequest->description = $request->description;
+    //      $serviceRequest->priority = $request->priority;
+    //      if ($request->hasFile('image')) {
+    //         $image = $request->file('image');
+    //         $filename = time() . '.' . $image->getClientOriginalExtension();
+    //         $location = public_path('images/service-request/' . $filename);
+    //         if (file_exists($serviceRequest->image)) {
+    //            unlink($serviceRequest->image);
+    //         }
+    //         $serviceRequest->image = $filename;
+    //      }
+    //      $serviceRequest->save();
+    //      Common::one_time_message('success', __('Service Request Updated Successfully'));
+    //      return redirect('users/service-request');
+    //    }
 
        public function deleteServiceRequest($id)
        {
-         if(UserServiceRequest::find($id)){
-            $serviceRequest = UserServiceRequest::find($id)->delete();
+         $service_request   = PmsHelpdesk::find($id);
+         if ($service_request) {
+            $file_path = public_path().'/front/images/service_request/'.$service_request->image;
+            if (file_exists($file_path)) {
+                unlink($file_path);
+            }
+            $service_request->delete();
+            PmsJobs::where('helpdesk_id', $id)->delete();
             Common::one_time_message('success', __('Service Request Deleted Successfully'));
-         }else{
+         } else {
             Common::one_time_message('error', __('Service Request Not Found'));
          }
          return redirect('users/service-request');

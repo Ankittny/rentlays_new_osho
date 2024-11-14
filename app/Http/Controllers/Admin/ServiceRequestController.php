@@ -131,6 +131,7 @@ class ServiceRequestController extends Controller
             $data['role'] = RoleAdmin::getAll()->where('admin_id', Auth::guard('admin')->user()->id)->first();
             return view('admin.serviceRequest.edit', $data);
         } elseif ($request->isMethod('post')) {
+            dd($request->all());
             $rules = array(
                 'issue'           => 'required|max:100',
                 'description'    => 'required|max:200',
@@ -203,12 +204,12 @@ class ServiceRequestController extends Controller
                 unlink($file_path);
             }
             PmsHelpdesk::find($request->id)->delete();
-           
+            PmsJobs::where('helpdesk_id', $request->id)->delete();
             Common::one_time_message('success', 'Deleted Successfully');
         }
-        
         return redirect('admin/service_request');
     }
+
 
 
 

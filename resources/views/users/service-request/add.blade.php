@@ -36,14 +36,29 @@
                                                 <div class="form-group">
                                                     <label for="issue">Issue</label>
                                                     <input type="text" class="form-control" id="issue" name="issue" maxlength="2000" required>
+													@if ($errors->has('issue'))
+														<span class="error-tag">
+															<p>{{ $errors->first('issue') }}</p>
+														</span>
+													@endif
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="description">Description</label>
                                                     <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+													@if ($errors->has('description'))
+														<span class="error-tag">
+															<p>{{ $errors->first('description') }}</p>
+														</span>
+													@endif
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="image">Image</label>
                                                     <input type="file" class="form-control" id="image" name="image">
+													@if ($errors->has('image'))
+														<span class="error-tag">
+															<p>{{ $errors->first('image') }}</p>
+														</span>
+													@endif
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="priority">Priority</label>
@@ -52,6 +67,11 @@
                                                         <option value="medium">Medium</option>
                                                         <option value="high">High</option>
                                                     </select>
+													@if ($errors->has('priority'))
+														<span class="error-tag">
+															<p>{{ $errors->first('priority') }}</p>
+														</span>
+													@endif
                                                 </div>
                                                 <button type="submit" class="btn btn-primary px-5 py-3 float-right">Submit</button>
                                             </form>
