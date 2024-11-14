@@ -131,7 +131,6 @@ class ServiceRequestController extends Controller
             $data['role'] = RoleAdmin::getAll()->where('admin_id', Auth::guard('admin')->user()->id)->first();
             return view('admin.serviceRequest.edit', $data);
         } elseif ($request->isMethod('post')) {
-            dd($request->all());
             $rules = array(
                 'issue'           => 'required|max:100',
                 'description'    => 'required|max:200',
