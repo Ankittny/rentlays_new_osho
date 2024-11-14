@@ -30,7 +30,7 @@
 												->whereIn('for_property', ['pms', 'pmsandrentlays'])
 												->first() : null;
 
-									$hasRequest = $property && \App\Models\UserServiceRequest::where('property_id', $property->id)
+									$hasRequest = $property && \App\Models\PmsHelpdesk::where('property_id', $property->id)
 												->where('user_id', Auth::id())
 												->exists();
 								@endphp
