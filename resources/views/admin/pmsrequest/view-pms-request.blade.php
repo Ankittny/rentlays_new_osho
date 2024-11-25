@@ -46,7 +46,7 @@
                       @php
                         $get_role=App\Http\Helpers\Common::get_roles(Auth::guard('admin')->user()->id);
                       @endphp
-                      @if($get_role != 'sitemanager')
+                      @if($get_role == 'supervisor')
                       <tr>
                         <th>Area Site Engineer</th>
                         <td>

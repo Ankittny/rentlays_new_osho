@@ -84,7 +84,8 @@
 				$property_id = \App\Models\Bookings::where('user_id', Auth::id())->where('status', 'Accepted')->Select('property_id')->first();
 				$property = null;
 				if(isset($property_id) && $property_id->property_id != null){
-					$property = \App\Models\Properties::where('id', $property_id->property_id)->whereIn('for_property',['pms','pmsandrentlays'])->count();
+					$property = \App\Models\Properties::where('id', $property_id->property_id)
+					->whereIn('for_property',['pms','pmsandrentlays'])->where('agreement_status', 'approve')->count();
 				}
 				@endphp
 		     	@if(isset($property) && $property > 0)

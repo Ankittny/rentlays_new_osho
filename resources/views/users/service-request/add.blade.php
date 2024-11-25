@@ -67,7 +67,7 @@
                                                         <option value="medium">Medium</option>
                                                         <option value="high">High</option>
                                                     </select>
-													@if ($errors->has('priority'))
+													@if($errors->has('priority'))
 														<span class="error-tag">
 															<p>{{ $errors->first('priority') }}</p>
 														</span>
