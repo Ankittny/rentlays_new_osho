@@ -151,7 +151,7 @@
                                             class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Select
                                             Department</label>
                                         <div class="col-sm-8">
-                                            <select name="department" class="form-control f-14"
+                                            <select name="department" class="form-control f-14 ext-capitalize"
                                                 OnChange="OnChangeDepartment(this.value)" @if($result->status=="Completed") disabled @endif>
                                                 <option value="">Select Department</option>
                                                 @foreach ($pms_department_master as $key => $value)
@@ -167,7 +167,7 @@
                                             class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Assign to site
                                             Manager</label>
                                         <div class="col-sm-8">
-                                            <select name="assign_to_sitemanager" class="form-control f-14"
+                                            <select name="assign_to_sitemanager" class="form-control f-14 ext-capitalize"
                                                 id="assign_to_sitemanager" OnChange="OnChangeSiteManager(this.value)"  @if($result->status=="Completed") disabled @endif>
                                                 <option value="">Select Site Manager</option>
                                                 @foreach ($assign_to_sitemanager as $key => $value)

@@ -145,21 +145,21 @@
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label class="label-large label-inline">{{ __('Property Area(meter)') }}</label>
-                                                                    <input type="text" class="form-control" name="property_square" required value="{{ $result->property_square ?? '' }}" data-saving="">
+                                                                    <input type="number" class="form-control" name="property_square" required value="{{ $result->property_square ?? '' }}" data-saving="">
                                                                     <span class="text-danger">{{ $errors->first('property_square') }}</span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label class="label-large label-inline">{{ __('No Of Floors') }}</label>
-                                                                    <input type="text" class="form-control" name="number_of_floor" required value="{{ $result->number_of_floor ?? '' }}" data-saving="">
+                                                                    <input type="number" class="form-control" name="number_of_floor" required value="{{ $result->number_of_floor ?? '' }}" data-saving="">
                                                                     <span class="text-danger">{{ $errors->first('number_of_floor') }}</span>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <label class="label-large label-inline">{{ __('No Of Rooms') }}</label>
-                                                                    <input type="text" class="form-control" name="number_of_rooms" required value="{{ $result->number_of_rooms ?? '' }}" data-saving="">
+                                                                    <input type="number" class="form-control" name="number_of_rooms" required value="{{ $result->number_of_rooms ?? '' }}" data-saving="">
                                                                     <span class="text-danger">{{ $errors->first('number_of_rooms') }}</span>
                                                                 </div>
                                                             </div>
