@@ -33,10 +33,17 @@ class Properties extends Model
     public static function recommendedHome()
     {
         $data = parent::where('status', 'listed')
-                        ->with('users','property_price', 'property_address')
+                        ->with('users', 'property_price', 'property_address')
                         ->where('recomended', '1')
-                        ->whereHas('users', function($query){
+                        ->whereHas('users', function ($query) {
                             $query->where('status', 'Active');
+                        })
+                        ->where(function ($query) {
+                            $query->where('for_property', 'rentlays')
+                                ->orWhere(function ($query) {
+                                    $query->where('for_property', '!=', 'rentlays')
+                                          ->where('agreement_status', 'approve');
+                                });
                         })
                         ->take(8)
                         ->inRandomOrder()
