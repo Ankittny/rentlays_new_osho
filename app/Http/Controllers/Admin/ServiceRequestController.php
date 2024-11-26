@@ -267,17 +267,20 @@ class ServiceRequestController extends Controller
         }
     }
 
-    public function sitemanagerdepartment($id){         
+    public function sitemanagerdepartment($id,$property_id = null)
+    {
+        $property = PropertyAddress::where('property_id', $property_id)->first();
         $data = PmsAppointManager::whereJsonContains('department_ids', $id)->get();
-            if(!empty($data)){
-                echo '<option value="">Select Site Manager</option>';
-                $itesm = array();
-                foreach($data as $item){ ?> 
-                    <option value="<?= Admin::where('id',$item->assign_to_id)->first()->id ?>"><?= ucfirst(Admin::where('id',$item->assign_to_id)->first()->username) ?></option>
-               <?php }
-            } else {
-                return response()->json(['status'=>false]);
-            }
+        if(!empty($data)){
+            echo '<option value="">Select Site Manager</option>';
+            $itesm = array();
+            foreach($data as $item){ ?> 
+                <option value="<?= Admin::where('id',$item->assign_to_id)->where('pincode',$property->postal_code)->first()->id ?>">
+                    <?= ucfirst(Admin::where('id',$item->assign_to_id)->where('pincode',$property->postal_code)->first()->username) ?></option>
+           <?php }
+        } else {
+            echo '<option value="">No Site Manager Found</option>';
+        }
     } 
 }
 
