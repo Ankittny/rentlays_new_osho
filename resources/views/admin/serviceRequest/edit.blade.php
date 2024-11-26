@@ -152,10 +152,10 @@
                                             Department</label>
                                         <div class="col-sm-8">
                                             <select name="department" class="form-control f-14 ext-capitalize"
-                                                OnChange="OnChangeDepartment(this.value)" @if($result->status=="Completed") disabled @endif>
+                                                OnChange="OnChangeDepartment(this.value,{{ $result->property_id }})" @if($result->status=="Completed") disabled @endif>
                                                 <option value="">Select Department</option>
                                                 @foreach ($pms_department_master as $key => $value)
-                                                    <option data-icon-class="icon-star-alt  " class="text-capitalize" value="{{ $value->id }}">
+                                                    <option data-icon-class="icon-star-alt" class="text-capitalize" value="{{ $value->id }}">
                                                         {{ $value->name }}
                                                     </option>
                                                 @endforeach
@@ -256,9 +256,9 @@
             });
         }
         OnChangeSiteManager(assign_to_sitemanager);
-        function OnChangeDepartment(id) {
+        function OnChangeDepartment(id,property_id) {
             $.ajax({
-                url: "{{ url('admin/site_manager_department') }}" + "/" + id,
+                url: "{{ url('admin/site_manager_department') }}" + "/" + id  + "/" + property_id,
                 type: "GET",
                 success: function(data) {
                    $('#assign_to_sitemanager').html(data);

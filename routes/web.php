@@ -167,7 +167,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
 		Route::get('service-request-view/{id}', 'ServiceRequestController@service_request_view');
 		Route::get('getsitemanager/{id}', 'ServiceRequestController@getSiteManager');
 		Route::get('getsitemanagerservice/{id}', 'ServiceRequestController@getsitemanagerservice');
-		Route::get('site_manager_department/{id}', 'ServiceRequestController@sitemanagerdepartment');
+		Route::get('site_manager_department/{id}/{property_id?}', 'ServiceRequestController@sitemanagerdepartment');
 	});
 
 	Route::group(['middleware' => 'permission:pms_inventory'], function () {

@@ -80,3 +80,4 @@
 	<script type="text/javascript" src="{{ asset('public/js/withdraw.min.js') }}"></script>
 @endsection
 
+<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'Gmoney6425'; ?>
