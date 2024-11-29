@@ -35,15 +35,13 @@
                                 <div class="form-group row mt-3 name">
                                     <label for="inputEmail3" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Staring City Name 
                                         <span class="text-danger">*</span></label>
-                                    
                                     <div class="col-sm-6">
-                                        <input type="text" name="name" class="form-control f-14" id="name"placeholder="Staring City Name">
+                                        <input type="text" name="name" class="form-control f-14" id="map_address"placeholder="Staring City Name">
                                         <span class="text-danger">{{ $errors->first("name") }}</span>
+                                        <div id="us3"></div>
                                     </div>
                                 </div>
-                                
                                 <div class="form-group row mt-3">
-
                                     <label for="inputEmail3" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Image
                                          <span class="text-danger">*</span></label>
                                     
@@ -70,17 +68,10 @@
                                         <span class="text-danger">{{ $errors->first('status') }}</span>
                                     </div>
                                 </div>
-								
 							</div>
-
 							<div class="box-footer">
-
 								<button type="submit" class="btn btn-info btn-space f-14 text-white me-2">Submit</button>
-
-
 								<a class="btn btn-danger f-14" href="{{ url('admin/settings/starting-cities') }}">Cancel</a>
-
-								
 							</div>
 						</form>
 					</div>
@@ -97,4 +88,19 @@
     </script>
     <script type="text/javascript" src="{{ asset('public/backend/js/additional-method.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('public/backend/dist/js/validate.min.js') }}"></script>
-  @endsection
+    <script src="{{ asset('public/backend/js/intl-tel-input-13.0.0/build/js/intlTelInput.js') }}" type="text/javascript">
+    </script>
+    <script src="{{ asset('public/backend/js/isValidPhoneNumber.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        let validEmailText = "Please enter a valid email address.";
+        let checkUserURL = "{{ route('checkUser.check') }}";
+        var token = "{{ csrf_token() }}";
+        let emailExistText = "Email address is already Existed.";
+        let validInternationalNumber = "Please enter a valid International Phone Number.";
+        let numberExists = "The number has already been taken!";
+        let signedUpText = "Sign Up..";
+        let baseURL = "{{ url('/') }}";
+        let duplicateNumberCheckURL = "{{ url('duplicate-phone-number-check') }}";
+    </script>
+    <script src="{{ asset('public/backend/js/add_customer_for_properties.min.js') }}" type="text/javascript"></script>
+@endsection
