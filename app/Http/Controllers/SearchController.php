@@ -25,12 +25,12 @@ class SearchController extends Controller
 
     public function index(Request $request)
     {
+
         $location = $request->input('location');
         $address = str_replace(" ", "+", "$location");
         $map_where = 'https://maps.google.com/maps/api/geocode/json?key=' . config("vrent.google_map_key") . '&address=' . $address . '&sensor=false';
         $geocode = $this->content_read($map_where);
         $json = json_decode($geocode);
-
         
         if (isset($json->{'results'}) && $json->{'results'}) {
             $data['lat'] = isset($json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'}) ? $json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'} : 0;
@@ -207,12 +207,11 @@ class SearchController extends Controller
         $currency_rate = Currency::getAll()
             ->firstWhere('code', \Session::get('currency'))
             ->rate;
-
-        $properties = Properties::with([
-            'property_address',
-            'property_price',
-            'users'
-        ])
+            $properties = Properties::with([
+                'property_address',
+                'property_price',
+                'users'
+            ])
             ->whereHas('property_address', function ($query) use ($minLat, $maxLat, $minLong, $maxLong) {
                 $query->whereRaw("latitude between $minLat and $maxLat and longitude between $minLong and $maxLong");
             })
