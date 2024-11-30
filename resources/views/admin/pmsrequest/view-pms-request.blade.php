@@ -37,7 +37,7 @@
             <!-- /.box-header -->
             
             <div class="box-body">
-              <div class="row w-75 mx-auto">
+              <div class="row w-20 mx-auto">
                 <div class="col-sm-12">
                   <form action="{{ url('admin/view-pms-request', $pms_request->id) }}" method="POST">
                     @csrf
@@ -161,7 +161,7 @@
                         <td><input type="text" name="number_of_rooms" class="form-control" @if($get_role != 'sitemanager') disabled  @endif value="{{ $pms_request->property_name->number_of_rooms ?? '' }}"></td>
                       </tr>
                       <tr>
-                        <th>Amenities</th>
+                        <!-- <th>Amenities</th> -->
                         <td>
                           @php
                             $amenities_data = explode(',', App\Models\Properties::find($pms_request->property_id)->amenities);
@@ -171,11 +171,11 @@
                           <ul class="list-group">
                             @foreach ($amenities_type as $row_type)
                             @if (count($amenities->where('type_id', $row_type->id)->whereIn('id', $amenities_data)) > 0)
-                            <li class="list-group-item "> 
+                            <li class="list-group-item mt-3"> 
                                   <p class="text-bold text-decoration-underline">{{ $row_type->name }}</p>
                                   <ul class="list-group">
                                     @foreach ($amenities->where('type_id', $row_type->id) as $data)
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center mt-3">
                                             {{ $data->title }}
                                             <input type="checkbox" name="amenities[{{ $data->id }}]" 
                                                   @if($get_role != 'sitemanager') disabled @endif 
