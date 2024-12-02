@@ -3,7 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LoginEmployee;
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::post('login', 'Api\LoginController@login');
+    Route::post('login', 'Api\LoginController@login')->name('login');
     Route::post('signup', 'Api\LoginController@create');
     
     Route::get('ware-house-type', 'Api\CommanApiController@wareHouseType');
@@ -23,6 +23,9 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('top-destination', 'Api\CommanApiController@Top_Destination');
     Route::get('testimonials', 'Api\CommanApiController@Testimonials');
     Route::post('search', 'Api\CommanApiController@searchResult');
+    // recommend property
+    Route::get('recommended-property', 'Api\CommanApiController@recommendedProperties');
+
     Route::get('listing', 'Api\CommanApiController@listing');
 
     Route::get('propertydetail/{any}', 'Api\CommanApiController@propertyDetail');
@@ -43,11 +46,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('booking','Api\PropertyController@booking');
         Route::get('calendardatalist/{id}','Api\PropertyController@calendar');
 
-        Route::get('my-list/{user_id}','Api\CommanApiController@myList');
-        Route::get('trips/{user_id}','Api\CommanApiController@trips');
-        Route::get('my-wallet/{user_id}','Api\CommanApiController@myWallet');
-        Route::get('latest-booking/{user_id}','Api\CommanApiController@latestBooking');
-        Route::get('latest-transactions/{user_id}','Api\CommanApiController@latestTransactions');
+        Route::get('my-list','Api\CommanApiController@myList');
+        Route::get('trips','Api\CommanApiController@trips');
+        Route::get('my-wallet','Api\CommanApiController@myWallet');
+        Route::get('latest-booking','Api\CommanApiController@latestBooking');
+        Route::get('latest-transactions','Api\CommanApiController@latestTransactions');
         Route::post('properties','Api\CommanApiController@userProperties');
         
         Route::post('my-bookings', 'Api\CommanApiController@myBookings');
@@ -59,7 +62,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('users/package-list', 'Api\CommanApiController@packageList');
         Route::match(array('GET', 'POST'),'users/profile', 'Api\CommanApiController@profile');
         Route::match(array('GET', 'POST'),'users/profile/media', 'Api\CommanApiController@media');
-        Route::get('users/security', 'Api\CommanApiController@security');
+        Route::post('users/security', 'Api\CommanApiController@security');
         Route::get('users/reviews', 'Api\CommanApiController@reviews');
         Route::match(array('GET', 'POST'),'users/reviews_by_you', 'Api\CommanApiController@reviewsByYou');
 
