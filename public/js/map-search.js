@@ -113,7 +113,6 @@
 
        
     function getProperties(map, url){
-
         if (loadPage) {
             url = url||'';
         var p = map;

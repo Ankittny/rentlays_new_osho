@@ -404,7 +404,7 @@ class PropertyController extends Controller
             $validator->setAttributeNames($fieldNames);
 
             if ($validator->fails()) {
-                return response(['errors' => $validate->errors()->all()],self::HTTP_STATUS_VALIDATION_ERROR);
+                return response(['errors' => $validator->errors()->all()],self::HTTP_STATUS_VALIDATION_ERROR);
             } else {
                 //dd($request->price);
                 $property_price                    = PropertyPrice::where('property_id', $property_id)->first();
@@ -468,8 +468,7 @@ class PropertyController extends Controller
     }
 
     public function calendar($id,CalendarController $calendar){
-        $data['calendar'] = $calendar->generate($id);
-        dd($data);
+        return response()->json(['status'=>true,'calendar'=>$calendar->generate($id)],self::HTTP_STATUS_OK);
         //return view('listing.calendar');
     }
 
