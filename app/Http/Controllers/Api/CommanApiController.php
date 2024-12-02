@@ -35,6 +35,7 @@ use App\Models\{
     PmsJobApproval,
     PmsSubscriptionIds,
     User,
+    Timezone
 };
 use Common,Illuminate\Support\Facades\DB;
 use Session,Auth,Validator;
@@ -509,8 +510,9 @@ class CommanApiController extends Controller
         return $result;
     }
 
-    public function myList($user_id){
-        $data = Properties::where('host_id', $user_id)->count();
+
+    public function myList(){
+        $data = Properties::where('host_id', Auth::user()->id)->count();
         if($data){
             return response()->json(['status'=>true, 'data'=>['list'=>$data]]);
         } else {
@@ -518,16 +520,17 @@ class CommanApiController extends Controller
         }
     }
 
-    public function trips($user_id){
-        $data = Bookings::where(['user_id' =>$user_id, 'status' => 'Accepted'])->count();
+    public function trips(){
+        $data = Bookings::where(['user_id' =>Auth::user()->id, 'status' => 'Accepted'])->count();
         if($data){
             return response()->json(['status'=>true, 'data'=>$data]);
         } else {
             return response()->json(['status'=>false, 'data'=>$data]);
         }
     }
-    public function my_wallet($user_id){
-        $trip = Bookings::where(['user_id' =>$user_id, 'status' => 'Accepted'])->count();
+
+    public function my_wallet(){
+        $trip = Bookings::where(['user_id' =>Auth::user()->id, 'status' => 'Accepted'])->count();
         if($trip){
             return response()->json(['status'=>true, 'data'=>['trip'=>$trip]]);
         } else {
@@ -535,9 +538,9 @@ class CommanApiController extends Controller
         }
     }
 
-    public function myWallet($user_id)
+    public function myWallet()
     {
-        $wallet  = wallet::where('user_id', $user_id)->first();
+        $wallet  = wallet::where('user_id',Auth::user()->id)->first();
         $currentCurrency = $this->helper->getCurrentCurrency();
         if($wallet){
             return response()->json(['status'=>true, 'data'=>[
@@ -548,9 +551,9 @@ class CommanApiController extends Controller
             return response()->json(['status'=>false, 'data'=>[]]);
         }
     }
-    public function latestBooking($user_id){
+    public function latestBooking(){
         $data = Bookings::with('users', 'properties')
-                        ->where(['host_id' => $user_id, 'status' => 'Accepted'])
+                        ->where(['host_id' => Auth::user()->id, 'status' => 'Accepted'])
                         ->orderBy('id', 'desc')->take(5)->get();
         if($data){
             return response()->json(['status'=>true, 'data'=>$data]);
@@ -559,20 +562,20 @@ class CommanApiController extends Controller
         }
     }
 
-    public function latestTransactions($user_id)
+    public function latestTransactions()
     {
         $bookings = Bookings::select('payment_method_id','gateways.name as p_method', 'currency_code',
             DB::raw('(total - service_charge - iva_tax - accomodation_tax) as total'), 'bookings.created_at', DB::raw('1 as type'))
             ->join('gateways', function ($join) {
                 $join->on('bookings.payment_method_id', '=', 'gateways.id');
             })
-            ->where(['host_id' => $user_id, 'bookings.status' => 'Accepted']);
+            ->where(['host_id' => Auth::user()->id, 'bookings.status' => 'Accepted']);
 
         $trips = Bookings::select('payment_method_id','gateways.name as p_method', 'currency_code', 'total', 'bookings.created_at', DB::raw('-1 as type'))
             ->join('gateways', function ($join) {
                 $join->on('bookings.payment_method_id', '=', 'gateways.id');
             })
-            ->where(['user_id' => $user_id, 'bookings.status' => 'Accepted']);
+            ->where(['user_id' => Auth::user()->id, 'bookings.status' => 'Accepted']);
 
         $data['transactions'] = Withdrawal::join('currency', function ($join) {
                     $join->on('withdrawals.currency_id', '=', 'currency.id');
@@ -580,7 +583,7 @@ class CommanApiController extends Controller
                     $join->on('withdrawals.payment_method_id', '=', 'payment_methods.id');
                 })
             ->select('payment_method_id','payment_methods.name as p_method', 'currency_id', 'amount', 'withdrawals.created_at', DB::raw('0 as type'))
-            ->where(['user_id' => $user_id, 'withdrawals.status' => 'Success'])->union($bookings)->union($trips)
+            ->where(['user_id' => Auth::user()->id, 'withdrawals.status' => 'Success'])->union($bookings)->union($trips)
             ->orderBy('created_at', 'desc')->take(9)->get();
         if($data['transactions'] && $data['transactions']->count()){
             return response()->json(['status'=>true, 'data'=>$data['transactions']]);
@@ -604,7 +607,7 @@ class CommanApiController extends Controller
         $data['property_approval'] = Settings::getAll()->firstWhere('name', 'property_approval')->value;
         $data['status'] = $request->status;
         $data['properties'] = Properties::with('property_price', 'property_address')
-                                ->where('host_id', $request->user_id)
+                                ->where('host_id', Auth::user()->id)
                                 ->where($pram)
                                 ->orderBy('id', 'desc')
                                 ->paginate(Session::get('row_per_page'));
@@ -642,7 +645,7 @@ class CommanApiController extends Controller
         $data['status']  = $request->status;
         $data['title']   = "Bookings";
         $data['bookings'] = Bookings::with(['users','properties'])
-            ->orWhere(['host_id'=>$request->user_id,'user_id'=>$request->user_id])
+            ->orWhere(['host_id'=>Auth::user()->id,'user_id'=>Auth::user()->id])
             ->where($params)->orderBy('id', 'desc')
             ->paginate(Session::get('row_per_page'));
         if ($data['bookings']->count()) {
@@ -677,7 +680,7 @@ class CommanApiController extends Controller
         $data['yesterday'] = Carbon::yesterday();
         $data['status']    = $request->status;
         $data['bookings']  = Bookings::with('host','properties')
-            ->where('user_id', $request->user_id)
+            ->where('user_id', Auth::user()->id)
             ->where($params)->orderBy('id', 'desc')
             ->paginate(Session::get('row_per_page'));
 
@@ -707,12 +710,12 @@ class CommanApiController extends Controller
         $data['title'] = 'Payouts';
         $data['from'] = isset(request()->from) ? request()->from : null;
         $data['to'] = isset(request()->to) ? request()->to : null;
-        $data['walletBalance'] = Wallet::where(['user_id' => $request->user_id])->first();
-        $data['payouts'] = PayoutSetting::where(['user_id' => $request->user_id])->get();
+        $data['walletBalance'] = Wallet::where(['user_id' => Auth::user()->id])->first();
+        $data['payouts'] = PayoutSetting::where(['user_id' => Auth::user()->id])->get();
         $data['currentCurrency'] = Currency::getAll()->firstWhere('code',
             Session::get('currency') ?? Common::getCurrentCurrencyCode());
 
-        $withdrawals = Withdrawal::with('user', 'currency', 'payment_methods')->where('user_id', $request->user_id);
+        $withdrawals = Withdrawal::with('user', 'currency', 'payment_methods')->where('user_id', Auth::user()->id);
         if (isset($data['from'])) {
             $withdrawals->whereDate('created_at', '>=', setDateForDb($data['from']));
         }
@@ -731,7 +734,7 @@ class CommanApiController extends Controller
     public function transactionHistory(Request $request)
     {
         $data['title'] = 'Transaction History';
-        $user_id = $request->user_id;
+        $user_id = Auth::user()->id;
         $from = $request->input('from') ? setDateForDb($request->input('from')) : null;
         $to = $request->input('to') ? setDateForDb($request->input('to')) : null;
     
@@ -817,7 +820,7 @@ class CommanApiController extends Controller
 
     public function jobApproval(Request $request){
         $data['title']  = 'Job Approval';
-        $user_id = $request->user_id;
+        $user_id = Auth::user()->id;
        // $pmsJobApproval = PmsJobApproval::where('user_id', $user_id)->first();
         $data['pmsJobApproval'] = PmsJobApproval::where('pms_job_approval.user_id', $user_id)
             ->join('pms_jobs', 'pms_jobs.id', '=', 'pms_job_approval.job_id')
@@ -874,14 +877,15 @@ class CommanApiController extends Controller
                 ->get();
             
             // Fetch service names
-            $serviceIdsForName = $services->pluck('service_id');
+            $serviceIdsForName = $services->pluck('service_id')->toArray();
             $serviceNames = DB::table('pms_service_masters')
                 ->whereIn('id', $serviceIdsForName)
-                ->pluck('name', 'id');
+                ->pluck('name', 'id')
+                ->toArray();
             
             // Format services into a single line with HTML line breaks
             $formattedServices = $services->map(function ($service) use ($serviceNames) {
-                return $serviceNames[$service->service_id] . '-  ' . $service->duration_time;
+                return $serviceNames[$service->service_id] ?? '' . '-  ' . $service->duration_time;
             });
 
             // Add formatted services to the package
@@ -897,14 +901,15 @@ class CommanApiController extends Controller
 
     }
 
+
     public function profile(Request $request, EmailController $email_controller)
     {
-        $user = User::find($request->user_id);
+        $user = User::find(Auth::user()->id);
         if ($request->isMethod('post')) {
             $rules = array(
                 'first_name'      => 'required|max:255',
                 'last_name'       => 'required|max:255',
-                'email'           => 'required|max:255|email|unique:users,email,'.$request->user_id,
+                'email'           => 'required|max:255|email|unique:users,email,'.Auth::user()->id,
                 'birthday_day'    => 'required',
                 'birthday_month'  => 'required',
                 'birthday_year'   => 'required',
@@ -951,7 +956,7 @@ class CommanApiController extends Controller
                 $temp_details['date_of_birth'] = $request->birthday_year.'-'.$request->birthday_month.'-'.$request->birthday_day;
                 foreach ($temp_details as $key => $value) {
                     if (!is_null($value) && $value != '') {
-                        UserDetails::updateOrCreate(['user_id' =>$request->user_id, 'field' => $key], ['value' => $value]);
+                        UserDetails::updateOrCreate(['user_id' =>Auth::user()->id, 'field' => $key], ['value' => $value]);
                     }
                 }
 
@@ -971,7 +976,7 @@ class CommanApiController extends Controller
             }
         }
 
-        $data['profile']   = User::find($request->user_id);
+        $data['profile']   = User::find(Auth::user()->id);
 
         $data['timezone'] = Cache::remember('timezone', 86400, function () {
             return Timezone::get()->pluck('zone', 'value');
@@ -982,7 +987,7 @@ class CommanApiController extends Controller
             });
 
 
-        $data['details']   = $details = UserDetails::where('user_id',$request->user_id)->pluck('value', 'field')->toArray();
+        $data['details']   = $details = UserDetails::where('user_id',Auth::user()->id)->pluck('value', 'field')->toArray();
 
         if (isset($details['date_of_birth'])) {
             $data['date_of_birth'] = explode('-', $details['date_of_birth']);
@@ -995,7 +1000,7 @@ class CommanApiController extends Controller
     
     public function media(Request $request)
     {
-        $user = User::find($request->user_id);
+        $user = User::find(Auth::user()->id);
         if ($request->isMethod('get')) {
             if ($user) {
                 return response()->json([
@@ -1018,7 +1023,7 @@ class CommanApiController extends Controller
                 $response = ['status' => false, 'message' => '', 'data' => []];
                 foreach ($files as $file) {
                     $name = 'profile_' . time() . '.' . $file->getClientOriginalExtension();
-                    $path = public_path('images/profile/' . $request->user_id);
+                    $path = public_path('images/profile/' . Auth::user()->id);
                     if (!file_exists($path)) {
                         mkdir($path, 0777, true);
                     }
@@ -1078,7 +1083,7 @@ class CommanApiController extends Controller
                     'errors'  => $validator->errors()->all()
                 ], 422);
             } else {
-                $user = User::find($request->user_id);
+                $user = User::find(Auth::user()->id);
 
                 if (!Hash::check($request->old_password, $user->password)) {
                     return response()->json([
@@ -1107,7 +1112,7 @@ class CommanApiController extends Controller
     public function reviews(Request $request)
     {
         $data['title'] = "Reviews";
-        $data['reviewsAboutYou'] = Reviews::where('receiver_id',$request->user_id)
+        $data['reviewsAboutYou'] = Reviews::where('receiver_id',Auth::user()->id)
         ->orderBy('id', 'desc')
         ->get();
         return response()->json([
@@ -1119,7 +1124,7 @@ class CommanApiController extends Controller
     public function reviewsByYou(Request $request)
     {
         $data['title'] = "Reviews";
-        $data['reviewsByYou'] = Reviews::with('properties','bookings')->where('sender_id',$request->user_id)
+        $data['reviewsByYou'] = Reviews::with('properties','bookings')->where('sender_id',Auth::user()->id)
                                 ->orderBy('id', 'desc')
                                 ->paginate(Session::get('row_per_page'), ['*'], 'you');
 
@@ -1127,12 +1132,12 @@ class CommanApiController extends Controller
             ->whereRaw('DATEDIFF(now(),end_date)>=1')
             ->where('status', 'Accepted')
             ->where(function ($query) use ($request) {
-                return $query->where('user_id',$request->user_id)->orWhere('host_id',$request->user_id);
+                return $query->where('user_id',Auth::user()->id)->orWhere('host_id',Auth::user()->id);
             })
             ->whereDoesntHave('reviews')->paginate(Session::get('row_per_page'), ['*'], 'write');
 
         $data['expiredReviews'] = Bookings::with(['reviews'])->whereRaw('DATEDIFF(now(),end_date) > 14')->where('status', 'Accepted')->where(function ($query) use ($request) {
-            return $query->where('user_id',$request->user_id)->orWhere('host_id',$request->user_id);
+            return $query->where('user_id',Auth::user()->id)->orWhere('host_id',Auth::user()->id);
         })->has('reviews', '<', 1)->paginate(Session::get('row_per_page'), ['*'], 'expired');
 
         if ($request->expired) {
@@ -1147,6 +1152,16 @@ class CommanApiController extends Controller
             'data' => $data
         ]);
     }
+
+    public function recommendedProperties()
+    {
+        $data['properties']          = Properties::recommendedHome();
+        return response()->json([
+            'status' => true,
+            'data' => $data
+        ]);
+    }
+
 
 }
 
