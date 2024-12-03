@@ -26,7 +26,7 @@
             <!-- /.box-header -->
             
             <div class="box-body">
-              <div class="row w-75 mx-auto">
+              <div class="row w-20 mx-auto">
                 <div class="col-sm-12">
                   <form action="{{ url('admin/update-pms-history', $pms_history->id) }}" method="POST">
                     <input type="hidden" value="{{ $pms_history->property_id }}" name="property_id">
@@ -130,7 +130,7 @@
                         <td>{{ $pms_history->property_name->number_of_rooms ?? '' }}</td>
                       </tr>
                       <tr>
-                        <th>Amenities</th>
+                        <!-- <th>Amenities</th> -->
                         <td>
                             @php
                                 $amenities_type = App\Models\AmenityType::all();
@@ -140,12 +140,12 @@
                             <ul class="list-group">
                                 @foreach ($amenities_type as $row_type)
                                     @if (count($amenities->where('type_id', $row_type->id)->whereIn('id', $amenities_data)) > 0)
-                                        <li class="list-group-item">
+                                        <li class="list-group-item mt-3">
                                             <p class="mb-2 text-bold text-decoration-underline">{{ $row_type->name }}</p>
                                             <ul class="list-group mb-0">
                                                 @foreach ($amenities->where('type_id', $row_type->id) as $data)
                                                     @if (in_array($data->id, $amenities_data))
-                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center mb-3 mt-2">
                                                             <span>{{ $data->title }}</span>
                                                             <div class="d-flex align-items-center">
                                                                 <!-- Amenity Status Radios -->
@@ -183,18 +183,18 @@
                                                             </div>
                                                         </li>
                                                         <!-- Remarks Field -->
-                                                        <div id="remarks_{{ $data->id }}" style="display:{{ isset($pms_history->remarks[$data->id]) && $pms_history->amenities_status[$data->id] == 'no' ? 'block' : 'none' }}" class="ms-4">
+                                                        <div id="remarks_{{ $data->id }}" style="display:{{ isset($pms_history->remarks[$data->id]) && $pms_history->amenities_status[$data->id] == 'no' ? 'block' : 'none' }}" class="">
                                                             <label for="remarks[{{ $data->id }}]">Remarks</label>
                                                             <input type="text" name="remarks[{{ $data->id }}]" 
-                                                                   class="form-control mb-2"
+                                                                   class="form-control mb-2 mt-2 cp-control"
                                                                    value="{{ $pms_history->remarks[$data->id] ?? '' }}"
                                                                    @if($get_role != 'admin') disabled @endif >
                                                         </div>
                                                         
-                                                        <div id="working_options_{{ $data->id }}"  class="working_options" style="display:{{ isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'yes' ? 'block' : 'none'}}">
+                                                        <div id="working_options_{{ $data->id }}"  class="working_options op-section " style="display:{{ isset($pms_history->amenities_status[$data->id]) && $pms_history->amenities_status[$data->id] == 'yes' ? 'block' : 'none'}}">
                                                             {{-- working --}}
                                                           <b>Working Options</b> 
-                                                          <br>
+                                                          <div class="d-flex justify-content-between mt-2 import-text">
                                                             <div class="form-check form-check-inline">
                                                               <input class="form-check-input" 
                                                                     type="radio" 
@@ -227,11 +227,12 @@
                                                                     Not Working
                                                                 </label>
                                                             </div>
+                                                            </div>
                                                         </div>
                                                         <!-- Repairing Options -->
-                                                        <div id="repairing_options_{{ $data->id }}"  class="repairing_options" style="display:{{ isset($pms_history->working[$data->id]) && $pms_history->working[$data->id] == 'not_working' ? 'block' : 'none'}}">
+                                                        <div id="repairing_options_{{ $data->id }}"  class="repairing_options mt-3" style="display:{{ isset($pms_history->working[$data->id]) && $pms_history->working[$data->id] == 'not_working' ? 'block' : 'none'}}">
                                                           <b>Repairing Options</b> 
-                                                          <br>  
+                                                          <div class="d-flex justify-content-between mt-2 import-text">
                                                           <div class="form-check form-check-inline">
                                                                 <input class="form-check-input" 
                                                                        type="radio" 
@@ -271,10 +272,11 @@
                                                                        onchange="showEstimatedCost(this, {{ $data->id }})">
                                                                 <label class="form-check-label" for="is_repairing_{{ $data->id }}_out_repairing">Out Repairing</label>
                                                             </div>
-                                                            <div id="estimated_cost_{{ $data->id }}" style="display:{{ isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'in_repairing' || $pms_history->repairing[$data->id] == 'replace' ? 'block' : 'none' }}" class="mt-2">
+                                                            </div>
+                                                            <div id="estimated_cost_{{ $data->id }}" style="display:{{ isset($pms_history->repairing[$data->id]) && $pms_history->repairing[$data->id] == 'in_repairing' || $pms_history->repairing[$data->id] == 'replace' ? 'block' : 'none' }}" class="mt-3">
                                                                 <label for="estimated_cost[{{ $data->id }}]">Estimated Cost</label>
                                                                 <input type="text" name="estimated_cost[{{ $data->id }}]" 
-                                                                       class="form-control"
+                                                                       class="form-control control-text mt-2 mb-3"
                                                                        value="{{ $pms_history->estimated_cost[$data->id] ?? '' }}"
                                                                        @if($get_role != 'admin') disabled @endif
                                                                        @if($pms_history->property_name->agreement_status == 'approve')
@@ -318,11 +320,13 @@
                         @elseif($pms_history->property_name->agreement_status == 'unapprove')
                         <button type="button" class="btn btn-primary float-end " >Waiting For Again Agreement Upload</button>
                         @elseif($pms_history->property_name->agreement_status == 'approve')
+                        <div class="d-flex gap-3">
                           <a href="{{url('admin/agreement-download'.'/'.$pms_history->property_name->id)}}"  onclick="downloadFile(event, this.href)"class="btn btn-primary float-end ">
                               Download Agreement
-                          </a>
-                          <button type="button" class="btn btn-primary float-end " style="margin-right: 10px">Property  Approved</button>
-                        @endif
+                      </a>
+                          <button type="button" class="btn btn-primary float-end ">Property  Approved</button>
+                          </div>
+                          @endif
                       @endif
                   </form>
                 </div>
