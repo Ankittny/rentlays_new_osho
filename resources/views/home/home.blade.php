@@ -221,7 +221,7 @@
                                                 <div class="text-color text-color-hover d-flex align-items-center">
                                                     
                                                 <span class="text-14 font-weight-700 w-100 ">{{ App\Models\PropertyType::getAll()->where('id',$property->property_type)->first()->name ?? "" }},</span>
-                                                <span class="text-14 font-weight-700  mb-0 ">{{ $property->property_address->city }}</span>
+                                                <span class="text-14 font-weight-700 text-nowrap  mb-0 ">{{ $property->property_address->city }}</span>
                                                     
                                                         
                                                 </div>
@@ -241,7 +241,7 @@
                                         <div>
                                         <a href="" class="text-color text-color-hover d-flex align-items-center">
                                             <div>
-                                                <span class="text-14 font-weight-700 w-100">{{ App\Models\PropertyType::getAll()->where('id',$property->property_type)->first()->name }},</span>
+                                                <span class="text-14 font-weight-700  w-100">{{ App\Models\PropertyType::getAll()->where('id',$property->property_type)->first()->name }},</span>
                                                 
                                                 
                                                 <span class="text-14 font-weight-700 text mb-0">{{ $property->property_address->city }}</span>
