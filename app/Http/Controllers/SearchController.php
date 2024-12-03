@@ -215,6 +215,7 @@ class SearchController extends Controller
             ->whereHas('property_address', function ($query) use ($minLat, $maxLat, $minLong, $maxLong) {
                 $query->whereRaw("latitude between $minLat and $maxLat and longitude between $minLong and $maxLong");
             })
+            ->whereIn('for_property', ['rentlays','pmsandrentlays'])            
             ->whereHas('property_price', function ($query) use ($min_price, $max_price, $currency_rate) {
                 $query->join('currency', 'currency.code', '=', 'property_price.currency_code');
                 $query->whereRaw('((price / currency.rate) * ' . $currency_rate . ') >= ' . $min_price . ' and ((price / currency.rate) * ' . $currency_rate . ') <= ' . $max_price);

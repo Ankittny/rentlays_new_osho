@@ -38,13 +38,7 @@ class Properties extends Model
                         ->whereHas('users', function ($query) {
                             $query->where('status', 'Active');
                         })
-                        ->where(function ($query) {
-                            $query->where('for_property', 'rentlays')
-                                ->orWhere(function ($query) {
-                                    $query->where('for_property', '!=', 'rentlays')
-                                          ->where('agreement_status', 'approve');
-                                });
-                        })
+                        ->whereIn('for_property', ['rentlays','pmsandrentlays'])
                         ->take(8)
                         ->inRandomOrder()
                         ->get();
