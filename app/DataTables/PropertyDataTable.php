@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\Properties;
 use App\Models\RoleAdmin;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Services\DataTable;
 use Request, Common;
 
@@ -65,8 +66,15 @@ class PropertyDataTable extends DataTable
         $from = isset(request()->from) ? setDateForDb(request()->from) : null;
         $to = isset(request()->to) ? setDateForDb(request()->to) : null;
         $space_type = isset(request()->space_type) ? request()->space_type : null;
-
-        $query = Properties::with(['users:id,first_name,profile_image']);
+        $admin_pincode = Auth::guard('admin')->user()->pincode;
+        $role_id = RoleAdmin::getAll()->where('admin_id', Auth::guard('admin')->user()->id)->first();
+        $query = Properties::with(['users:id,first_name,profile_image','property_address']);
+        
+        if($admin_pincode && $role_id->role_id != 1){
+            $query->whereHas('property_address', function ($q) use ($admin_pincode) {
+                $q->where('postal_code', $admin_pincode);
+            });
+        }
         if (isset($user_id)) {
             $query->where('host_id', '=', $user_id);
         }
@@ -103,7 +111,7 @@ class PropertyDataTable extends DataTable
             ->addColumn(['data' => 'status', 'name' => 'status', 'title' => 'Status'])
             ->addColumn(['data' => 'recomended', 'name' => 'recomended', 'title' => 'Recomended'])
             ->addColumn(['data' => 'verified', 'name' => 'verified', 'title' => 'Verified'])
-            ->addColumn(['data' => 'for_property', 'name' => 'For Property', 'title' => 'For Property'])
+            ->addColumn(['data' => 'for_property', 'name' => 'for_property', 'title' => 'For Property'])
             ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => 'Date'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Action', 'orderable' => false, 'searchable' => false])
             ->parameters(dataTableOptions());
