@@ -8,6 +8,8 @@ use App\Models\Employee;
 use App\Models\RoleAdmin;
 use App\Models\Roles;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Admin;
 use Auth ,App\Http\Helpers\Common;
 
 class EmployeeController extends Controller
@@ -27,7 +29,7 @@ class EmployeeController extends Controller
         } else {
             $request->validate([
                 'name' => 'required',
-                'email' => 'nullable|email',
+                'email' => 'nullable|email|unique:employees,email|unique:users,email',
                 'mobile' => 'required',
                 'address' => 'required',
                 'pan_photo' => 'required|image',
@@ -72,6 +74,17 @@ class EmployeeController extends Controller
             $employee->date_of_end = $request->date_of_end;
             $employee->status = $request->status;
             $employee->save();
+            $admin = new Admin;
+            $admin->user_id =  Auth('admin')->user()->id;
+            $admin->employee_id = $employee->id;
+            $admin->username = $request->name;
+            $admin->email    = $request->email;
+            $admin->pincode  = $request->pincode;
+            $admin->password = bcrypt($request->password);
+            $admin->status   = !empty($request->status) ? $request->status : 'Active';
+            $admin->save();
+            RoleAdmin::insert(['admin_id' => $admin->id, 'role_id' => 7]);
+            Cache::forget(config('cache.prefix') . '.role_admin');
             Common::one_time_message('success', 'Employee created successfully');
             return redirect()->route('employee')->with('success', 'Employee created successfully');
         }
@@ -87,7 +100,7 @@ class EmployeeController extends Controller
         } elseif ($request->isMethod('post')) {
             $request->validate([
                 'name' => 'required',
-                'email' => 'nullable|email',
+                'email' => 'nullable|email|unique:employees,email,' . $request->id . '|unique:users,email,' . $request->id,
                 'mobile' => 'required',
                 'address' => 'required',
                 'pincode' => 'required',
@@ -147,6 +160,9 @@ class EmployeeController extends Controller
             $employee->date_of_end = $request->date_of_end;
             $employee->status = $request->status;
             $employee->save();
+            if ($admin = \App\Models\Admin::where('employee_id',$request->id)->first()) {
+                $admin->delete();
+            }
             Common::one_time_message('success', 'Employee updated successfully');
             return redirect()->route('employee')->with('success', 'Employee updated successfully');
         }
@@ -156,6 +172,10 @@ class EmployeeController extends Controller
     {
         if (Employee::where('id', $id)->exists()) {
             $employee = Employee::findOrFail($id);
+            // Delete user from users table
+            if (Admin::where('employee_id', $employee->id)->exists()) {
+                Admin::where('employee_id', $employee->id)->delete();
+            }
             $employee->delete();
             Common::one_time_message('success', 'Deleted Successfully');
             return redirect()->route('employee')->with('success', 'Employee deleted successfully');
