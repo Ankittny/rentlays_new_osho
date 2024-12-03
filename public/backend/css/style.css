@@ -549,3 +549,6 @@ font-size: 20px;
     color:#03ae74;
 }
 
+.card-meta span {
+    white-space: nowrap;
+}

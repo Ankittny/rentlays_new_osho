@@ -2198,4 +2198,7 @@ hr {
 .btn-primary {
     border-radius: 6px;
 }
+.card-meta span {
+    white-space: nowrap;
+}
 
