@@ -221,23 +221,12 @@
                                                 <div class="text-color text-color-hover d-flex align-items-center">
                                                     
                                                 <span class="text-14 font-weight-700 w-100 ">{{ App\Models\PropertyType::getAll()->where('id',$property->property_type)->first()->name ?? "" }},</span>
-                                                <span class="text-14 font-weight-700 text-nowrap  mb-0 ">{{ $property->property_address->city }}</span>
-                                                    
-                                                        
+                                                <span class="text-14 font-weight-700 text-nowrap  mb-0 ">{{ $property->property_address->city }}</span>    
                                                 </div>
-                                                <div class="text-12 mb-0  cc"  ><span><i class="fa fa-star text-14 secondary-text-color"></i>
-                                                    @if ( $property->guest_review)
-                                                        {{ $property->avg_rating }}
-                                                    @else
-                                                        0
-                                                    @endif
-                                                    ({{ $property->guest_review }})</span> 
-                                                </div>
+                                               
                                             </div>
                                         </div>
                                         {{-- <div class="d-flex justify-content-betweeb w-100">
-                                            
-
                                         <div>
                                         <a href="" class="text-color text-color-hover d-flex align-items-center">
                                             <div>
@@ -245,8 +234,7 @@
                                                 
                                                 
                                                 <span class="text-14 font-weight-700 text mb-0">{{ $property->property_address->city }}</span>
-                                                </div>
-                                                
+                                                </div>    
                                         </a>
                                     </div>
                                         <p class="text-12 mb-0 text cc"  ><span><i class="fa fa-star text-14 secondary-text-color"></i>
@@ -258,8 +246,6 @@
                                             ({{ $property->guest_review }})</span> </p>
 
                                         </div> --}}
-                                        
-									
 									<div class="card-button imagebutton">
                                               @auth
                                                     <a class="btn btn-sm book_mark_change"
@@ -281,7 +267,6 @@
                                             <i class="fas fa-heart hrtmt"></i>
                                         </a>                                         --}}
                                     </div>
-									
 										</div>
                                     <div class="review-0 ">
                                         <div class="d-flex justify-content-between ">
@@ -300,22 +285,22 @@
                                             <div  class="pricenightfont">
                                                 <span class="font-weight-700 " >{!! moneyFormat($property->property_price->default_symbol, $property->property_price->price) !!}</span> @if($property->property_type!=29) /{{ __('Night') }}@endif
                                             </div>
+                                            <div class="text-12 mb-0  cc"  ><span><i class="fa fa-star text-14 secondary-text-color"></i>
+                                                    @if ( $property->guest_review)
+                                                        {{ $property->avg_rating }}
+                                                    @else
+                                                        0
+                                                    @endif
+                                                    ({{ $property->guest_review }})</span> 
+                                                </div>
                                         </div>
                                     </div>
-
-
-
-
-
                                 </div>
                             </div>
-
                         </div>
                     @endforeach
 
                 </div>
-
-
 
                 {{-- <div class="row mt-3">
 					@foreach ($properties as $property)
@@ -330,7 +315,6 @@
 									</figure>
 								</a>
 							</div>
-
 							<div class="card-body">
 								<div class="d-flex">
 									<div>
@@ -346,7 +330,6 @@
 										<p class="text-12 mb-0 text"><i class="fas fa-map-marker-alt"></i> {{ $property->property_address->city }}</p>
 									</div>
 								</div>
-
 								<div class="review-0 p-3">
 									<div class="d-flex justify-content-between">
 
@@ -380,8 +363,6 @@
                                                 @endauth
                                             </div>
                                         </div>
-
-
 										<div>
 											<span class="font-weight-700">{!! moneyFormat( $property->property_price->default_symbol, $property->property_price->price) !!}</span> / {{ __('night') }}
 										</div>
@@ -418,11 +399,6 @@
 					</div>
 					@endforeach
 				</div> --}}
-
-
-
-
-
             </div>
         </section>
     @endif
