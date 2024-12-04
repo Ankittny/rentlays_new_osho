@@ -13,5 +13,5 @@
     <link rel="stylesheet" href="{{ asset('public/backend/font-awesome/css/font-awesome.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('public/backend/dist/css/AdminLTE.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/dist/css/style.css?v=' . time()) }}">
+    <link rel="stylesheet" href="{{ asset('public/backend/dist/css/style.css?v=' . time()) }}">
 </head>
