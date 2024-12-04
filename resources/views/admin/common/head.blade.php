@@ -23,7 +23,7 @@
 			<link rel="stylesheet" href="{{ asset('public/backend/dist/css/AdminLTE.min.css') }}">
 			<!-- Custom css -->
 			<link rel="stylesheet" href="{{ asset('public/backend/dist/css/custom.min.css') }}">
-			<link rel="stylesheet" href="{{ asset('backend/dist/css/style.css?v=' . time()) }}">
+			<link rel="stylesheet" href="{{ asset('public/backend/dist/css/style.css?v=' . time()) }}">
 
 			<!-- AdminLTE Skins. Choose a skin from the css/skins
 				folder instead of downloading all of them to reduce the load. -->
