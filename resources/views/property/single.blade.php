@@ -1753,7 +1753,9 @@
                         <div class="px-3 text">
                             <a class="text-color text-color-hover d-flex align-items-center" href="{{ url('properties/' . $row_similar->slug) }}">
                                 <p class="mb-0">
-                                <span class="text-14 font-weight-700 w-100">{{ App\Models\PropertyType::getAll()->where('id',$row_similar->property_type)->first()->name }},</span>
+                                @if($propertyType = App\Models\PropertyType::getAll()->where('id', $row_similar->property_type)->first())
+                                    <span class="text-14 font-weight-700 w-100">{{ $propertyType->name }},</span>
+                                @endif
 								<span class="text-14 font-weight-700 text mb-0">{{ $row_similar->property_address->city ?? null }}</span>
                                 </p>
                                 <p class="text-12 mb-0 text cc"  ><span><i class="fa fa-star text-14 secondary-text-color"></i>
@@ -1804,7 +1806,8 @@
                             </div> --}}
                             <div class="pricenightfont">
                                 <span class="font-weight-700">{!! moneyFormat(
-                                    $row_similar->property_price->default_symbol, $row_similar->property_price->price)
+                                    $row_similar->property_price ? $row_similar->property_price->default_symbol : '',
+                                    $row_similar->property_price ? $row_similar->property_price->price : 0)
                                     !!}
                                 </span> / {{ __('Weekend Night') }}
                             </div>
