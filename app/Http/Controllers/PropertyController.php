@@ -597,6 +597,7 @@ class PropertyController extends Controller
         }
     }
 
+
     public function currencySymbol(Request $request)
     {
         $symbol          = Currency::code_to_symbol($request->currency);
