@@ -101,8 +101,12 @@
                       </tr>
                       <tr>
                         <th>Supervisor Name</th>
-                        <td><input type="text" name="supervisor_name" disabled class="form-control" value="{{ $pms_request->getSupervisor->username ?? '' }}"></td>
-                        <td><input type="text" name="assign_to_supervisor" hidden class="form-control" value="{{ $pms_request->getSupervisor->id ?? '' }}"></td>
+                        <td>
+                          <input type="text" name="supervisor_name" disabled class="form-control" value="{{ $pms_request->getSupervisor->username ?? '' }}">
+                        </td>
+                        <td>
+                          <input type="text" name="assign_to_supervisor" hidden class="form-control" value="{{ $pms_request->getSupervisor->id ?? '' }}">
+                        </td>
                       </tr>
                       <tr>
                         <th>Helpdesk User Name</th>
