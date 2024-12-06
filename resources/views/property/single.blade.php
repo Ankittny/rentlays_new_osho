@@ -2211,6 +2211,7 @@ e.stopPropagation();
                 const placeLocation = place.geometry.location;
                 const userLocation = new google.maps.LatLng(latitude, longitude);
                 const distance = google.maps.geometry.spherical.computeDistanceBetween(userLocation, placeLocation);
+                const distanceText = (distance / 1000).toFixed(2) + ' km';
                 if (distance <= radius) {
                 const placeMarker = new google.maps.Marker({
                     position: placeLocation,
@@ -2225,6 +2226,7 @@ e.stopPropagation();
                     category: category.name,
                     address: place.formatted_address,
                     photoUrl: photoUrl,
+                    distance: distanceText,
                 });
 
                 // Update the property list HTML
@@ -2253,6 +2255,7 @@ e.stopPropagation();
                 <h4><strong>Name:</strong>${property.name}</h4>
                 <p><strong>Type:</strong> ${property.category}</p>
                 <p><strong>Address:</strong> ${property.address}</p>
+                <p><strong>Distance:</strong> ${property.distance}</p>
             </div>
             <div class="col-6 float-right">
                 ${
