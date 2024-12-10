@@ -92,23 +92,25 @@
                                     <div class="banner_form_icon">
                                         <img class="banner_form_icon_img" src={{ asset('/public/front/images/clock.png') }}
                                             alt="">
-                                        <div class="d-flex" id="daterange-btn">
+                                        <div class="d-flex pt-2" id="daterange-btn">
                                             <div class="input-group">
-                                                <input class="form-control p-3 border-right-0 border text-14 checkinout"
+                                            <label class="form-chec-label">Check In</label>
+                                                <input class="form-control cnt-frm p-3 border-right-0 border text-14 checkinout"
                                                     name="checkin" id="startDate" type="text"
-                                                    placeholder="{{ __('Check In') }}" autocomplete="off"
+                                                    placeholder="{{ __('') }}" autocomplete="off"
                                                     readonly="readonly" required>
-                                                <span class="input-group-append">
+                                                <span class="input-group-append append-slip">
                                                     <div class="input-group-text">
                                                         <i class="fa fa-calendar success-text text-14"></i>
                                                     </div>
                                                 </span>
                                             </div>
                                             <div class="input-group">
-                                                <input class="form-control p-3 border-right-0 border text-14 checkinout"
-                                                    name="checkout" id="endDate" placeholder="{{ __('Check Out') }}"
+                                            <label class="form-chec-label">Check Out</label>
+                                                <input class="form-control cnt-frms  p-3 border-right-0 border text-14 checkinout"
+                                                    name="checkout" id="endDate" placeholder="{{ __('') }}"
                                                     type="text" readonly="readonly" required>
-                                                <span class="input-group-append">
+                                                <span class="input-group-append append-slip">
                                                     <div class="input-group-text">
                                                         <i class="fa fa-calendar success-text text-14"></i>
                                                     </div>
