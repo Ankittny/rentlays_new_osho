@@ -94,7 +94,7 @@
                                             alt="">
                                         <div class="d-flex pt-2" id="daterange-btn">
                                             <div class="input-group">
-                                            <label class="form-chec-label">Check In</label>
+                                            <label class="form-chec-label pt-2">Check In</label>
                                                 <input class="form-control cnt-frm p-3 border-right-0 border text-14 checkinout"
                                                     name="checkin" id="startDate" type="text"
                                                     placeholder="{{ __('') }}" autocomplete="off"
@@ -106,7 +106,7 @@
                                                 </span>
                                             </div>
                                             <div class="input-group">
-                                            <label class="form-chec-label">Check Out</label>
+                                            <label class="form-chec-label pt-2">Check Out</label>
                                                 <input class="form-control cnt-frms  p-3 border-right-0 border text-14 checkinout"
                                                     name="checkout" id="endDate" placeholder="{{ __('') }}"
                                                     type="text" readonly="readonly" required>
