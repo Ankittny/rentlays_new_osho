@@ -5403,3 +5403,36 @@ margin: 10px 0px;
     .sbs{
         background: #1896690f;
     }
+	.input-group label{
+		color: #1dbf73;
+	}
+    .cnt-frm {
+    margin-left: -75px;
+    margin-top: 12px;
+}
+.cnt-frms {
+    margin-left: -90px;
+    margin-top: 12px;
+}
+.append-slip{
+	margin-top: -23px;
+    margin-right: 10px;
+}
+
+@media(max-width:1199px) and (min-width:769px){
+	.append-slip {
+		margin-top: -23px;
+		margin-right: 0px;
+	}
+}
+
+@media(max-width:991px) and (min-width:768px){
+	.append-slip {
+		margin-top: 19px;
+		margin-right: 20px;
+	}	
+	.g-button-submit button {
+     width: 40px;
+	 height: 40px;
+}
+}
