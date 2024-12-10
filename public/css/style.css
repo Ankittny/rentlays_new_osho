@@ -5405,6 +5405,7 @@ margin: 10px 0px;
     }
 	.input-group label{
 		color: #1dbf73;
+		font-weight: 400;
 	}
     .cnt-frm {
     margin-left: -75px;
