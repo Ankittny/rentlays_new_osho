@@ -22,7 +22,7 @@
                                 <h2>OnDemand</h2>
                                 {{-- <h3 class="price">$80</h3>                    --}}
                                 <button class="btn vbtn-outline-success text-14 font-weight-700 p-0 mt-2 pl-4 pr-4">
-                                    <p class="p-3 mb-0">Subscribe Now</p>
+                                    <p class="p-2 mb-0">Subscribe Now</p>
                                 </button>
                             </div>
                         </form>
@@ -41,7 +41,7 @@
                                     <h2>{{ ucfirst($items->package_name) }}</h2>
                                     <h3 class="price">€ {{ $items->price }}</h3>
                                     <button class="btn vbtn-outline-success text-14 font-weight-700 p-0 mt-2 pl-4 pr-4">
-                                        <p class="p-3 mb-0 ">Subscribe Now</p>
+                                        <p class="p-2 mb-0 ">Subscribe Now</p>
                                     </button>
                                 </div>
                             </form>

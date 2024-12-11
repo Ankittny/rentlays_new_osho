@@ -46,7 +46,7 @@
                         <p> Tenant screening & placement </p>
                     </li>
                 </ul>
-                <section class="slider-area slider">
+                <section class="slider-area slider ">
 				@if($property_type->count() > 0)
 					@foreach($property_type as $itemsType)
 						<div>
