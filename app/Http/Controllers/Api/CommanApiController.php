@@ -35,7 +35,9 @@ use App\Models\{
     PmsJobApproval,
     PmsSubscriptionIds,
     User,
-    Timezone
+    Timezone,
+    PropertyPhotos,
+    Amenities
 };
 use Common,Illuminate\Support\Facades\DB;
 use Session,Auth,Validator;
@@ -466,9 +468,8 @@ class CommanApiController extends Controller
                 $properties = $properties->where('booking_type', $book_value);
             }
         }
-        $properties = $properties;
+            $properties = $properties;
             return response()->json(['status'=>true, 'data'=>$properties]);
-        echo $properties;
     }
 
 
@@ -476,7 +477,7 @@ class CommanApiController extends Controller
         $properties = Properties::with([
             'property_address',
             'property_price',
-            'users'
+            'users',
         ])->where(['status'=>'Listed','is_verified'=>'Approved'])->paginate(10);
         if($properties){
             return response()->json(['status'=>true, 'data'=>$properties]);
@@ -486,15 +487,75 @@ class CommanApiController extends Controller
     }   
 
     public function propertyDetail($id){
-        $properties = Properties::with([
-            'property_address',
-            'property_price',
-            'users',
-        ])->where(['status'=>'Listed','is_verified'=>'Approved','id'=>$id])->first();
-        if($properties){
-            return response()->json(['status'=>true, 'data'=>$properties]);
+        // $data['property_slug'] = $request->slug;
+
+        $data['result'] = $result = Properties::where('id', $id)->first();
+        $data['property_slug'] = $result->slug;
+
+        $userActive = $result->Users()->where('id', $result->host_id)->first();
+        if ($userActive->status == 'Inactive' ) {
+            return response()->json(['status'=>false, 'data'=>'host_inactive']);
+
+        } elseif ($data['result']->status == 'Unlisted' ) {
+            return response()->json(['status'=>false, 'data'=>'unlisted_property']);
+            
+
+        } elseif ($data['result']->is_verified == 'Pending') {
+            return response()->json(['status'=>false, 'data'=>'pending_property']);
+          
         } else {
-            return response()->json(['status'=>false, 'data'=>$properties]);
+            if ( empty($result) ) {
+                abort('404');
+            }
+
+            $data['property_id']      = $id = $result->id;
+            $data['booking_status']   = Bookings::where('property_id',$id)->select('status')->first();
+
+            $data['property_photos']  = PropertyPhotos::where('property_id', $id)->orderBy('serial', 'asc')
+                ->get();
+
+            $data['amenities']        = Amenities::normal($id);
+            $data['safety_amenities'] = Amenities::security($id);
+
+            $newAmenityTypes          = Amenities::newAmenitiesType();
+            $data['all_new_amenities']= [];
+
+            foreach ($newAmenityTypes as $amenites) {
+                $data['all_new_amenities'][$amenites->name] = Amenities::newAmenities($id, $amenites->id);
+            }
+
+            $data['all_new_amenities']= array_filter($data['all_new_amenities']);
+
+            $property_address         = $data['result']->property_address;
+
+            $latitude                 = $property_address->latitude;
+
+            $longitude                = $property_address->longitude;
+
+            $data['checkin']          = (isset($request->checkin) && $request->checkin != '') ? $request->checkin:'';
+            $data['checkout']         = (isset($request->checkout) && $request->checkout != '') ? $request->checkout:'';
+
+            $data['guests']           = (isset($request->guests) && $request->guests != '')?$request->guests:'';
+
+            $data['similar']  = Properties::join('property_address', function ($join) {
+                                            $join->on('properties.id', '=', 'property_address.property_id');
+            })
+                                        ->select(DB::raw('*, ( 3959 * acos( cos( radians(' . $latitude . ') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $longitude . ') ) + sin( radians(' . $latitude . ') ) * sin( radians( latitude ) ) ) ) as distance'))
+                                        ->having('distance', '<=', 30)
+                                        ->where('properties.host_id', '!=', Auth::id())
+                                        ->where('properties.id', '!=', $id)
+                                        ->where('properties.status', 'Listed')
+                                        ->get();
+
+            $data['title']    =   $data['result']->name . ' in ' . $data['result']->property_address->city;
+            $data['symbol'] = Common::getCurrentCurrencySymbol();
+            $data['shareLink'] = url('properties/' . $data['property_slug']);
+
+            $data['date_format'] = Settings::getAll()->firstWhere('name', 'date_format_type')->value;
+
+            $data['adminPropertyApproval'] = Settings::getAll()->firstWhere('name', 'property_approval')->value;
+            return response()->json(['status'=>true, 'data'=>$data]);
+            //return view('property.single', $data);
         }
     }
     
@@ -1155,11 +1216,19 @@ class CommanApiController extends Controller
 
     public function recommendedProperties()
     {
-        $data['properties']          = Properties::recommendedHome();
-        return response()->json([
-            'status' => true,
-            'data' => $data
-        ]);
+        $data['properties']  = Properties::recommendedHome();
+
+        if(count($data['properties']) > 0){
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'data' => []
+            ]);
+        }
     }
 
 
