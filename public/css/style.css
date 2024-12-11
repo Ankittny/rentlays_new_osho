@@ -5422,7 +5422,11 @@ margin: 10px 0px;
 
 
 /* =============================================Media-Query============================================= */
-
+@media(max-width:1199px) and (min-width:1025px){
+	.offers{
+		padding: 25px;
+	}
+}
 @media(max-width:1199px) and (min-width:769px){
 	.append-slip {
 		margin-top: -23px;
@@ -5438,5 +5442,15 @@ margin: 10px 0px;
 	.g-button-submit button {
      width: 40px;
 	 height: 40px;
+}
+.offers{
+	width: 160px;
+	padding: 25px;
+}
+}
+
+@media(max-width:767px) and (min-width:425px){
+.offers{
+	margin-top: 20px;
 }
 }
