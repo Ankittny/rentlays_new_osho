@@ -5280,7 +5280,7 @@ margin-top: 150px !important;
 
 
 	  /* custom css */
-	.grclor{
+.grclor{
 		font-weight: 600;
   color: #6a6666;
 	  }
@@ -5313,7 +5313,7 @@ margin-top: 150px !important;
 	box-shadow: 2px 3px 5px 3px #ececec;
 }
 .fntsize{
-	font-weight: 700 !important;
+font-weight: 700 !important;
 font-size: 25px;
 margin-top: -9px !important;
 }
@@ -5409,16 +5409,18 @@ margin: 10px 0px;
 	}
     .cnt-frm {
     margin-left: -75px;
-    margin-top: 12px;
+    margin-top: 16px;
 }
 .cnt-frms {
     margin-left: -90px;
-    margin-top: 12px;
+    margin-top: 16px;
 }
 .append-slip{
 	margin-top: -14px;
     margin-right: 10px;
 }
+
+/* =============================================Media-Query============================================= */
 
 @media(max-width:1199px) and (min-width:769px){
 	.append-slip {
