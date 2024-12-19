@@ -197,7 +197,9 @@
                                                       onchange="showRemark(this, {{ $data->id }})" 
                                                       {{-- {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }} --}}
                                                       >
-                                                <label class="form-check-label" for="is_working_{{ $data->id }}_yes" {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>Yes</label>
+                                                <label class="form-check-label" for="is_working_{{ $data->id }}_yes"
+                                                   {{-- {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }} --}}
+                                                   >Yes</label>
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input amenities_status_no" 
@@ -208,7 +210,9 @@
                                                       onchange="showRemark(this, {{ $data->id }})"
                                                       {{-- {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }} --}}
                                                       >
-                                                <label class="form-check-label" for="is_working_{{ $data->id }}_no" {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }}>No</label>
+                                                <label class="form-check-label" for="is_working_{{ $data->id }}_no" 
+                                                  {{-- {{ in_array($data->id, $amenities_data) ? '' : 'style=display:none;' }} --}}
+                                                  >No</label>
                                             </div>
                                           
                                         </li>
