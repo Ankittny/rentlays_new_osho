@@ -15,7 +15,8 @@ use App\Models\{
     Messages,
     Bookings,
     PasswordResets,
-    Properties
+    Properties,
+    TaskList
 };
 use App\DataTables\{
     AdminuserDataTable, 
@@ -23,7 +24,7 @@ use App\DataTables\{
 };
 use App\Rules\GoogleReCaptcha;
 use App\dataTables\PackageListDataTable;
-
+use App\dataTables\TaskListDataTable;
 class AdminController extends Controller
 {
 
@@ -612,45 +613,140 @@ public function hostMessage(Request $request)
    $data['title'] = 'Conversation';
    return view('admin.bookings.hostmessage', $data);
 }
-public function reply(Request $request)
-{
-    $rules = array(
-        'message'      => 'required',
-    );
+    public function reply(Request $request)
+    {
+        $rules = array(
+            'message'      => 'required',
+        );
 
-    $fieldNames = array(
-        'message'      => 'Message',
-    );
+        $fieldNames = array(
+            'message'      => 'Message',
+        );
 
-    $validator = Validator::make($request->all(), $rules);
-    $validator->setAttributeNames($fieldNames);
+        $validator = Validator::make($request->all(), $rules);
+        $validator->setAttributeNames($fieldNames);
 
-    if ($validator->fails()) {
-        return back()->withErrors($validator)->withInput();
-    } else {
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        } else {
 
-        $booking = Bookings::where('id', $request->booking_id)->first();
+            $booking = Bookings::where('id', $request->booking_id)->first();
 
-        $message = new Messages;
-        $message->property_id  = $booking->property_id;
-        $message->booking_id   = $request->booking_id;
-        $message->receiver_id  =$booking->user_id ;
-        $message->sender_id    = $booking->host_id;
-        $message->message      = $request->message;
-        $message->type_id      = 1;
+            $message = new Messages;
+            $message->property_id  = $booking->property_id;
+            $message->booking_id   = $request->booking_id;
+            $message->receiver_id  =$booking->user_id ;
+            $message->sender_id    = $booking->host_id;
+            $message->message      = $request->message;
+            $message->type_id      = 1;
 
-        $message->save();
+            $message->save();
 
-        return redirect('admin/messaging/host/'.$request->booking_id);
+            return redirect('admin/messaging/host/'.$request->booking_id);
+        }
+
     }
 
-  }
+    public function package_list(PackageListDataTable $dataTable)
+    {
+        return $dataTable->render('admin.listing.package-list');
+    }
 
-  public function package_list(PackageListDataTable $dataTable)
-  {
-    return $dataTable->render('admin.listing.package-list');
-  }
+    public function task_list(TaskListDataTable $dataTable)
+    {
+        return $dataTable->render('admin.listing.task-list');
+    }
 
+
+    public function add_task_list()
+    {
+        $data['title'] = 'Add Task List';
+        $data['property'] =Properties::whereIn('for_property',['pms','pmsandrentlays'])->get();
+        return view('admin.listing.add-task-list', $data);
+    }
+
+    public function store_task_list(Request $request)
+    {
+        $rules = array(
+            'property_id' => 'required',
+            'date'          => 'required',
+            'image'          => 'required',
+            'task_status'   => 'required',
+        );
+        $fieldNames = array(
+            'property_id' => 'Property Id',
+            'date'          => 'Date',
+            'image'          => 'File',
+            'task_status'   => 'Task Status',
+        );
+        $validator = Validator::make($request->all(), $rules);
+        $validator->setAttributeNames($fieldNames);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        } else {
+            $task = new TaskList;
+            $task->property_id = $request->property_id;
+            $task->date          = $request->date;
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/task_files'), $filename);
+                $task->image = $filename;
+            }
+            $task->task_status   = $request->task_status;
+            $task->task          = $request->task;
+            $task->save();
+
+            return redirect('admin/task-list');
+        }
+    }
+
+    public function edit_task_list($id)
+    {
+        $data['title'] = 'Edit Task List';
+        $data['task'] = TaskList::where('id', $id)->first();
+        $data['property'] =Properties::whereIn('for_property',['pms','pmsandrentlays'])->get();
+        return view('admin.listing.edit-task-list', $data);
+    }
+
+    public function update_task_list(Request $request)
+    {
+        $rules = array(
+            'property_id' => 'required',
+            'date'          => 'required',
+            'task_status'   => 'required',
+        );
+        $fieldNames = array(
+            'property_id' => 'Property Name',
+            'date'          => 'Date',
+            'task_status'   => 'Task Status',
+        );
+        $validator = Validator::make($request->all(), $rules);
+        $validator->setAttributeNames($fieldNames);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        } else {
+            $task = TaskList::where('id', $request->id)->first();
+            $task->property_id = $request->property_id;
+            $task->date          = $request->date;
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/task_files'), $filename);
+                $task->image = $filename;
+            }
+            $task->task_status   = $request->task_status;
+            $task->task   = $request->task;
+            $task->save();
+            return redirect('admin/task-list');
+        }
+    }
+
+    public function delete_task_list($id)
+    {
+        TaskList::where('id', $id)->delete();
+        return redirect('admin/task-list');
+    }
 
 }
 

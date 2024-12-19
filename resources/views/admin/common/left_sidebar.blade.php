@@ -53,6 +53,10 @@
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'package_list'))
 				<li class="{{ (Route::current()->uri() == 'admin/package-list') || (Route::current()->uri() == 'admin/package-list') || (Route::current()->uri() == 'admin/package-list') ? 'active' : ''  }}"><a href="{{ url('admin/package-list') }}"><i class="fa fa-list"></i><span>Package List</span></a></li>
 			@endif
+			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'task_list'))
+				<li class="{{ (Route::current()->uri() == 'admin/task-list') || (Route::current()->uri() == 'admin/task-list') || (Route::current()->uri() == 'admin/task-list') ? 'active' : ''  }}">
+					<a href="{{ url('admin/task-list') }}"><i class="fa fa-list"></i><span>Task List</span></a></li>
+			@endif
 
 			@if (Helpers::has_permission(Auth::guard('admin')->user()->id, 'manage_admin'))
 				<li class="{{ (Route::current()->uri() == 'admin/admin-users') || (Route::current()->uri() == 'admin/add-admin') || (Route::current()->uri() == 'admin/edit-admin/{id}') ? 'active' : ''  }}">

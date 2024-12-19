@@ -99,6 +99,7 @@
                                                                 <input type="hidden" id="amenity_type_id" value="{{ $row_type->id }}">
                                                                 <span class="text-danger">*</span>
                                                             @endif
+                                                           
                                                         </h4>
                                                         @if ($row_type->description != '')
                                                             <p class="text-muted">{{ $row_type->description }}</p>
@@ -133,10 +134,6 @@
                                                                     </div>
                                                                     @endif
                                                                     @endforeach
-                                                                    @if($row_type->name == 'Property Nearest')
-                                                                    <div id="map" style="height: 500px; width: 100%;"></div>
-                                                                    <div id="property-list" style="margin-top: 20px;"></div>
-                                                                    @endif
                                                             <span class="ml-4" id="at_least_one"><br></span>
                                                         </div>
                                                     </div>
@@ -166,6 +163,15 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    @endif
+                                                    @if($loop->last)
+                                                        <div class="col-md-12 pl-4 main-panelbg mb-4">
+                                                            <h4 class="text-18 font-weight-700 pl-0 pr-0 pt-4 pb-4">
+                                                                {{ __('Property Nearest') }}
+                                                            </h4>
+                                                            <div id="map" style="height: 500px; width: 100%;"></div>
+                                                            <div id="property-list" style="margin-top: 20px;"></div>
+                                                        </div>
                                                     @endif
                                                 </div>
                                             </div>

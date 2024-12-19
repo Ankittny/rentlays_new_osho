@@ -70,6 +70,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
     Route::get('delete-customer/{id}', 'CustomerController@delete')->middleware(['permission:delete_customer']);
 	Route::get('package-list', 'AdminController@package_list');
 	
+	Route::get('task-list', 'AdminController@task_list');
+	Route::get('add-task-list', 'AdminController@add_task_list');
+	Route::post('store-task-list', 'AdminController@store_task_list');
+	Route::get('edit-task-list/{id}', 'AdminController@edit_task_list');
+	Route::post('update-task-list/{id}', 'AdminController@update_task_list');
+	Route::get('delete-task-list/{id}', 'AdminController@delete_task_list');
 
 	Route::group(['middleware' => 'permission:edit_customer'], function () {
 		Route::match(array('GET', 'POST'), 'edit-customer/{id}', 'CustomerController@update');

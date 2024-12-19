@@ -107,7 +107,6 @@ class EmployeeController extends Controller
                 'designation_id' => 'required',
                 'date_of_joining' => 'required|date',
                 'date_of_end' => 'nullable|date',
-                'password' => 'required',
                 'status' => 'required',
             ]);
             // Update fields
@@ -117,7 +116,9 @@ class EmployeeController extends Controller
             $employee->phone = $request->mobile;
             $employee->address = $request->address;
             $employee->supervisor_id = $request->supervisor_id;
-            $employee->password = bcrypt($request->password);
+            if ($request->filled('password')) {
+                $employee->password = bcrypt($request->password);
+            }
             if ($request->hasFile('pan_photo')) {
                 // Delete old PAN photo if it exists
                 if ($employee->pan_photo && file_exists(public_path(parse_url($employee->pan_photo, PHP_URL_PATH)))) {
@@ -160,9 +161,19 @@ class EmployeeController extends Controller
             $employee->date_of_end = $request->date_of_end;
             $employee->status = $request->status;
             $employee->save();
-            if ($admin = \App\Models\Admin::where('employee_id',$request->id)->first()) {
-                $admin->delete();
-            }
+            \App\Models\Admin::updateOrCreate(
+                ['employee_id' => $request->id],
+                [
+                    'username' => $request->name,
+                    'email' => $request->email,
+                    'pincode' => $request->pincode,
+                    'status' => !empty($request->status) ? $request->status :'Active',
+                    'password' => isset($request->password) ? bcrypt($request->password) : \App\Models\Employee::where('id',$request->id)->value('password'),
+                ]
+            );
+            // if ($admin = \App\Models\Admin::where('employee_id',$request->id)->first()) {
+            //     $admin->delete();
+            // }
             Common::one_time_message('success', 'Employee updated successfully');
             return redirect()->route('employee')->with('success', 'Employee updated successfully');
         }
