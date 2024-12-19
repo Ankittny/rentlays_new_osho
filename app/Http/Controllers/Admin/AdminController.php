@@ -735,7 +735,6 @@ public function hostMessage(Request $request)
                 $file->move(public_path('uploads/task_files'), $filename);
                 $task->image = $filename;
             }
-            $task->image          = $request->filename;
             $task->task_status   = $request->task_status;
             $task->task   = $request->task;
             $task->save();
