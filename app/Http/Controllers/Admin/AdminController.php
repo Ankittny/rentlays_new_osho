@@ -23,8 +23,8 @@ use App\DataTables\{
     MessagesDataTable
 };
 use App\Rules\GoogleReCaptcha;
-use App\dataTables\PackageListDataTable;
-use App\dataTables\TaskListDataTable;
+use App\DataTables\PackageListDataTable;
+use App\DataTables\TaskListDataTable;
 class AdminController extends Controller
 {
 
