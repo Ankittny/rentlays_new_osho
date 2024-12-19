@@ -22,8 +22,8 @@ class TaskListDataTable extends DataTable
             })
             ->addColumn('image', function ($item) {
                 if ($item->image) {
-                    return '<a href="' . url('uploads/task_files/' . $item->image) . '" download>
-                                <img src="' . url('uploads/task_files/' . $item->image) . '" alt="Pan Card" style="width: 60px; height: 60px;"/>
+                    return '<a href="' . url('public/uploads/task_files/' . $item->image) . '" download>
+                                <img src="' . url('public/uploads/task_files/' . $item->image) . '" alt="Pan Card" style="width: 60px; height: 60px;"/>
                             </a>';
                 }
                 return 'No Image';
