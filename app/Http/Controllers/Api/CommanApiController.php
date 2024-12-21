@@ -486,11 +486,15 @@ class CommanApiController extends Controller
         }
     }   
 
-    public function propertyDetail($id){
-        // $data['property_slug'] = $request->slug;
 
-        $data['result'] = $result = Properties::where('id', $id)->first();
-        $data['property_slug'] = $result->slug;
+    public function propertyDetail($id){
+       
+        $result = Properties::where('id', $id)->first();
+        if (empty($result)) {
+            return response()->json(['status'=>false, 'data'=>'property_not_found']);
+        }
+        $data['result'] = $result;
+        $data['property_slug'] = $result->slug ?? "";
 
         $userActive = $result->Users()->where('id', $result->host_id)->first();
         if ($userActive->status == 'Inactive' ) {
