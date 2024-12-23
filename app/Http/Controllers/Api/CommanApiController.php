@@ -28,7 +28,7 @@ use App\Models\{
     PropertyDates,
     Properties,
     Bookings,
-    wallet,
+    Wallet,
     Withdrawal,
     Favourite,
     PayoutSetting,
@@ -606,7 +606,7 @@ class CommanApiController extends Controller
 
     public function myWallet()
     {
-        $wallet  = wallet::where('user_id',Auth::user()->id)->first();
+        $wallet  = Wallet::where('user_id',Auth::user()->id)->first();
         $currentCurrency = $this->helper->getCurrentCurrency();
         if($wallet){
             return response()->json(['status'=>true, 'data'=>[
