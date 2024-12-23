@@ -12,7 +12,7 @@ use App\Models\{
     Reviews,
     PropertyType,
     SpaceType,
-    warehouetype,
+    Warehouetype,
     PropertyTypeoption,
     ProperTypeOptionset,
     UsersVerification,
@@ -101,7 +101,7 @@ class CommanApiController extends Controller
     public function wareHouseType()
     {
         try{
-            $wareHouseTypeData =  warehouetype::select('id','name')->where('status','Active')->get();
+            $wareHouseTypeData =  Warehouetype::select('id','name')->where('status','Active')->get();
             if($wareHouseTypeData->count()>0){
                 return response()->json(['status'=>true,'wareHouseTypeData'=>$wareHouseTypeData],self::HTTP_STATUS_OK);
             } else{
@@ -287,6 +287,7 @@ class CommanApiController extends Controller
 
     function searchResult(Request $request)
     {   
+       // dd($request->all());
         $full_address = $request->input('location');
         $checkin = $request->input('checkin');
         $checkout = $request->input('checkout');
@@ -373,7 +374,7 @@ class CommanApiController extends Controller
 
         $checkin = date('Y-m-d', strtotime($checkin));
         $checkout = date('Y-m-d', strtotime($checkout));
-
+        
         $days = $this->helper->get_days($checkin, $checkout);
         unset($days[count($days) - 1]);
 
