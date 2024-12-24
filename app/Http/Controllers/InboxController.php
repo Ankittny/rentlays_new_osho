@@ -20,16 +20,20 @@ class InboxController extends Controller
             ->orWhere('receiver_id', Auth::id())
             ->orderBy('id', 'desc')
             ->get()->unique('booking_id');
+
         if (count($data['messages']) > 0) {
             $booking_id = $data['messages'][0]->booking_id;
             $data['conversation'] = Messages::where('booking_id', $booking_id)->get();
             $data['booking'] = Bookings::where('id', $booking_id)
                 ->with('users', 'properties')
                 ->first();
-            $data['symbol'] = Currency::getAll()->firstWhere('code', $data['booking']->currency_code)->symbol;
-         }
+            if ($data['booking'] != null) {
+                $data['symbol'] = Currency::getAll()->firstWhere('code', $data['booking']->currency_code)->symbol;
+            }
+        }
         return view('users.inbox', $data);
     }
+
 
     /**
     * Message Read status Change
