@@ -1236,6 +1236,28 @@ class CommanApiController extends Controller
         }
     }
 
+    public function AmenitiesData(){
+        try {
+            $data = Amenities::all();
+            if ($data->isNotEmpty()) {
+                return response()->json([
+                    'status' => true,
+                    'data' => $data
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'data' => []
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
 }
 
