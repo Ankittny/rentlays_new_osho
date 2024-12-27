@@ -459,23 +459,26 @@ class PropertyController extends Controller
                 return redirect('listing/' . $property_id . '/calendar');
             }
         } elseif ($step == 'calendar') {
-            $service_request = new PmsHelpdesk;
-            $service_request->issue  = null;
-            $service_request->image    = 'default.png';
-            $service_request->status   = 'New Task';
-            $service_request->description   = 'Onboard';
-            $service_request->property_id   = $request->id;
-            $service_request->priority   = 'Medium';
-            $service_request->assign_to_sitemanager   = 0;
-            $service_request->assign_to_supervisor   = self::getUser($request->id,'supervisor');
-            $service_request->helpdesk_user_id   = self::getUser($request->id,'helpdesk');
-            $service_request->save();
-            $pms_job = new PmsJobs();
-            $pms_job->user_id  = Auth::user()->id;
-            $pms_job->property_id   = $request->id;
-            $pms_job->helpdesk_id   = $service_request->id;
-            $pms_job->status   = 'Onboard';
-            $pms_job->save();
+            $property_type = Properties::find($request->id);
+            if ($property_type->for_property != 'rentlays') {
+                $service_request = new PmsHelpdesk;
+                $service_request->issue  = null;
+                $service_request->image    = 'default.png';
+                $service_request->status   = 'New Task';
+                $service_request->description   = 'Onboard';
+                $service_request->property_id   = $request->id;
+                $service_request->priority   = 'Medium';
+                $service_request->assign_to_sitemanager   = 0;
+                $service_request->assign_to_supervisor   = self::getUser($request->id,'supervisor');
+                $service_request->helpdesk_user_id   = self::getUser($request->id,'helpdesk');
+                $service_request->save();
+                $pms_job = new PmsJobs();
+                $pms_job->user_id  = Auth::user()->id;
+                $pms_job->property_id   = $request->id;
+                $pms_job->helpdesk_id   = $service_request->id;
+                $pms_job->status   = 'Onboard';
+                $pms_job->save();
+            }
             $data['calendar'] = $calendar->generate($request->id);
         }
         return view("listing.$step", $data);
