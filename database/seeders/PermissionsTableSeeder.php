@@ -97,6 +97,8 @@ class PermissionsTableSeeder extends Seeder
               ['id' => '81','name' => 'add_task_list', 'display_name' => 'Add Task List', 'description' => 'Add Task List'],
               ['id' => '82','name' => 'edit_task_list', 'display_name' => 'Edit Task List', 'description' => 'Edit Task List'],
               ['id' => '83','name' => 'delete_task_list', 'display_name' => 'Delete Task List', 'description' => 'Delete Task List'],
+              ['id' => '84','name' => 'edit_pms_job', 'display_name' => 'Edit Pms Job', 'description' => 'Edit Pms Job'],
+              ['id' => '85','name' => 'delete_pms_job', 'display_name' => 'Delete Pms Job', 'description' => 'Delete Pms Job'],
         ]);
     }
 }
