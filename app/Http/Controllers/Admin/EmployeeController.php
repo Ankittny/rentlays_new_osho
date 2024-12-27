@@ -10,6 +10,7 @@ use App\Models\Roles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Admin;
+use App\Models\Properties;
 use Auth ,App\Http\Helpers\Common;
 
 class EmployeeController extends Controller
@@ -25,11 +26,13 @@ class EmployeeController extends Controller
     {
         if (! $request->isMethod('post')) {
             $deparment_list = \App\Models\PmsDepartmentMaster::all();
-            return view('admin.employee.add',compact('deparment_list'));
+            $properties = Properties::whereIn('for_property',['pms','pmsandrentlays'])->get();
+            return view('admin.employee.add',compact('deparment_list','properties'));
         } else {
             $request->validate([
                 'name' => 'required',
                 'email' => 'nullable|email|unique:employees,email|unique:users,email',
+                'property_id'=>'required',
                 'mobile' => 'required',
                 'address' => 'required',
                 'pan_photo' => 'required|image',
@@ -48,6 +51,7 @@ class EmployeeController extends Controller
             $employee->email = $request->email;
             $employee->phone = $request->mobile;
             $employee->supervisor_id = $request->supervisor_id;
+            $employee->property_id = $request->property_id;
             $employee->address = $request->address;
             $employee->password = bcrypt($request->password);
             if ($request->hasFile('pan_photo')) {
@@ -102,6 +106,7 @@ class EmployeeController extends Controller
                 'name' => 'required',
                 'email' => 'nullable|email|unique:employees,email,' . $request->id . '|unique:users,email,' . $request->id,
                 'mobile' => 'required',
+                'property_id'=>'required',
                 'address' => 'required',
                 'pincode' => 'required',
                 'designation_id' => 'required',
@@ -114,6 +119,7 @@ class EmployeeController extends Controller
             $employee->name = $request->name;
             $employee->email = $request->email;
             $employee->phone = $request->mobile;
+            $employee->property_id = $request->property_id;
             $employee->address = $request->address;
             $employee->supervisor_id = $request->supervisor_id;
             if ($request->filled('password')) {
