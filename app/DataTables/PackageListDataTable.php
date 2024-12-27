@@ -3,7 +3,8 @@ namespace App\DataTables;
 
 use App\Models\PmsSubscriptionIds;
 use App\User;
-use Auth, DB, Session;
+use DB, Session;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Services\DataTable;
 
 class PackageListDataTable extends DataTable
@@ -43,8 +44,11 @@ class PackageListDataTable extends DataTable
             'pms_recurring_packages.price as price',
             'pms_recurring_packages.id as package_id',
             'pms_recurring_packages.offer_price as offer_price'
-        ])
-        ->where('pms_subscription_ids.status', '=', '1')->where('user_id', '=', auth()->user()->id);
+        ]);
+        if (auth()->user()) {
+            $query->where('pms_subscription_ids.status', '=', '1')
+                  ->where('pms_subscription_ids.user_id', '=', auth()->user()->id);
+        }
         // Apply date filtering if necessary
         $from = request()->get('from');  // Assuming 'from' is passed as a query parameter
         $to = request()->get('to');      // Assuming 'to' is passed as a query parameter
