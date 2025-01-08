@@ -16,7 +16,8 @@ use App\Models\{
     Bookings,
     PasswordResets,
     Properties,
-    TaskList
+    TaskList,
+    Employee
 };
 use App\DataTables\{
     AdminuserDataTable, 
@@ -661,7 +662,16 @@ public function hostMessage(Request $request)
     public function add_task_list()
     {
         $data['title'] = 'Add Task List';
-        $data['property'] =Properties::whereIn('for_property',['pms','pmsandrentlays'])->get();
+        $user_role_id = RoleAdmin::where('admin_id', Auth::guard('admin')->user()->id)->first();
+        $user_role = Roles::where('id', $user_role_id->role_id)->pluck('display_name')->first();
+        if ($user_role == 'employee') {
+            $user_property = Admin::where('id', Auth::guard('admin')->user()->id)->first();
+            $employee = Employee::where('id', $user_property->employee_id)->first();
+            $data['property'] = Properties::whereIn('for_property', ['pms', 'pmsandrentlays'])
+                ->whereIn('id', $employee->property_id)->get();
+        }else{
+            $data['property'] = Properties::whereIn('for_property', ['pms', 'pmsandrentlays'])->get();
+        }
         return view('admin.listing.add-task-list', $data);
     }
 
@@ -705,7 +715,16 @@ public function hostMessage(Request $request)
     {
         $data['title'] = 'Edit Task List';
         $data['task'] = TaskList::where('id', $id)->first();
-        $data['property'] =Properties::whereIn('for_property',['pms','pmsandrentlays'])->get();
+        $user_role_id = RoleAdmin::where('admin_id', Auth::guard('admin')->user()->id)->first();
+        $user_role = Roles::where('id', $user_role_id->role_id)->pluck('display_name')->first();
+        if ($user_role == 'employee') {
+            $user_property = Admin::where('id', Auth::guard('admin')->user()->id)->first();
+            $employee = Employee::where('id', $user_property->employee_id)->first();
+            $data['property'] = Properties::whereIn('for_property', ['pms', 'pmsandrentlays'])
+                ->whereIn('id', $employee->property_id)->get();
+        }else{
+            $data['property'] = Properties::whereIn('for_property', ['pms', 'pmsandrentlays'])->get();
+        }
         return view('admin.listing.edit-task-list', $data);
     }
 

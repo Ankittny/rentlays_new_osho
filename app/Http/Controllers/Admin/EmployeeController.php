@@ -99,8 +99,9 @@ class EmployeeController extends Controller
     {
         if (! $request->isMethod('post')) {
             $employee = \App\Models\Employee::find($request->id);
+            $properties = Properties::whereIn('for_property',['pms','pmsandrentlays'])->get();
             $deparment_list = \App\Models\PmsDepartmentMaster::all();
-            return view('admin.employee.edit', compact('employee','deparment_list'));
+            return view('admin.employee.edit', compact('employee','deparment_list','properties'));
         } elseif ($request->isMethod('post')) {
             $request->validate([
                 'name' => 'required',
