@@ -146,7 +146,6 @@ class PropertiesController extends Controller
 
     public function listing(Request $request, CalendarController $calendar)
     {
-
         $step            = $request->step;
         $property_id     = $request->id;
         $data['step']    = $step;
