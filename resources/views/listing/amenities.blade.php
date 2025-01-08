@@ -1,35 +1,46 @@
 @extends('template')
 @push('css')
 <style>
-    /* Custom style for the info window */
-    .info-window-content {
-      font-family: Arial, sans-serif;
-      max-width: 300px;
-    }
-    .info-window-header {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .info-window-category {
-      font-style: italic;
-      color: #555;
-    }
-    .info-window-address {
-      margin: 10px 0;
-    }
-    .info-window-photo {
-      width: 100%;
-      height: auto;
-      margin-top: 10px;
-    }
-    .info-window-link {
-      color: #1E90FF;
-      text-decoration: none;
-      font-size: 14px;
-      margin-top: 10px;
-      display: inline-block;
-    }
+/* General Styles for the Property List */
+#property-list {
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Category Section Styles */
+.category-section {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Category Title Styles */
+.category-title {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  text-transform: capitalize;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+/* Category List Styles */
+.category-list {
+  list-style: none;
+  padding-left: 15px;
+  margin: 0;
+}
+
+/* Property Name Styles */
+.property-name {
+  font-size: 16px;
+  color: #555;
+  margin: 4px 0;
+}
 </style>
 @endpush
 @section('main')
@@ -169,7 +180,7 @@
                                                             <h4 class="text-18 font-weight-700 pl-0 pr-0 pt-4 pb-4">
                                                                 {{ __('Property Nearest') }}
                                                             </h4>
-                                                            <div id="map" style="height: 500px; width: 100%;"></div>
+                                                            <div id="map" style="height: 500px; width: 100%;display: none"></div>
                                                             <div id="property-list" style="margin-top: 20px;"></div>
                                                         </div>
                                                     @endif
@@ -302,35 +313,42 @@
   }
 
   function updatePropertyList(propertyList) {
-    const propertyListDiv = document.getElementById('property-list');
-    propertyListDiv.innerHTML = ''; // Clear the existing list
+  const propertyListDiv = document.getElementById('property-list');
+  propertyListDiv.innerHTML = ''; // Clear the existing list
 
-    if (propertyList.length === 0) {
-      propertyListDiv.innerHTML = '<p>No properties found in the selected area.</p>';
-      return;
-    }
-
-    const listHtml = propertyList
-      .map(property => `
-        <div class="property-item row" style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc;">
-            <div class="col-6"> 
-                <h4><strong>Name:</strong>${property.name}</h4>
-                <p><strong>Type:</strong> ${property.category}</p>
-                <p><strong>Address:</strong> ${property.address}</p>
-            </div>
-            <div class="col-6 float-right">
-                ${
-                    property.photoUrl
-                    ? `<img src="${property.photoUrl}" alt="${property.name}" style="max-width: 100%; height: auto;"  class="float-right"/>`
-                    : ''
-                }
-            </div>
-        </div>
-      `)
-      .join('');
-
-    propertyListDiv.innerHTML = listHtml;
+  if (propertyList.length === 0) {
+    propertyListDiv.innerHTML = '<p>No properties found in the selected area.</p>';
+    return;
   }
+
+  // Group properties by category
+  const categorizedProperties = propertyList.reduce((acc, property) => {
+    if (!acc[property.category]) {
+      acc[property.category] = [];
+    }
+    acc[property.category].push(property.name);
+    return acc;
+  }, {});
+
+  // Generate HTML for each category
+  for (const category in categorizedProperties) {
+    const categorySection = document.createElement('div');
+    categorySection.classList.add('category-section');
+
+    categorySection.innerHTML = `
+      <h3 class="category-title">${category}</h3>
+      <ul class="category-list">
+        ${categorizedProperties[category]
+          .map(name => `<li class="property-name">${name}</li>`)
+          .join('')}
+      </ul>
+    `;
+
+    propertyListDiv.appendChild(categorySection);
+  }
+}
+
+
 
   window.onload = function () {
     initMap();

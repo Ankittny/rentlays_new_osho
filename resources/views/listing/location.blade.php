@@ -25,7 +25,7 @@
 										<label>{{ __('Country') }} <span class="text-danger">*</span></label>
 										<select id="basics-select-bed_type" name="country" class="form-control text-16 mt-2" id='country'>
 											@foreach ($country as $key => $value)
-												<option value="{{ $key }}" {{ ($key == $result->property_address->country) ? 'selected' : '' }}>{{ $value }}</option>
+												<option value="{{ $key }}" {{ (isset($result->property_address->country) && $key == $result->property_address->country) ? 'selected' : '' }}>{{ $value }}</option>
 											@endforeach
 										</select>
 										<span class="text-danger">{{ $errors->first('country') }}</span>
@@ -35,7 +35,7 @@
 								<div class="row mt-4">
 									<div class="col-md-12 pl-5 pr-5">
 										<label>{{ __('Address Line 1') }} <span class="text-danger">*</span></label>
-										<input type="text" name="address_line_1" id="address_line_1" value="{{ $result->property_address->address_line_1  }}" class="form-control text-16 mt-2" placeholder="House name/number + street/road">
+										<input type="text" name="address_line_1" id="address_line_1" value="{{ $result->property_address->address_line_1  ?? ''  }}" class="form-control text-16 mt-2" placeholder="House name/number + street/road">
 										<span class="text-danger">{{ $errors->first('address_line_1') }}</span>
 									</div>
 								</div>
@@ -53,23 +53,23 @@
 								<div class="row mt-4">
 									<div class="col-md-6 mt-4 pl-5 pr-5">
 										<label>{{ __('Address Line 2') }}</label>
-										<input type="text" name="address_line_2" id="address_line_2" value="{{ $result->property_address->address_line_2  }}" class="form-control text-16 mt-2" placeholder="Apt., suite, building access code">
+										<input type="text" name="address_line_2" id="address_line_2" value="{{ $result->property_address->address_line_2 ?? ''  }}" class="form-control text-16 mt-2" placeholder="Apt., suite, building access code">
 									</div>
 									<div class="col-md-6 mt-4 pl-5 pr-5">
 										<label>{{ __('City / Town / District') }}  <span class="text-danger">*</span></label>
-										<input type="text" name="city" id="city" value="{{ $result->property_address->city  }} " class="form-control text-16 mt-2">
+										<input type="text" name="city" id="city" value="{{ $result->property_address->city ?? ''  }} " class="form-control text-16 mt-2">
 										<span class="text-danger">{{ $errors->first('city') }}</span>
 									</div>
 
 									<div class="col-md-6 mt-4 pl-5 pr-5">
 										<label>{{ __('State / Province / County / Region') }} <span class="text-danger">*</span></label>
-										<input type="text" name="state" id="state" value="{{ $result->property_address->state  }}" class="form-control text-16 mt-2">
+										<input type="text" name="state" id="state" value="{{ $result->property_address->state ?? ''  }}" class="form-control text-16 mt-2">
 										<span class="text-danger">{{ $errors->first('state') }}</span>
 									</div>
 
 									<div class="col-md-6 mt-4 pl-5 pr-5">
 										<label>{{ __('ZIP / Postal Code') }}</label>
-										<input type="text" name="postal_code" id="postal_code" value="{{ $result->property_address->postal_code }}" class="form-control text-16 mt-2">
+										<input type="text" name="postal_code" id="postal_code" value="{{ $result->property_address->postal_code ?? '' }}" class="form-control text-16 mt-2">
 										<span class="text-danger">{{ $errors->first('postal_code') }}</span>
 									</div>
 								</div>
@@ -109,8 +109,8 @@
 		let nextText = "{{ __('Next') }}..";
 		let fieldRequiredText = "{{ __('This field is required.') }}";
 		let maxlengthText = "{{ __('Please enter no more than 255 characters.') }}";
-		let latitude = "{{ $result->property_address->latitude != '' ? $result->property_address->latitude:0 }}";
-		let longitude = "{{ $result->property_address->longitude != '' ? $result->property_address->longitude:0 }}";
+		let latitude = "{{ $result->property_address->latitude ?? 0 }}";
+		let longitude = "{{ $result->property_address->longitude ?? 0 }}";
 		let page = 'location';
 	</script>
 	<script type="text/javascript" src="{{ asset('public/js/listings.min.js') }}"></script>
