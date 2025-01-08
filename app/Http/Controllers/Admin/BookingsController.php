@@ -413,8 +413,14 @@ class BookingsController extends Controller
     {
         $walletBalance = Wallet::where('user_id',$booking->host_id)->first();
         $default_code = Currency::getAll()->firstWhere('default',1)->code;
-        $wallet_code = Currency::getAll()->firstWhere('id', $walletBalance->currency_id)->code;
-        $balance = ( $walletBalance->balance + Common::convert_currency($default_code, $wallet_code, $booking->total)  - Common::convert_currency($default_code, $wallet_code, $booking->service_charge) - Common::convert_currency($default_code, $wallet_code, $booking->accomodation_tax) - Common::convert_currency($default_code, $wallet_code, $booking->iva_tax) );
+        $wallet_code = $default_code;
+        $balance = 0;
+        if(!empty($walletBalance->currency_id)){
+           $wallet_code = Currency::getAll()->firstWhere('id', $walletBalance->currency_id)->code;
+           $balance = ( $walletBalance->balance + Common::convert_currency($default_code, $wallet_code, $booking->total)  - Common::convert_currency($default_code, $wallet_code, $booking->service_charge) - Common::convert_currency($default_code, $wallet_code, $booking->accomodation_tax) - Common::convert_currency($default_code, $wallet_code, $booking->iva_tax) );
+        }
+        
+        
         Wallet::where(['user_id' => $booking->host_id])->update(['balance' => $balance]);
     }
 

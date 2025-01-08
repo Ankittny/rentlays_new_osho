@@ -200,7 +200,7 @@ class CommanApiController extends Controller
     public function amenitiesType()
     {
         try{
-            $amenitiesTypeData = AmenityType::select('id','name','description')->get();
+            $amenitiesTypeData = AmenityType::with('amenities')->select('id','name','description')->get();
             if($amenitiesTypeData->count()>0){
                 return response()->json(['status'=>true,'amenitiesTypeData'=>$amenitiesTypeData],self::HTTP_STATUS_OK);
             } else{
@@ -1235,7 +1235,6 @@ class CommanApiController extends Controller
             ]);
         }
     }
-
 
 }
 

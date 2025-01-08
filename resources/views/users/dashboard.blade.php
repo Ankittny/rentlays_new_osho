@@ -68,7 +68,7 @@
                                     <p class="grclor mb-0">    {{ __('My Wallet') }} </p>
                                     <a href="{{ url('trips/active') }}">
                                        
-                                        <p class=" font-weight-bold m-0 fntsize">{!! moneyFormat( $currentCurrency->symbol, number_format($wallet->total ?? 0, 2)) !!}</p>
+                                        <p class="font-weight-bold m-0 fntsize">{!! moneyFormat($currentCurrency->symbol, number_format(optional($wallet)->total ?? 0, 2)) !!}</p>
                                     </a>
                                 </div>
                             </div>
