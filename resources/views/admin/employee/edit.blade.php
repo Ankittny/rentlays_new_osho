@@ -52,6 +52,21 @@
                                     <span class="text-danger">{{ $errors->first("email") }}</span>
                                 </div>
                             </div>
+                            <div class="form-group row mt-3">
+                                <label for="inputEmail3" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Property
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-6">
+                                    <select class="form-control f-14 validate_field" name="property_id" aria-invalid="false">
+                                        <option value="">Select Property</option>
+                                        @foreach($properties as $property)
+                                        <option value="{{ $property->id }}" {{ old('property_id', $employee->property_id) == $property->id ? 'selected' : '' }}>{{ $property->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="text-danger">{{ $errors->first('property_id') }}</span>
+                                </div>
+                            </div>
+
                             <div class="form-group row mt-3 designation_id">
                                 <label for="designation_id" class="control-label col-sm-3 fw-bold text-md-end mb-2 mb-md-0">Department
                                     <span class="text-danger">*</span>
