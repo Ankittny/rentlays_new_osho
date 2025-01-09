@@ -5,36 +5,47 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('public/js/ninja/ninja-slider.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('public/css/single-property.min.css') }}">
     <style>
-        /* Custom style for the info window */
-        .info-window-content {
-        font-family: Arial, sans-serif;
-        max-width: 300px;
+        /* General Styles for the Property List */
+        #property-list {
+          margin: 20px 0;
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
         }
-        .info-window-header {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 5px;
+        
+        /* Category Section Styles */
+        .category-section {
+          margin-bottom: 15px;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          background-color: #f9f9f9;
         }
-        .info-window-category {
-        font-style: italic;
-        color: #555;
+        
+        /* Category Title Styles */
+        .category-title {
+          margin-bottom: 8px;
+          font-size: 18px;
+          font-weight: bold;
+          color: #333;
+          text-transform: capitalize;
+          border-bottom: 1px solid #ddd;
+          padding-bottom: 5px;
         }
-        .info-window-address {
-        margin: 10px 0;
+        
+        /* Category List Styles */
+        .category-list {
+          list-style: none;
+          padding-left: 15px;
+          margin: 0;
         }
-        .info-window-photo {
-        width: 100%;
-        height: auto;
-        margin-top: 10px;
+        
+        /* Property Name Styles */
+        .property-name {
+          font-size: 16px;
+          color: #555;
+          margin: 4px 0;
         }
-        .info-window-link {
-        color: #1E90FF;
-        text-decoration: none;
-        font-size: 14px;
-        margin-top: 10px;
-        display: inline-block;
-        }
-    </style>
+        </style>
 @endpush
 
 @section('main')
@@ -1714,7 +1725,8 @@
 <div class="container-fluid container-fluid-90 mt-70">
     <div class="row mt-5">
         <div class="col-md-12">
-            <div id="map" style="height: 500px; width: 100%;"></div>
+             <h2>Property Nearest</h2>
+            <div id="map" style="height: 500px; width: 100%;display: none"></div>
             <div id="property-list" style="margin-top: 20px;"></div>
         </div>
     </div>
@@ -2153,128 +2165,136 @@ e.stopPropagation();
     <script type="text/javascript" src="{{ asset('public/js/listings.min.js') }}"></script>
     <script type="text/javascript" src='https://maps.google.com/maps/api/js?key={{ config("vrent.google_map_key") }}&libraries=places'></script>
     <script type="text/javascript">
-    'use strict';
-    function initMap() {
-    let latitude = "{{ $result->property_address->latitude != '' ? $result->property_address->latitude : 0 }}";
-    let longitude = "{{ $result->property_address->longitude != '' ? $result->property_address->longitude : 0 }}";
-
-    if (latitude == 0 || longitude == 0) {
-        alert('Invalid latitude or longitude.');
-        return;
-    }
-
-    const map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
-        zoom: 15,
-    });
-
-    const marker = new google.maps.Marker({
-        position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
-        map: map,
-        title: "Property Location",
-    });
-
-    const circle = new google.maps.Circle({
-        map: map,
-        radius: 1000, // 1 km radius
-        center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.2,
-    });
-
-    const service = new google.maps.places.PlacesService(map);
-    const radius = 1000; // 1 km radius
-    const categories = [
-        { name: 'School/College', keywords: 'school OR college' },
-        { name: 'Hospital/Clinic', keywords: 'hospital OR clinic' },
-        { name: 'Public Transport', keywords: 'bus stop OR metro station' },
-        { name: 'Restaurants/Cafes', keywords: 'restaurant OR cafe' },
-        { name: 'Supermarket', keywords: 'supermarket' },
-        { name: 'Playground', keywords: 'playground' },
-        { name: 'Walking/Jogging Track', keywords: 'walking track OR jogging track' },
-        { name: 'Sports Complex', keywords: 'sports complex' },
-        { name: 'Parking Facility', keywords: 'parking' },
-    ];
-
-    const propertyList = []; // Array to store the properties for listing
-
-    categories.forEach(category => {
-        service.textSearch(
-        {
-            location: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
-            radius: radius,
-            query: category.keywords,
-        },
-        (results, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-            results.forEach(place => {
-                const placeLocation = place.geometry.location;
-                const userLocation = new google.maps.LatLng(latitude, longitude);
-                const distance = google.maps.geometry.spherical.computeDistanceBetween(userLocation, placeLocation);
-                if (distance <= radius) {
-                const placeMarker = new google.maps.Marker({
-                    position: placeLocation,
-                    map: map,
-                    title: place.name,
-                });
-
-                const photoUrl = place.photos && place.photos.length > 0 ? place.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 }) : null;
-
-                propertyList.push({
-                    name: place.name,
-                    category: category.name,
-                    address: place.formatted_address,
-                    photoUrl: photoUrl,
-                });
-
-                // Update the property list HTML
-                updatePropertyList(propertyList);
+        'use strict';
+      
+        function initMap() {
+          let latitude = "{{ $result->property_address->latitude != '' ? $result->property_address->latitude : 0 }}";
+          let longitude = "{{ $result->property_address->longitude != '' ? $result->property_address->longitude : 0 }}";
+      
+          if (latitude == 0 || longitude == 0) {
+            alert('Invalid latitude or longitude.');
+            return;
+          }
+      
+          const map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+            zoom: 15,
+          });
+      
+          const marker = new google.maps.Marker({
+            position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+            map: map,
+            title: "Property Location",
+          });
+      
+          const circle = new google.maps.Circle({
+            map: map,
+            radius: 1000, // 1 km radius
+            center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.2,
+          });
+      
+          const service = new google.maps.places.PlacesService(map);
+          const radius = 1000; // 1 km radius
+          const categories = [
+            { name: 'School/College', keywords: 'school OR college' },
+            { name: 'Hospital/Clinic', keywords: 'hospital OR clinic' },
+            { name: 'Public Transport', keywords: 'bus stop OR metro station' },
+            { name: 'Restaurants/Cafes', keywords: 'restaurant OR cafe' },
+            { name: 'Supermarket', keywords: 'supermarket' },
+            { name: 'Playground', keywords: 'playground' },
+            { name: 'Walking/Jogging Track', keywords: 'walking track OR jogging track' },
+            { name: 'Sports Complex', keywords: 'sports complex' },
+            { name: 'Parking Facility', keywords: 'parking' },
+          ];
+      
+          const propertyList = []; // Array to store the properties for listing
+      
+          categories.forEach(category => {
+            service.textSearch(
+              {
+                location: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+                radius: radius,
+                query: category.keywords,
+              },
+              (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                  results.forEach(place => {
+                    const placeLocation = place.geometry.location;
+                    const userLocation = new google.maps.LatLng(latitude, longitude);
+                    const distance = google.maps.geometry.spherical.computeDistanceBetween(userLocation, placeLocation);
+                    if (distance <= radius) {
+                      const placeMarker = new google.maps.Marker({
+                        position: placeLocation,
+                        map: map,
+                        title: place.name,
+                      });
+      
+                      const photoUrl = place.photos && place.photos.length > 0 ? place.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 }) : null;
+      
+                      propertyList.push({
+                        name: place.name,
+                        category: category.name,
+                        address: place.formatted_address,
+                        photoUrl: photoUrl,
+                      });
+      
+                      // Update the property list HTML
+                      updatePropertyList(propertyList);
+                    }
+                  });
                 }
-            });
-            }
+              }
+            );
+          });
         }
-        );
-    });
-    }
-
-    function updatePropertyList(propertyList) {
-    const propertyListDiv = document.getElementById('property-list');
-    propertyListDiv.innerHTML = ''; // Clear the existing list
-
-    if (propertyList.length === 0) {
-        propertyListDiv.innerHTML = '<p>No properties found in the selected area.</p>';
-        return;
-    }
-
-    const listHtml = propertyList
-        .map(property => `
-        <div class="property-item row" style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc;">
-            <div class="col-6"> 
-                <h4><strong>Name:</strong>${property.name}</h4>
-                <p><strong>Type:</strong> ${property.category}</p>
-                <p><strong>Address:</strong> ${property.address}</p>
-            </div>
-            <div class="col-6 float-right">
-                ${
-                    property.photoUrl
-                    ? `<img src="${property.photoUrl}" alt="${property.name}" style="max-width: 100%; height: auto;"  class="float-right"/>`
-                    : ''
-                }
-            </div>
-        </div>
-        `)
-        .join('');
-
-    propertyListDiv.innerHTML = listHtml;
-    }
-
-    window.onload = function () {
-    initMap();
-    };
-   </script>
+      
+        function updatePropertyList(propertyList) {
+        const propertyListDiv = document.getElementById('property-list');
+        propertyListDiv.innerHTML = ''; // Clear the existing list
+      
+        if (propertyList.length === 0) {
+          propertyListDiv.innerHTML = '<p>No properties found in the selected area.</p>';
+          return;
+        }
+      
+        // Group properties by category
+        const categorizedProperties = propertyList.reduce((acc, property) => {
+          if (!acc[property.category]) {
+            acc[property.category] = [];
+          }
+          acc[property.category].push(property.name);
+          return acc;
+        }, {});
+      
+        // Generate HTML for each category
+        for (const category in categorizedProperties) {
+          const categorySection = document.createElement('div');
+          categorySection.classList.add('category-section');
+      
+          categorySection.innerHTML = `
+            <h3 class="category-title">${category}</h3>
+            <ul class="category-list">
+              ${categorizedProperties[category]
+                .map(name => `<li class="property-name">${name}</li>`)
+                .join('')}
+            </ul>
+          `;
+      
+          propertyListDiv.appendChild(categorySection);
+        }
+      }
+      
+      
+      
+        window.onload = function () {
+          initMap();
+        };
+      </script>
 @endsection
 
 
