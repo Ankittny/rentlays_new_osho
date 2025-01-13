@@ -258,19 +258,40 @@ class PaymentController extends Controller
         $booking_code = Bookings::find($booking->id);
 
         $booking_code->code = $code;
-
         if ($booking->booking_type == "instant") {
             $dates = [];
             $propertyCurrencyCode = PropertyPrice::firstWhere('property_id', $data['property_id'])->currency_code;
             foreach ($data['price_list']->date_with_price as $dp) {
                 $tmp_date = setDateForDb($dp->date);
-                $property_data = [
-                    'property_id' => $data['property_id'],
-                    'status'      => 'Not available',
-                    'price'       => Common::convert_currency($data['price_list']->currency, $propertyCurrencyCode, $dp->original_price),
-                    'date'        => $tmp_date
-                ];
+                $number_of_bedrooms = Properties::find($data['property_id'])->bedrooms;
 
+                $bookings = Bookings::where(function($query) use ($data) {
+                    $query->where(function($q) use ($data) {
+                        $q->where('start_date', '<=', setDateForDb($data['checkout']))
+                          ->where('end_date', '>=', setDateForDb($data['checkin']));
+                    });
+                })->whereIn('status', ['Accepted', 'Pending'])
+                ->selectRaw('property_id, count(*) as total_bookings')
+                ->groupBy('property_id')
+                ->get();
+
+                // dd($bookings, $bookings[0]->total_bookings, $number_of_bedrooms);
+                if (count($bookings) > 0 && $bookings[0]->total_bookings >= $number_of_bedrooms) {
+                    $property_data = [
+                        'property_id' => $data['property_id'],
+                        'status'      => 'Not available',
+                        'price'       => Common::convert_currency($data['price_list']->currency, $propertyCurrencyCode, $dp->original_price),
+                        'date'        => $tmp_date
+                    ];
+                } else {
+                    $property_data = [
+                        'property_id' => $data['property_id'],
+                        'status'      => 'Available',
+                        'price'       => Common::convert_currency($data['price_list']->currency, $propertyCurrencyCode, $dp->original_price),
+                        'date'        => $tmp_date
+                    ];
+                }
+                    
                 PropertyDates::updateOrCreate(['property_id' => $data['property_id'], 'date' => $tmp_date], $property_data);
                 if ($data['paymode'] == 'Bank') {
                     array_push($dates, ['booking_id'=> $booking->id, 'date' => $tmp_date ]);
