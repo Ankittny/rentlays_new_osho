@@ -37,10 +37,10 @@
 
 							  @if($ProperTypeOptionset->count() > 0)
 								  @foreach($ProperTypeOptionset as $item)
-									@php
-										$option = App\Models\PropertyTypeoption::find($item->property_option_type_id);
-										$name = str_replace(' ', '_', strtolower($option->name));
-									@endphp
+										@php
+											$option = App\Models\PropertyTypeoption::find($item->property_option_type_id);
+											$name = str_replace(' ', '_', strtolower($option->name));
+										@endphp
 										@if($option->name=="Floor")
 												<div class="form-group col-md-6 pl-5 pr-5">
 													<label for="inputState">{{ $option->name }}</label>

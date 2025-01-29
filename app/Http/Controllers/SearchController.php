@@ -76,6 +76,7 @@ class SearchController extends Controller
 
     function searchResult(Request $request)
     {   
+        echo "dsfdsfdsf"; die;
         $full_address = $request->input('location');
         $checkin = $request->input('checkin');
         $checkout = $request->input('checkout');

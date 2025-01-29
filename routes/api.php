@@ -29,7 +29,6 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('listing', 'Api\CommanApiController@listing');
 
     Route::get('propertydetail/{any}', 'Api\CommanApiController@propertyDetail');
-    Route::get('amenities','Api\CommanApiController@AmenitiesData');
     Route::middleware('auth:api')->group( function () {
         Route::get('profileupdate', 'Api\LoginController@profileupdate');
         Route::post('profile-media', 'Api\LoginController@profilemedia');

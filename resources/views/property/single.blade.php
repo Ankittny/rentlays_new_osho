@@ -239,7 +239,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h2><strong class="singlestrong">{{ __('About this listing') }}</strong> </h2>
-                                <p class="mt-4 text-justify">{{ $result->property_description->summary }}</p>
+                                <p class="mt-4 text-justify">{{ $result->property_description->summary ?? "" }}</p>
                             </div>
                         </div>
                     </div>
