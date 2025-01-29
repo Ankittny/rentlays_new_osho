@@ -339,7 +339,6 @@ class CommanApiController extends Controller
         $property_type_val = [];
         $properties_whereIn = [];
         $space_type_val = [];
-
         $address = str_replace([" ", "%2C"], ["+", ","], "$full_address");
         $map_where = 'https://maps.google.com/maps/api/geocode/json?key=' . config("vrent.google_map_key") . '&address=' . $address . '&sensor=false&libraries=places';
         $geocode = $this->content_read($map_where);
@@ -369,7 +368,7 @@ class CommanApiController extends Controller
                 $maxLong = 1100;
             }
         }
-
+        //dd(config("vrent.google_map_key"));
         $users_where['users.status'] = 'Active';
 
         $checkin = date('Y-m-d', strtotime($checkin));
@@ -382,7 +381,7 @@ class CommanApiController extends Controller
 
         $not_available_property_ids = PropertyDates::whereIn('date', $days)->where('status', 'Not available')->distinct()->pluck('property_id');
         $properties_where['properties.accommodates'] = $guest;
-     
+        
         $properties_where['properties.status'] = 'Listed';
         $property_approval = Settings::where('name', 'property_approval')->first()->value;
         $property_approval === 'Yes' ? ($properties_where['properties.is_verified'] = 'Approved') : '';

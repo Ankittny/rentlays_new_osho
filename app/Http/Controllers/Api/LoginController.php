@@ -142,7 +142,6 @@ class LoginController extends Controller
         if (!Hash::check($request->password, $user->password)) {
             return response(['message' => 'Password mismatch'], 401);
         }
-        //dd($user);
         $token = $user->createToken('authToken')->accessToken;
         $response = [
             'id' => $user->id,

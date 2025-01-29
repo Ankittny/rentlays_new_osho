@@ -1,9 +1,9 @@
 {
     "Gateway": true,
     "Addons": true,
-    "Paystack": true,
-    "Flutterwave": true,
-    "Paypal": true,
+    "Paystack": false,
+    "Flutterwave": false,
+    "Paypal": false,
     "Stripe": true,
     "DirectBankTransfer": true
 }
