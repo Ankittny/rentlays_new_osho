@@ -5435,6 +5435,12 @@ margin: 10px 0px;
 		margin-right: 0px;
 	}
 }
+@media(max-width:991px){
+	.accordian-graph{
+		padding: 10px;
+	}
+	
+}
 
 @media(max-width:991px) and (min-width:768px){
 	.append-slip {
@@ -5449,11 +5455,17 @@ margin: 10px 0px;
 	width: 160px;
 	padding: 25px;
 }
+.input-group-set{
+	left: -140px !important;
+}
 }
 
 @media(max-width:767px) and (min-width:425px){
 .offers{
 	margin-top: 20px;
+}
+.input-group-set{
+	left: -5px !important;
 }
 }
 
@@ -5557,12 +5569,23 @@ margin: 10px 0px;
   .banner_form_box {
     width: 100%;
 }
-.g-button-submit {
+/* .g-button-submit {
     left: 0px;
     top: -75px;
-}
+} */
 
   }
+  @media(max-width:767px) and (min-width:425px){
+	.g-button-submit{
+      display: none;
+  }
+}
+
+@media(max-width:424px) and (min-width:120px){
+	.g-button-submit{
+      display: none;
+  }
+}
 
   .left-counter-title p{
 	margin-bottom: 0px;
