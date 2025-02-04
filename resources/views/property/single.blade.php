@@ -1008,6 +1008,18 @@
                                                             <div class="value-button increase" data-target="infant">+</div>
                                                         </div>
                                                     </div>
+                                                    <!-- pets counter -->
+                                                    <div class="main-counter">
+                                                        <div class="left-counter-title">
+                                                            <p>Pets</p>
+                                                            <span>Below 2 years</span>
+                                                        </div>
+                                                        <div class="increment-decrement">
+                                                            <div class="value-button decrease" data-target="pets">-</div>
+                                                            <input type="number" class="guest-count" id="pets" value="0" min="0">
+                                                            <div class="value-button increase" data-target="pets">+</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -2549,12 +2561,14 @@
                     let adult = parseInt($("#adult").val());
                     let child = parseInt($("#child").val());
                     let infant = parseInt($("#infant").val());
+                    let pets = parseInt($("#pets").val());
 
                     let guestSummary = [];
 
                     if (adult > 0) guestSummary.push(adult + " Adult" + (adult > 1 ? "s" : ""));
                     if (child > 0) guestSummary.push(child + " Child" + (child > 1 ? "ren" : ""));
                     if (infant > 0) guestSummary.push(infant + " Infant" + (infant > 1 ? "s" : ""));
+                    if (pets > 0) guestSummary.push(pets + " Pets" + (pets > 1 ? "s" : ""));
 
                     $("#guestInput").val(guestSummary.join(", ") || "Select guest");
                 }

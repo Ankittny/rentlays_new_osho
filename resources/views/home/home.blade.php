@@ -73,11 +73,11 @@
                     }]
                 });
             </script>
-            <div class="banner_form_box d-flex">
-                <form id="front-search-form" method="post" action="{{ url('search') }}">
+            <div class="banner_form_box ">
+                <form id="front-search-form" class="d-flex" method="post" action="{{ url('search') }}">
                     {{ csrf_field() }}
                     <input type="hidden" name="property_type" id="getvalueprotype">
-                    <div class="g-field-search">
+                    <div class="g-field-search ">
                         <div class="row">
                             <div class="col-md-4 border-right">
                                 <div class="banner_form_icon">
@@ -125,48 +125,54 @@
                                 <div class="banner_form_icon icon-right-sight pt-4">
                                     <img class="banner_form_icon_img"
                                         src={{ asset('/public/front/images/traveler-man.png') }} alt="">
-                                        <div class="webki-btn">
-                                    <button class="toggle-button" onclick="toggleVisibility()">Add Guest</button>
-                                        </div>
-                                    <div class="input-group-set" id="input-group" style="display: none;">
-                                        <div class="input-row">
-                                            <div class="title">
-                                                <h2 class="label">Adults</h2>
-                                                <p class="description">People 18 years old and above.</p>
-                                            </div>
-                                            <div class="input">
-                                                <button class="minus" aria-label="Decrease by one" disabled onclick="changeCount('adults', 'decrease')">
-                                                    <svg width="16" height="2" viewBox="0 0 16 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <line y1="1" x2="16" y2="1" stroke="#0064FE" stroke-width="2" class="icon" />
-                                                    </svg>
-                                                </button>
-                                                <div class="number" id="adults-count">0</div>
-                                                <button class="plus" aria-label="Increase by one" onclick="changeCount('adults', 'increase')">
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon">
-                                                        <line x1="8" y1="4.37114e-08" x2="8" y2="16" stroke="#0064FE" stroke-width="2" />
-                                                        <line y1="8" x2="16" y2="8" stroke="#0064FE" stroke-width="2" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="input-row">
-                                            <div class="title">
-                                                <h2 class="label">Children</h2>
-                                                <p class="description">People under 18 years old.</p>
-                                            </div>
-                                            <div class="input">
-                                                <button class="minus" aria-label="Decrease by one" disabled onclick="changeCount('children', 'decrease')">
-                                                    <svg width="16" height="2" viewBox="0 0 16 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <line y1="1" x2="16" y2="1" stroke="#0064FE" stroke-width="2" class="icon" />
-                                                    </svg>
-                                                </button>
-                                                <div class="number" id="children-count">0</div>
-                                                <button class="plus" aria-label="Increase by one" onclick="changeCount('children', 'increase')">
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="plus">
-                                                        <line x1="8" y1="4.37114e-08" x2="8" y2="16" stroke="#0064FE" stroke-width="2" />
-                                                        <line y1="8" x2="16" y2="8" stroke="#0064FE" stroke-width="2" />
-                                                    </svg>
-                                                </button>
+                                    <div class="webki-btn">
+                                        <div class="">
+                                            <!-- <label>{{ __('guest') }}</label> -->
+                                            <div class="containers">
+                                                <div class="clickable-inputs">
+                                                    <input type="text" class="form-controls" id="guestInput" placeholder="Select guest" readonly>
+                                                    <!-- <i class="fa fa-angle-down toggle-icon"></i> -->
+                                                </div>
+                                                <div class="gt-bcx rounder-bx">
+                                                    <!-- Adult Counter -->
+                                                    <div class="main-counter">
+                                                        <div class="left-counter-title ">
+                                                            <p class="text-left">Adult</p>
+                                                            <span>Above 13+</span>
+                                                        </div>
+                                                        <div class="increment-decrement">
+                                                            <div class="value-button decrease" data-target="adult">-</div>
+                                                            <input type="number" class="guest-count" id="adult" value="0" min="0">
+                                                            <div class="value-button increase" data-target="adult">+</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Child Counter -->
+                                                    <div class="main-counter">
+                                                        <div class="left-counter-title ">
+                                                            <p class="text-left">Child</p>
+                                                            <span>2-12 years</span>
+                                                        </div>
+                                                        <div class="increment-decrement">
+                                                            <div class="value-button decrease" data-target="child">-</div>
+                                                            <input type="number" class="guest-count" id="child" value="0" min="0">
+                                                            <div class="value-button increase" data-target="child">+</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Infant Counter -->
+                                                    <div class="main-counter">
+                                                        <div class="left-counter-title">
+                                                            <p class="text-left">Infant</p>
+                                                            <span>Below 2 years</span>
+                                                        </div>
+                                                        <div class="increment-decrement">
+                                                            <div class="value-button decrease" data-target="infant">-</div>
+                                                            <input type="number" class="guest-count" id="infant" value="0" min="0">
+                                                            <div class="value-button increase" data-target="infant">+</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -174,14 +180,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="g-button-submit">
+                            <button type="submit" class="btn vbtn-default btn-block p-3 text-16"><i
+                                    class="fa fa-search"></i>
+                            </button>
+                        </div>
                 </form>
-                <div class="g-button-submit">
-                <button type="submit" class="btn vbtn-default btn-block p-3 text-16"><i
-                        class="fa fa-search"></i>
-                </button>
+
             </div>
-            </div>
-          
+
 
         </div>
     </div>
@@ -551,39 +558,6 @@
     }
 </script>
 <script>
-    let adultsCount = 0;
-    let childrenCount = 0;
-
-    function changeCount(type, action) {
-        if (action === 'increase') {
-            if (type === 'adults') {
-                adultsCount++;
-                document.getElementById('adults-count').textContent = adultsCount;
-                document.querySelector('.minus[aria-label="Decrease by one"]').disabled = false; // Enable minus button
-            } else if (type === 'children') {
-                childrenCount++;
-                document.getElementById('children-count').textContent = childrenCount;
-                document.querySelector('.minus[aria-label="Decrease by one"]').disabled = false; // Enable minus button
-            }
-        } else if (action === 'decrease') {
-            if (type === 'adults' && adultsCount > 0) {
-                adultsCount--;
-                document.getElementById('adults-count').textContent = adultsCount;
-            }
-            if (type === 'children' && childrenCount > 0) {
-                childrenCount--;
-                document.getElementById('children-count').textContent = childrenCount;
-            }
-
-            if (adultsCount === 0) {
-                document.querySelector('.minus[aria-label="Decrease by one"]').disabled = true; // Disable minus button if count is 0
-            }
-            if (childrenCount === 0) {
-                document.querySelector('.minus[aria-label="Decrease by one"]').disabled = true; // Disable minus button if count is 0
-            }
-        }
-    }
-
     function toggleVisibility() {
         const inputGroup = document.getElementById('input-group');
 
@@ -594,5 +568,45 @@
             inputGroup.style.display = 'none'; // Hide the input group
         }
     }
+</script>
+<script>
+    $(document).ready(function() {
+        // Toggle dropdown visibility
+        $(".clickable-inputs").click(function() {
+            $(".gt-bcx").toggle();
+        });
+
+        // Increase or decrease guest count
+        $(".increase, .decrease").click(function() {
+            let target = $(this).attr("data-target");
+            let inputField = $("#" + target);
+            let currentValue = parseInt(inputField.val());
+
+            if ($(this).hasClass("increase")) {
+                inputField.val(currentValue + 1);
+            } else if ($(this).hasClass("decrease") && currentValue > 0) {
+                inputField.val(currentValue - 1);
+            }
+
+            updateGuestInput();
+        });
+
+        // Function to update the guest input field
+        function updateGuestInput() {
+            let adult = parseInt($("#adult").val());
+            let child = parseInt($("#child").val());
+            let infant = parseInt($("#infant").val());
+            let pets = parseInt($("#pets").val());
+
+            let guestSummary = [];
+
+            if (adult > 0) guestSummary.push(adult + " Adult" + (adult > 1 ? "s" : ""));
+            if (child > 0) guestSummary.push(child + " Child" + (child > 1 ? "ren" : ""));
+            if (infant > 0) guestSummary.push(infant + " Infant" + (infant > 1 ? "s" : ""));
+            if (pets > 0) guestSummary.push(pets + " Pets" + (pets > 1 ? "s" : ""));
+
+            $("#guestInput").val(guestSummary.join(", ") || "Select guest");
+        }
+    });
 </script>
 @endsection
