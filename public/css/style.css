@@ -5785,3 +5785,13 @@ input[type="number"] {
 .show-off-vx{
 	width: 65rem !important ;
 }
+.hide-sesction:hover{
+	color: #fff;
+    background: #47cf73;
+}
+.hide-sesction{
+	border: 1px solid;
+    padding: 8px 40px;
+    margin: 5px 10px;
+    border-radius: 10px;
+}
