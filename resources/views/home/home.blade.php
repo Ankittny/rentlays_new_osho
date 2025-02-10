@@ -172,6 +172,7 @@
                                                             <div class="value-button increase" data-target="infant">+</div>
                                                         </div>
                                                     </div>
+                                                    <button class="hide-sesction" id="hide" >Apply</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -181,10 +182,10 @@
                         </div>
                     </div>
                     <div class="g-button-submit">
-                            <button type="submit" class="btn vbtn-default btn-block p-3 text-16"><i
-                                    class="fa fa-search"></i>
-                            </button>
-                        </div>
+                        <button type="submit" class="btn vbtn-default btn-block p-3 text-16"><i
+                                class="fa fa-search"></i>
+                        </button>
+                    </div>
                 </form>
 
             </div>
@@ -607,6 +608,13 @@
 
             $("#guestInput").val(guestSummary.join(", ") || "Select guest");
         }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#hide").click(function() {
+            $(".gt-bcx ").hide();
+        });
     });
 </script>
 @endsection

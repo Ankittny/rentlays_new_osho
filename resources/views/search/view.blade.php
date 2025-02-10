@@ -35,11 +35,13 @@
             margin-left: -5px;
             width: 100%;
         }
-        .align-text, .rounder-bx {
+
+        .align-text,
+        .rounder-bx {
             margin-left: 80%;
             margin-top: -20px;
+        }
     }
-}
 
     @media (max-width:767px) {
         .clickable-inputs {
@@ -189,46 +191,47 @@
                                                                                 <!-- <i class="fa fa-angle-down toggle-icon"></i> -->
                                                                             </div>
                                                                             <div class="align-text">
-                                                                            <div class="gt-bcx rounder-bx bca-rdx">
-                                                                                <!-- Adult Counter -->
-                                                                                <div class="main-counter">
-                                                                                    <div class="left-counter-title ">
-                                                                                        <p class="text-left">Adult</p>
-                                                                                        <span>Above 13+</span>
+                                                                                <div class="gt-bcx rounder-bx bca-rdx">
+                                                                                    <!-- Adult Counter -->
+                                                                                    <div class="main-counter">
+                                                                                        <div class="left-counter-title ">
+                                                                                            <p class="text-left">Adult</p>
+                                                                                            <span>Above 13+</span>
+                                                                                        </div>
+                                                                                        <div class="increment-decrement">
+                                                                                            <div class="value-button decrease" data-target="adult">-</div>
+                                                                                            <input type="number" class="guest-count" id="adult" value="0" min="0">
+                                                                                            <div class="value-button increase" data-target="adult">+</div>
+                                                                                        </div>
                                                                                     </div>
-                                                                                    <div class="increment-decrement">
-                                                                                        <div class="value-button decrease" data-target="adult">-</div>
-                                                                                        <input type="number" class="guest-count" id="adult" value="0" min="0">
-                                                                                        <div class="value-button increase" data-target="adult">+</div>
-                                                                                    </div>
-                                                                                </div>
 
-                                                                                <!-- Child Counter -->
-                                                                                <div class="main-counter">
-                                                                                    <div class="left-counter-title ">
-                                                                                        <p class="text-left">Child</p>
-                                                                                        <span>2-12 years</span>
+                                                                                    <!-- Child Counter -->
+                                                                                    <div class="main-counter">
+                                                                                        <div class="left-counter-title ">
+                                                                                            <p class="text-left">Child</p>
+                                                                                            <span>2-12 years</span>
+                                                                                        </div>
+                                                                                        <div class="increment-decrement">
+                                                                                            <div class="value-button decrease" data-target="child">-</div>
+                                                                                            <input type="number" class="guest-count" id="child" value="0" min="0">
+                                                                                            <div class="value-button increase" data-target="child">+</div>
+                                                                                        </div>
                                                                                     </div>
-                                                                                    <div class="increment-decrement">
-                                                                                        <div class="value-button decrease" data-target="child">-</div>
-                                                                                        <input type="number" class="guest-count" id="child" value="0" min="0">
-                                                                                        <div class="value-button increase" data-target="child">+</div>
-                                                                                    </div>
-                                                                                </div>
 
-                                                                                <!-- Infant Counter -->
-                                                                                <div class="main-counter">
-                                                                                    <div class="left-counter-title">
-                                                                                        <p class="text-left">Infant</p>
-                                                                                        <span>Below 2 years</span>
+                                                                                    <!-- Infant Counter -->
+                                                                                    <div class="main-counter">
+                                                                                        <div class="left-counter-title">
+                                                                                            <p class="text-left">Infant</p>
+                                                                                            <span>Below 2 years</span>
+                                                                                        </div>
+                                                                                        <div class="increment-decrement">
+                                                                                            <div class="value-button decrease" data-target="infant">-</div>
+                                                                                            <input type="number" class="guest-count" id="infant" value="0" min="0">
+                                                                                            <div class="value-button increase" data-target="infant">+</div>
+                                                                                        </div>
                                                                                     </div>
-                                                                                    <div class="increment-decrement">
-                                                                                        <div class="value-button decrease" data-target="infant">-</div>
-                                                                                        <input type="number" class="guest-count" id="infant" value="0" min="0">
-                                                                                        <div class="value-button increase" data-target="infant">+</div>
-                                                                                    </div>
+                                                                                    <button class="hide-sesction" id="hide" >Apply</button>
                                                                                 </div>
-                                                                            </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -666,6 +669,13 @@
 
             $("#guestInput").val(guestSummary.join(", ") || "Select guest");
         }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#hide").click(function() {
+            $(".gt-bcx ").hide();
+        });
     });
 </script>
 <script type="text/javascript" src="{{ asset('public/js/map-search.min.js') }}"></script>
