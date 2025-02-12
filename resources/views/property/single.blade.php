@@ -46,14 +46,14 @@
         margin: 4px 0;
     }
 
-
+/* 
     .container {
         width: 200px;
         margin: 20px auto;
         border: 1px solid #ddd;
         padding: 10px;
         text-align: center;
-    }
+    } */
 
     .clickable-input {
         display: flex;
@@ -2333,33 +2333,25 @@
         <script type="text/javascript">
             'use strict'
             let back = 0;
-            let dateFormat = '{{ $date_format }}';
-            let getPriceURL = '{{ url("property/get-price") }}';
-            var token = "{{ csrf_token() }}";
-            let customPriceText = "{{ __('Custom Price') }}";
-            let dateText = "{{ __('Date') }}";
-            let priceText = "{{ __('Price') }}";
-            let symbolText = "{{ $symbol }}";
-            let host = "{{ ($result->host_id == Auth()->user()?->id) ? '1' : '' }}";
-            let latitude = {
-                {
-                    $result - > property_address - > latitude
-                }
-            };
-            let longitude = {
-                {
-                    $result - > property_address - > longitude
-                }
-            };
-            let user_id = "{{ Auth::id() }}";
-            let success = "{{ __('Success') }}";
-            let yes = "{{ __('Yes') }}";
-            let no = "{{ __('No') }}";
-            let add = "{{ __('Add to Favourite List ?') }}";
-            let remove = "{{ __('Remove from Favourite List ?') }}";
-            let added = "{{ __('Added to favourite list.') }}";
-            let removed = "{{ __('Removed from favourite list.') }}";
-            const BaseURL = "{{ url('/') }}";
+        let dateFormat = '{{ $date_format }}';
+        let getPriceURL = '{{ url("property/get-price") }}';
+        var token = "{{ csrf_token() }}";
+        let customPriceText = "{{ __('Custom Price') }}";
+        let dateText = "{{ __('Date') }}";
+        let priceText = "{{ __('Price') }}";
+        let symbolText = "{{ $symbol }}";
+		let host = "{{ ($result->host_id == Auth()->user()?->id) ? '1' : '' }}";
+        let latitude = {{ $result->property_address->latitude }};
+		let longitude = {{ $result->property_address->longitude }};
+        let user_id = "{{ Auth::id() }}";
+        let success = "{{ __('Success') }}";
+        let yes = "{{ __('Yes') }}";
+        let no = "{{ __('No') }}";
+        let add = "{{ __('Add to Favourite List ?') }}";
+        let remove = "{{ __('Remove from Favourite List ?') }}";
+        let added = "{{ __('Added to favourite list.') }}";
+        let removed = "{{ __('Removed from favourite list.') }}";
+        const BaseURL = "{{ url('/') }}";
         </script>
 
         <script type="text/javascript" src="{{ asset('public/js/single-property.min.js') }}"></script>
